@@ -6,12 +6,15 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
+import 'package:app_settings/app_settings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
-import 'package:open_settings_plus/open_settings_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,10 +23,12 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/application_constants.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
 import 'package:app/providers/profiles/gender_controller.dart';
@@ -32,6 +37,8 @@ import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 
@@ -47,6 +54,7 @@ class SystemControllerState with _$SystemControllerState {
     required bool showingSemanticsDebugger,
     required bool showingDebugMessages,
     @Default(bool) hasPerformedInitialSetup,
+    @Default([]) List<TargetFeed> disabledFeeds,
     String? appName,
     String? packageName,
     String? version,
@@ -76,8 +84,76 @@ class SystemController extends _$SystemController {
 
   static const String kFirebaseRemoteConfigFeedPromotionFrequencyKey = 'feed_promotion_injection_frequency';
   static const String kFirebaseRemoteConfigChatPromotionFrequencyKey = 'chat_promotion_injection_frequency';
+  static const String kFirebaseRemoteConfigFeedUpdateCheckFrequencyKey = 'feed_update_periodic_check_frequency';
+
+  static const String kFirebaseRemoteConfigDisabledFeedsKey = 'disabled_feeds';
+  static const String kFirebaseRemoteConfigFeedRefreshTimeoutKey = 'feed_refresh_timeout';
 
   static const String kFirebaseRemoteConfigAppsFlyerOneLinkKey = 'apps_flyer_one_link';
+
+  static const String kFirebaseRemoteConfigAuthTimeoutKey = 'auth_timeout';
+  static const int kDefaultAuthTimeout = 60009;
+
+  Future<int> getBiometricAuthTimeout() async {
+    final FirebaseRemoteConfig firebaseRemoteConfig = await ref.read(firebaseRemoteConfigProvider.future);
+    final int firebseAuthTimeout = firebaseRemoteConfig.getInt(SystemController.kFirebaseRemoteConfigAuthTimeoutKey);
+    if (firebseAuthTimeout <= 0) {
+      return kDefaultAuthTimeout;
+    }
+    return firebseAuthTimeout;
+  }
+
+  Future<void> updateBiometricsLastVerifiedTime() async {
+    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+    sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
+  }
+
+  void updateDisabledFeeds(List<TargetFeed> disabledFeeds) {
+    state = state.copyWith(disabledFeeds: disabledFeeds);
+  }
+
+  Future<void> biometricsReverification() async {
+    final LocalAuthentication localAuthentication = LocalAuthentication();
+    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
+    final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
+
+    //? If the user has enabled biometric authentication, they will be prompted in this section otherwise skip
+    await sharedPreferences.reload();
+    final bool biometricPreferencesAgree = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
+    if (!biometricPreferencesAgree || firebaseAuth.currentUser == null) {
+      return;
+    }
+
+    //? Check epoch times to make sure the user is not asked for authentication too often based on app constants
+    final int? lastCheckedEpoch = sharedPreferences.getInt(kBiometricsAcceptedLastTime);
+
+    //? If we have never set epoch/something else has gone wrong, do not ask the user to authenticate
+    if (lastCheckedEpoch == null) {
+      return;
+    }
+
+    //? Check difference between last checked time and current time, do not auth if the user has authenticated recently
+    final int currentEpochTime = DateTime.now().millisecondsSinceEpoch;
+    final int timeSinceLastAuthCheck = currentEpochTime - lastCheckedEpoch;
+    if (timeSinceLastAuthCheck <= await systemController.getBiometricAuthTimeout()) {
+      return;
+    }
+
+    //? Authenticate via biometrics if the user is required to
+    final bool hasReauthenticated = await localAuthentication.authenticate(localizedReason: "Positive+1 needs to verify it's you");
+    await sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
+    if (!hasReauthenticated) {
+      final UserController userController = providerContainer.read(userControllerProvider.notifier);
+      final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+      final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
+      await userController.signOut();
+      profileController.resetState();
+      relationshipController.resetState();
+      await router.replace(LoginRoute(senderRoute: HomeRoute));
+    }
+  }
 
   SystemEnvironment get environment {
     const String environmentValue = String.fromEnvironment(kEnvironmentSystemKey, defaultValue: 'develop');
@@ -159,6 +235,20 @@ class SystemController extends _$SystemController {
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
     final PromotionsController promotionsController = ref.read(promotionsControllerProvider.notifier);
+    final FirebaseRemoteConfig firebaseRemoteConfig = await ref.read(firebaseRemoteConfigProvider.future);
+
+    final String remoteDisabledFeedsStr = firebaseRemoteConfig.getString(kFirebaseRemoteConfigDisabledFeedsKey);
+    final List<TargetFeed> remoteDisabledFeeds = [];
+    if (remoteDisabledFeedsStr.isNotEmpty) {
+      remoteDisabledFeeds.addAll(remoteDisabledFeedsStr.split(',').map((String origin) => TargetFeed.fromOrigin(origin.trim())).toList());
+    }
+
+    final String localDisabledFeedHash = state.disabledFeeds.map((TargetFeed feed) => TargetFeed.toOrigin(feed)).join(',');
+    final String remoteDisabledFeedHash = remoteDisabledFeeds.map((TargetFeed feed) => TargetFeed.toOrigin(feed)).join(',');
+    if (localDisabledFeedHash != remoteDisabledFeedHash) {
+      logger.d('updateSystemConfiguration: Disabled feeds have changed');
+      updateDisabledFeeds(remoteDisabledFeeds);
+    }
 
     //* Data is assumed to be correct, if not the app cannot be used
     final EndpointResponse endpointResponse = await systemApiService.getSystemConfiguration();
@@ -216,6 +306,14 @@ class SystemController extends _$SystemController {
     await appRouter.push(const DevelopmentRoute());
   }
 
+  //* Travels to a page given on development which allows the users to test the app
+  Future<void> returnToHomePage() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    if (appRouter.current is! HomeRoute) {
+      appRouter.replaceAll([const HomeRoute()]);
+    }
+  }
+
   Future<bool> isDeviceAppleSimulator() async {
     final Logger logger = ref.read(loggerProvider);
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
@@ -239,14 +337,12 @@ class SystemController extends _$SystemController {
     final bool isIOS = UniversalPlatform.isIOS;
 
     if (isAndroid) {
-      const OpenSettingsPlusAndroid openSettingsPlusAndroid = OpenSettingsPlusAndroid();
-      await openSettingsPlusAndroid.notification();
+      await AppSettings.openAppSettings(type: AppSettingsType.settings);
       return;
     }
 
     if (isIOS) {
-      const OpenSettingsPlusIOS openSettingsPlusIOS = OpenSettingsPlusIOS();
-      await openSettingsPlusIOS.settings();
+      await AppSettings.openAppSettings(type: AppSettingsType.settings);
       return;
     }
 
@@ -259,14 +355,12 @@ class SystemController extends _$SystemController {
     final bool isIOS = UniversalPlatform.isIOS;
 
     if (isAndroid) {
-      const OpenSettingsPlusAndroid openSettingsPlusAndroid = OpenSettingsPlusAndroid();
-      await openSettingsPlusAndroid.appSettings();
+      await AppSettings.openAppSettings(type: AppSettingsType.security);
       return;
     }
 
     if (isIOS) {
-      const OpenSettingsPlusIOS openSettingsPlusIOS = OpenSettingsPlusIOS();
-      await openSettingsPlusIOS.settings();
+      await AppSettings.openAppSettings(type: AppSettingsType.security);
       return;
     }
 

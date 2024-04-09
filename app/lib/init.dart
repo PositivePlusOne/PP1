@@ -131,4 +131,6 @@ Future<void> setupApplication() async {
   if (imagePickerImplementation is ImagePickerAndroid) {
     imagePickerImplementation.useAndroidPhotoPicker = true;
   }
+
+  await systemController.biometricsReverification();
 }

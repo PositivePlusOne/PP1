@@ -180,7 +180,7 @@ extension MemberListExt on Iterable<Member> {
 
 extension MessageExt on Message {
   String getFormattedDescription() {
-    final String formattedText = text?.trim() ?? '';
+    String formattedText = text?.trim() ?? '';
     final String handle = (user?.name ?? '').asHandle;
 
     if (isDeleted) {
@@ -198,6 +198,18 @@ extension MessageExt on Message {
         return '$handle sent a file.';
       }
     }
+    final RegExp exp = RegExp(r'@\w+');
+    List<RegExpMatch> matches = exp.allMatches(formattedText).toList();
+    if (matches.isNotEmpty) {
+      final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+      for (int i = matches.length - 1; i >= 0; i--) {
+        final String substring = formattedText.substring(matches[i].start + 1, matches[i].end);
+        final Profile? targetProfile = cacheController.get(substring);
+        formattedText = formattedText.replaceRange(matches[i].start + 1, matches[i].end, targetProfile?.displayName ?? "");
+      }
+
+      print(matches);
+    }
 
     if (formattedText.isEmpty) {
       return '$handle sent a message.';
@@ -207,6 +219,6 @@ extension MessageExt on Message {
       return formattedText;
     }
 
-    return "$text";
+    return formattedText;
   }
 }

@@ -23,11 +23,10 @@ class HomeLoginPromptPage extends ConsumerWidget {
     return PositiveGenericPage(
       title: localisations.page_home_blocker_title,
       body: localisations.page_home_blocker_body,
-      buttonText: localisations.shared_actions_sign_up,
+      primaryActionText: localisations.shared_actions_sign_up,
       isBusy: false,
-      style: PositiveGenericPageStyle.imaged,
       canBack: true,
-      onContinueSelected: () => onContinueSelected(context, ref),
+      onPrimaryActionSelected: () => onContinueSelected(context, ref),
     );
   }
 

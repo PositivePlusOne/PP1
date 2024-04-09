@@ -22,6 +22,7 @@ import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/buttons/select_button.dart';
@@ -30,9 +31,8 @@ import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/profile/vms/gender_select_view_model.dart';
-import '../../atoms/buttons/enumerations/positive_button_size.dart';
-import '../../molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
 class ProfileGenderSelectPage extends ConsumerWidget {
@@ -63,7 +63,7 @@ class ProfileGenderSelectPage extends ConsumerWidget {
 
     return PositiveScaffold(
       onWillPopScope: () async => formController.onBackSelected(ProfileGenderSelectRoute),
-      controller: scrollController,
+      scrollController: scrollController,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: [

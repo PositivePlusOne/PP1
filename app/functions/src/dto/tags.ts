@@ -13,7 +13,7 @@ export type TagTopicJSON = {
   fallback?: string;
   localizations?: TagLocalizationJSON[];
   isEnabled?: boolean;
-}
+};
 
 export type TagLocalizationJSON = {
   locale?: string;

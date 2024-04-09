@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:exif/exif.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/log.dart';
@@ -11,10 +12,12 @@ import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/session_state.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image/image.dart';
 import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/helpers/image_helpers.dart';
 import 'package:app/main.dart';
@@ -66,7 +69,12 @@ class GalleryEntry {
     }
   }
 
-  Future<Media> createMedia({AwesomeFilter? filter, String altText = '', String mimeType = ''}) async {
+  Future<Media> createMedia({
+    AwesomeFilter? filter,
+    String altText = '',
+    String mimeType = '',
+    required bool forceCompression,
+  }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final List<MediaThumbnail> mediaThumbnails = <MediaThumbnail>[];
     logger.i('createMedia() checking if uploaded');
@@ -74,7 +82,10 @@ class GalleryEntry {
     final bool isUploaded = await hasBeenUploaded();
     if (!isUploaded) {
       logger.i('createMedia() uploading');
-      final UploadResult result = await upload(filter: filter);
+      final UploadResult result = await upload(
+        filter: filter,
+        forceCompression: forceCompression,
+      );
       mediaThumbnails.addAll(result.mediaThumbnails);
     }
 
@@ -91,7 +102,10 @@ class GalleryEntry {
     );
   }
 
-  Future<UploadResult> upload({AwesomeFilter? filter}) async {
+  Future<UploadResult> upload({
+    AwesomeFilter? filter,
+    required bool forceCompression,
+  }) async {
     final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
     final List<MediaThumbnail> mediaThumbnails = <MediaThumbnail>[];
@@ -118,7 +132,11 @@ class GalleryEntry {
 
     if (mimeType.startsWith('image/')) {
       logger.d('upload() mimeType.startsWith(image/)');
-      data = await compressImageAndApplyFilter(data: data, filter: filter);
+      data = await compressImageAndApplyFilter(
+        data: data,
+        filter: filter,
+        forceCompression: forceCompression,
+      );
     }
 
     if (mimeType.startsWith('video/')) {
@@ -229,20 +247,71 @@ class GalleryEntry {
   Future<Uint8List> compressImageAndApplyFilter({
     required Uint8List data,
     required AwesomeFilter? filter,
+    required bool forceCompression,
   }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.d('upload() mimeType.startsWith(image/)');
 
-    //? This image compression is increasing the size of the images and flipping them vertically on Android
-    // data = await FlutterImageCompress.compressWithList(
-    //   data,
-    //   keepExif: kImageCompressKeepExif,
-    //   rotate: 180,
-    //   minHeight: kImageCompressMaxHeight,
-    //   minWidth: kImageCompressMaxWidth,
-    //   quality: kImageCompressMaxQuality,
-    //   format: kImageCompressFormat,
-    // );
+    late Image decodedToImage;
+
+    if (forceCompression) {
+      String? exifOrientation;
+      final dataExif = await readExifFromBytes(data);
+      if (dataExif.containsKey('Image Orientation')) {
+        exifOrientation = dataExif["Image Orientation"]!.printable;
+      }
+      List<String> exifOrientationList = exifOrientation!.split(" ");
+
+      //? This image compression is increasing the size of the images and flipping them vertically on Android
+      data = await FlutterImageCompress.compressWithList(
+        data,
+        keepExif: true,
+        rotate: 0,
+        minWidth: kImageCompressMaxWidth,
+        quality: kImageCompressMaxQuality,
+        format: CompressFormat.png,
+        autoCorrectionAngle: false,
+      );
+
+      decodedToImage = decodeImage(data)!;
+      for (var i = 0; i < exifOrientationList.length; i++) {
+        final int useCounterClockwise = exifOrientationList.contains('CCW') ? -1 : 1;
+        switch (exifOrientationList[i].toLowerCase()) {
+          case "90":
+            decodedToImage = copyRotate(
+              decodedToImage,
+              angle: 90 * useCounterClockwise,
+            );
+            break;
+          case "180":
+            decodedToImage = copyRotate(
+              decodedToImage,
+              angle: 180 * useCounterClockwise,
+            );
+            break;
+          case "270":
+            decodedToImage = copyRotate(
+              decodedToImage,
+              angle: 270 * useCounterClockwise,
+            );
+            break;
+          case "360":
+          case "0":
+            decodedToImage = copyRotate(
+              decodedToImage,
+              angle: 0,
+            );
+            break;
+          case "horizontal":
+            decodedToImage = flipHorizontal(decodedToImage);
+          default:
+        }
+      }
+    } else {
+      decodedToImage = decodeImage(data)!;
+    }
+
+    data = encodeJpg(decodedToImage);
 
     // Apply filter if not none
     if (filter != null && filter != AwesomeFilter.None) {

@@ -34,8 +34,8 @@ class ProfileEditThanksPage extends ConsumerWidget {
     return PositiveGenericPage(
       title: title,
       body: body,
-      buttonText: continueText,
-      onContinueSelected: () async {
+      primaryActionText: continueText,
+      onPrimaryActionSelected: () async {
         switch (returnStyle) {
           case ProfileEditThanksReturnStyle.popToEditSettings:
             context.router.popUntil((route) => route.settings.name == const AccountProfileEditSettingsRoute().routeName);

@@ -22,6 +22,7 @@ import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/content/sharing_controller.dart';
 import 'package:app/providers/enrichment/activity_enrichment_controller.dart';
@@ -200,14 +201,25 @@ extension ActivityExt on Activity {
   bool canDisplayOnFeed({
     required Profile? currentProfile,
     required Relationship? relationshipWithActivityPublisher,
+    bool hideWhenMatchesPromotionKey = false,
   }) {
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final Set<RelationshipState> states = relationshipWithActivityPublisher?.relationshipStatesForEntity(currentProfileId) ?? <RelationshipState>{};
     final bool hasFullyConnected = states.contains(RelationshipState.sourceConnected) && states.contains(RelationshipState.targetConnected);
     final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
 
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+
     final String publisherId = publisherInformation?.publisherId ?? '';
-    if (currentProfileId == publisherId) {
+    final bool isPublisher = currentProfileId == publisherId;
+    final bool isLoggedIn = currentProfileId.isNotEmpty;
+
+    final bool shouldSkipOnPromotionKey = hideWhenMatchesPromotionKey && isLoggedIn && isPublisher && promotionsController.isActivityPromoted(activityId: flMeta?.id ?? '', promotionType: PromotionType.feed);
+    if (shouldSkipOnPromotionKey) {
+      return false;
+    }
+
+    if (isPublisher) {
       return true;
     }
 
@@ -567,11 +579,6 @@ extension ActivityExt on Activity {
       // update the count to be one fewer
       incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: -1);
 
-      // and show the snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
-      );
-
       return;
     }
 
@@ -580,11 +587,6 @@ extension ActivityExt on Activity {
 
     // update the count to be one more
     incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: 1);
-
-    // and show the snackbar
-    ScaffoldMessenger.of(context).showSnackBar(
-      PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
-    );
   }
 
   Future<void> onRequestPostSharedToFeed({

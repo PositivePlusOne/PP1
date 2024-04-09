@@ -48,6 +48,22 @@ class NotificationsViewModel extends _$NotificationsViewModel with LifecycleMixi
     await appRouter.push(const AccountRoute());
   }
 
+  Future<void> onProfileSelected(String id) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    final currentRoute = appRouter.current.name;
+
+    logger.d('onProfileSelected($id)');
+    await switchProfileAndAttemptToMarkNotifications(id);
+
+    // Check if we are still on the same route.
+    // If so, pop the route as we can assume we are on a dialog.
+    if (appRouter.current.name == currentRoute) {
+      await appRouter.pop();
+    }
+  }
+
   Future<void> notifyNotificationsSeen() async {
     final Logger logger = ref.read(loggerProvider);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);

@@ -18,6 +18,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
@@ -70,7 +71,7 @@ class GuidanceDirectoryEntryPage extends HookConsumerWidget {
     final List<Widget> actions = [];
 
     if (profileControllerState.currentProfile != null) {
-      actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
+      actions.addAll(buildCommonProfilePageActions());
     }
 
     final String parsedMarkdown = html2md.convert(guidanceEntry.markdown);

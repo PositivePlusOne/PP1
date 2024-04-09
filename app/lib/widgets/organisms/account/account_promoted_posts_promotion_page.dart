@@ -17,10 +17,10 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/number_extensions.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -138,7 +138,7 @@ class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPosts
 
     final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
     if (currentProfileId.isNotEmpty) {
-      actions.addAll(widget.currentProfile?.buildCommonProfilePageActions() ?? []);
+      actions.addAll(buildCommonProfilePageActions());
     }
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -274,13 +274,15 @@ class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPosts
                 index: promotionKindIndex,
                 onTapped: (index) => type = index == 0 ? AccountPromotedPostsType.hub : AccountPromotedPostsType.chat,
                 margin: EdgeInsets.zero,
-                tabColours: <Color>[
-                  widget.colors.green,
-                  widget.colors.yellow,
-                ],
-                tabs: <String>[
-                  widget.localisations.shared_promotion_type_hub,
-                  widget.localisations.shared_promotion_type_chat,
+                tabs: <PositiveTabEntry>[
+                  PositiveTabEntry(
+                    title: widget.localisations.shared_promotion_type_hub,
+                    colour: widget.colors.green,
+                  ),
+                  PositiveTabEntry(
+                    title: widget.localisations.shared_promotion_type_chat,
+                    colour: widget.colors.yellow,
+                  ),
                 ],
               ),
             ),

@@ -16,6 +16,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -80,7 +81,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                       onTapped: viewModel.onBackSelected,
                     ),
                     const Spacer(),
-                    ...profile.buildCommonProfilePageActions(includeSpacer: true),
+                    ...buildCommonProfilePageActions(includeSpacer: true),
                   ],
                 ),
                 const SizedBox(height: kPaddingLarge),

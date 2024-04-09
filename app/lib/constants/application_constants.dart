@@ -14,6 +14,9 @@ const int kVerificationCodeLength = 6;
 // Pagination
 const int kStandardFeedWindowSize = 50;
 
+const Duration kStandardDebounceDuration = Duration(milliseconds: 500);
+const Duration kExtendedDebounceDuration = Duration(milliseconds: 1000);
+
 // Cache durations
 const Duration kCacheTTLShort = Duration(minutes: 5);
 const Duration kCacheTTL = Duration(hours: 1);
@@ -42,6 +45,7 @@ const String kKeyPrefix = 'positive';
 const String kSplashOnboardedKey = '$kKeyPrefix-splash-onboarded';
 const String kNotificationsAcceptedKey = '$kKeyPrefix-notifications-accepted';
 const String kBiometricsAcceptedKey = '$kKeyPrefix-biometrics-accepted';
+const String kBiometricsAcceptedLastTime = '$kKeyPrefix-biometrics-accepted-last-time';
 const String kPledgeAcceptedKey = '$kKeyPrefix-pledge-accepted';
 
 const String kIsFirstInstallKey = '$kKeyPrefix-is-first-install';

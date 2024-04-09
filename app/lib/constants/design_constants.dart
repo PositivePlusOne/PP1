@@ -18,6 +18,8 @@ import 'package:app/extensions/color_extensions.dart';
 const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;
 
+const double kMinimumTapTargetSize = 42.0;
+
 // API Debounce
 const Duration kDebounceDuration = Duration(milliseconds: 500);
 
@@ -91,6 +93,7 @@ const double kCommentFooter = 135.0;
 
 // Icon
 const double kIconIndicator = 10.0;
+const double kUniconIndicator = 12.0;
 const double kIconExtraSmall = 16.0;
 const double kIconSmall = 20.0;
 const double kIconMedium = 24.0;

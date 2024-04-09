@@ -19,6 +19,7 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
@@ -70,6 +71,8 @@ class AccountDetailsPage extends HookConsumerWidget {
 
     final UserController userController = ref.read(userControllerProvider.notifier);
     final bool isSocialOnly = userController.isSocialProviderLinkedExclusive;
+    final bool isMissingSocialProvider = userController.isMissingSocialProvider;
+    final bool isMissingEmailProvider = userController.isMissingEmailProvider;
     final int providerCount = userController.providerCount;
 
     final List<String> cacheKeys = [];
@@ -78,12 +81,22 @@ class AccountDetailsPage extends HookConsumerWidget {
 
     final Profile? profile = profileState.currentProfile;
     final String name = profile?.name ?? '';
-    final String emailAddress = profile?.email ?? '';
     final String phoneNumber = profile?.phoneNumber ?? '';
+    String emailAddress = profile?.email ?? '';
+
+    // If the account is a personal account
+    // Check if the email address matches the email address of the user
+    // If so then use the email address from the user controller
+    // Else hide the email address
+    final bool isManagedProfile = profileController.isCurrentlyManagedProfile;
+    final String currentUserEmailAddress = userController.passwordProvider?.email ?? '';
+    if (!isManagedProfile && (currentUserEmailAddress.isEmpty || currentUserEmailAddress != emailAddress)) {
+      emailAddress = '';
+    }
 
     final List<Widget> actions = [];
     if (profileState.currentProfile != null) {
-      actions.addAll(profileState.currentProfile!.buildCommonProfilePageActions(disableAccount: true));
+      actions.addAll(buildCommonProfilePageActions(disableAccount: true));
     }
 
     final (String countryCode, String formattedPhoneNumber) phoneNumberComponents = phoneNumber.formatPhoneNumberIntoComponents();
@@ -131,6 +144,8 @@ class AccountDetailsPage extends HookConsumerWidget {
                 isPendingDeletion: isPendingDeletion,
                 isSocialOnly: isSocialOnly,
                 providerCount: providerCount,
+                isMissingSocialProvider: isMissingSocialProvider,
+                isMissingEmailProvider: isMissingEmailProvider,
               ),
             ] else ...<Widget>[
               ...buildManagedAccountDetails(
@@ -299,6 +314,8 @@ class AccountDetailsPage extends HookConsumerWidget {
     required bool isPendingDeletion,
     required bool isSocialOnly,
     required int providerCount,
+    required bool isMissingSocialProvider,
+    required bool isMissingEmailProvider,
   }) {
     return [
       Text(
@@ -347,8 +364,8 @@ class AccountDetailsPage extends HookConsumerWidget {
                 ),
               ),
       ),
-      if (!isSocialOnly) ...<Widget>[
-        const SizedBox(height: kPaddingMedium),
+      const SizedBox(height: kPaddingMedium),
+      if (viewModelState.emailUserInfo != null) ...<Widget>[
         PositiveButton(
           colors: colors,
           onTapped: () => viewModel.onUpdatePasswordButtonPressed(context, locale, controller),
@@ -360,9 +377,23 @@ class AccountDetailsPage extends HookConsumerWidget {
           iconColorOverride: colors.colorGray7,
           style: PositiveButtonStyle.primary,
         ),
+        const SizedBox(height: kPaddingMedium),
+        if (!isMissingSocialProvider) ...<Widget>[
+          PositiveButton(
+            colors: colors,
+            onTapped: viewModel.onDisconnectEmailProviderPressed,
+            isDisabled: viewModelState.isBusy,
+            primaryColor: colors.white,
+            label: localisations.page_account_actions_change_disable_email_sign_in,
+            icon: UniconsLine.fast_mail_alt,
+            fontColorOverride: colors.colorGray7,
+            iconColorOverride: colors.colorGray7,
+            style: PositiveButtonStyle.primary,
+          ),
+          const SizedBox(height: kPaddingMedium),
+        ],
       ],
-      const SizedBox(height: kPaddingMedium),
-      if (viewModelState.googleUserInfo != null && providerCount > 1) ...<Widget>[
+      if (viewModelState.googleUserInfo != null) ...<Widget>[
         PositiveButton(
           colors: colors,
           onTapped: viewModel.onDisconnectGoogleProviderPressed,
@@ -376,7 +407,7 @@ class AccountDetailsPage extends HookConsumerWidget {
         ),
         const SizedBox(height: kPaddingMedium),
       ],
-      if (viewModelState.appleUserInfo != null && providerCount > 1) ...<Widget>[
+      if (viewModelState.appleUserInfo != null) ...<Widget>[
         PositiveButton(
           colors: colors,
           onTapped: viewModel.onDisconnectAppleProviderPressed,
@@ -403,20 +434,34 @@ class AccountDetailsPage extends HookConsumerWidget {
       //   ),
       //   const SizedBox(height: kPaddingMedium),
       // ],
-      // if (false) ...<Widget>[
-      //   PositiveButton(
-      //     colors: colors,
-      //     onTapped: viewModel.onConnectSocialUserRequested,
-      //     isDisabled: viewModelState.isBusy,
-      //     primaryColor: colors.white,
-      //     label: localisations.page_account_actions_change_connect_social_account,
-      //     icon: UniconsLine.link_alt,
-      //     fontColorOverride: colors.colorGray7,
-      //     iconColorOverride: colors.colorGray7,
-      //     style: PositiveButtonStyle.primary,
-      //   ),
-      //   const SizedBox(height: kPaddingMedium),
-      // ],
+      if (isMissingEmailProvider) ...<Widget>[
+        PositiveButton(
+          colors: colors,
+          onTapped: viewModel.onConnectEmailUserRequested,
+          isDisabled: viewModelState.isBusy,
+          primaryColor: colors.white,
+          label: localisations.page_account_actions_change_connect_email_account,
+          icon: UniconsLine.fast_mail_alt,
+          fontColorOverride: colors.colorGray7,
+          iconColorOverride: colors.colorGray7,
+          style: PositiveButtonStyle.primary,
+        ),
+        const SizedBox(height: kPaddingMedium),
+      ],
+      if (isMissingSocialProvider) ...<Widget>[
+        PositiveButton(
+          colors: colors,
+          onTapped: viewModel.onConnectSocialUserRequested,
+          isDisabled: viewModelState.isBusy,
+          primaryColor: colors.white,
+          label: localisations.page_account_actions_change_connect_social_account,
+          icon: UniconsLine.link_alt,
+          fontColorOverride: colors.colorGray7,
+          iconColorOverride: colors.colorGray7,
+          style: PositiveButtonStyle.primary,
+        ),
+        const SizedBox(height: kPaddingMedium),
+      ],
       PositiveButton(
         colors: colors,
         onTapped: () => isPendingDeletion ? viewModel.onUndeleteAccountButtonPressed(context, locale, controller) : viewModel.onDeleteAccountButtonPressed(context, locale, controller),

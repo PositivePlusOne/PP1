@@ -22,6 +22,7 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
@@ -30,17 +31,17 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
+import 'package:app/widgets/molecules/lists/positive_profile_actions_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/molecules/tiles/positive_profile_tile.dart';
+import 'package:app/widgets/molecules/tiles/profile_biography_tile.dart';
+import 'package:app/widgets/organisms/profile/components/profile_app_bar_header.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
-import '../../behaviours/positive_feed_pagination_behaviour.dart';
-import '../../molecules/lists/positive_profile_actions_list.dart';
-import '../../molecules/tiles/positive_profile_tile.dart';
-import '../../molecules/tiles/profile_biography_tile.dart';
-import 'components/profile_app_bar_header.dart';
 
 @RoutePage()
 class ProfilePage extends HookConsumerWidget {
@@ -52,9 +53,8 @@ class ProfilePage extends HookConsumerWidget {
     return PositiveGenericPage(
       title: 'You are not allowed to view this page',
       body: 'You are not allowed to view this profile, if you think this is an error, please check out our app guidance.',
-      buttonText: 'Back',
-      style: PositiveGenericPageStyle.decorated,
-      onContinueSelected: () async => providerContainer.read(appRouterProvider).removeLast(),
+      primaryActionText: 'Back',
+      onPrimaryActionSelected: () async => providerContainer.read(appRouterProvider).removeLast(),
     );
   }
 
@@ -139,7 +139,7 @@ class ProfilePage extends HookConsumerWidget {
 
     final List<Widget> actions = [];
     if (controllerState.currentProfile != null) {
-      actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions(color: appBarTextColor));
+      actions.addAll(buildCommonProfilePageActions(color: appBarTextColor));
     }
 
     final bool canDisplayName = targetProfile?.visibilityFlags.contains(kVisibilityFlagName) == true;

@@ -12,7 +12,7 @@ part of 'create_post_view_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$CreatePostViewModelState {
@@ -21,6 +21,7 @@ mixin _$CreatePostViewModelState {
   bool get isUploadingMedia => throw _privateConstructorUsedError;
   bool get isCreatingPost => throw _privateConstructorUsedError;
   bool get isEditingPost => throw _privateConstructorUsedError;
+  bool get isMediaPreCompressed => throw _privateConstructorUsedError;
   PostType get currentPostType => throw _privateConstructorUsedError;
   CreatePostCurrentPage get currentCreatePostPage =>
       throw _privateConstructorUsedError;
@@ -81,6 +82,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       bool isUploadingMedia,
       bool isCreatingPost,
       bool isEditingPost,
+      bool isMediaPreCompressed,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       String currentActivityID,
@@ -137,6 +139,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? isUploadingMedia = null,
     Object? isCreatingPost = null,
     Object? isEditingPost = null,
+    Object? isMediaPreCompressed = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? currentActivityID = null,
@@ -184,6 +187,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
       isEditingPost: null == isEditingPost
           ? _value.isEditingPost
           : isEditingPost // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isMediaPreCompressed: null == isMediaPreCompressed
+          ? _value.isMediaPreCompressed
+          : isMediaPreCompressed // ignore: cast_nullable_to_non_nullable
               as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
@@ -326,6 +333,7 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
       bool isUploadingMedia,
       bool isCreatingPost,
       bool isEditingPost,
+      bool isMediaPreCompressed,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       String currentActivityID,
@@ -383,6 +391,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? isUploadingMedia = null,
     Object? isCreatingPost = null,
     Object? isEditingPost = null,
+    Object? isMediaPreCompressed = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? currentActivityID = null,
@@ -430,6 +439,10 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
       isEditingPost: null == isEditingPost
           ? _value.isEditingPost
           : isEditingPost // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isMediaPreCompressed: null == isMediaPreCompressed
+          ? _value.isMediaPreCompressed
+          : isMediaPreCompressed // ignore: cast_nullable_to_non_nullable
               as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
@@ -550,6 +563,7 @@ class _$CreatePostViewModelStateImpl
       this.isUploadingMedia = false,
       this.isCreatingPost = false,
       this.isEditingPost = false,
+      this.isMediaPreCompressed = false,
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.entry,
       this.currentActivityID = '',
@@ -601,6 +615,9 @@ class _$CreatePostViewModelStateImpl
   @override
   @JsonKey()
   final bool isEditingPost;
+  @override
+  @JsonKey()
+  final bool isMediaPreCompressed;
   @override
   @JsonKey()
   final PostType currentPostType;
@@ -705,7 +722,7 @@ class _$CreatePostViewModelStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, isEditingPost: $isEditingPost, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, currentActivityID: $currentActivityID, currentActivityMedia: $currentActivityMedia, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, postingAsProfileID: $postingAsProfileID, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, isEditingPost: $isEditingPost, isMediaPreCompressed: $isMediaPreCompressed, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, currentActivityID: $currentActivityID, currentActivityMedia: $currentActivityMedia, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, postingAsProfileID: $postingAsProfileID, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
   }
 
   @override
@@ -718,6 +735,7 @@ class _$CreatePostViewModelStateImpl
       ..add(DiagnosticsProperty('isUploadingMedia', isUploadingMedia))
       ..add(DiagnosticsProperty('isCreatingPost', isCreatingPost))
       ..add(DiagnosticsProperty('isEditingPost', isEditingPost))
+      ..add(DiagnosticsProperty('isMediaPreCompressed', isMediaPreCompressed))
       ..add(DiagnosticsProperty('currentPostType', currentPostType))
       ..add(DiagnosticsProperty('currentCreatePostPage', currentCreatePostPage))
       ..add(DiagnosticsProperty('currentActivityID', currentActivityID))
@@ -764,6 +782,8 @@ class _$CreatePostViewModelStateImpl
                 other.isCreatingPost == isCreatingPost) &&
             (identical(other.isEditingPost, isEditingPost) ||
                 other.isEditingPost == isEditingPost) &&
+            (identical(other.isMediaPreCompressed, isMediaPreCompressed) ||
+                other.isMediaPreCompressed == isMediaPreCompressed) &&
             (identical(other.currentPostType, currentPostType) ||
                 other.currentPostType == currentPostType) &&
             (identical(other.currentCreatePostPage, currentCreatePostPage) ||
@@ -830,6 +850,7 @@ class _$CreatePostViewModelStateImpl
         isUploadingMedia,
         isCreatingPost,
         isEditingPost,
+        isMediaPreCompressed,
         currentPostType,
         currentCreatePostPage,
         currentActivityID,
@@ -873,6 +894,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final bool isUploadingMedia,
           final bool isCreatingPost,
           final bool isEditingPost,
+          final bool isMediaPreCompressed,
           final PostType currentPostType,
           final CreatePostCurrentPage currentCreatePostPage,
           final String currentActivityID,
@@ -917,6 +939,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   bool get isCreatingPost;
   @override
   bool get isEditingPost;
+  @override
+  bool get isMediaPreCompressed;
   @override
   PostType get currentPostType;
   @override

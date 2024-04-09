@@ -256,6 +256,7 @@ class PostApiService {
     required String targetSlug,
     required String targetUserId,
     Pagination? pagination,
+    bool shouldPersonalize = false,
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'post-listActivities',
@@ -263,6 +264,7 @@ class PostApiService {
       parameters: {
         'targetSlug': targetSlug,
         'targetUserId': targetUserId,
+        'shouldPersonalize': shouldPersonalize,
       },
     );
   }

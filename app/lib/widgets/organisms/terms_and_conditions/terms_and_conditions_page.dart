@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:markdown_widget/config/configs.dart';
+import 'package:markdown_widget/widget/all.dart';
 
 // Project imports:
+import 'package:app/constants/templates.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
 import '../../../constants/design_constants.dart';
 import '../../atoms/buttons/positive_close_button.dart';
@@ -41,6 +45,18 @@ class TermsAndConditionsPage extends ConsumerWidget {
                     PositiveCloseButton(brightness: Brightness.dark),
                   ],
                 ),
+                MarkdownWidget(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  data: kTermsAndConditionsMarkdown,
+                  selectable: false,
+                  config: MarkdownConfig(
+                    configs: buildMarkdownWidgetConfig(
+                      brightness: Brightness.dark,
+                      onTapLink: (str) {},
+                    ),
+                  ),
+                )
               ],
             ),
           ),

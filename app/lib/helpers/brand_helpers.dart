@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:logger/logger.dart';
 import 'package:markdown_widget/config/all.dart';
 import 'package:markdown_widget/widget/all.dart';
 
@@ -13,8 +14,10 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/tag_extensions.dart';
+import 'package:app/helpers/markdown_truncator.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration_model.dart';
 import '../dtos/system/design_colors_model.dart';
@@ -29,6 +32,8 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   void Function(String link)? onTapLink,
   bool boldHandles = true,
   List<Mention> mentions = const [],
+  bool squashParagraphs = false,
+  int maxLength = -1,
 }) {
   //! Add the tags to the start of the markdown as bolded text
   String markdown = str;
@@ -46,6 +51,14 @@ MarkdownWidget buildMarkdownWidgetFromBody(
     markdown = markdown.boldHandlesAndLink(knownIdMap: mentionsIdMap);
   }
 
+  if (squashParagraphs) {
+    markdown = markdown.squashParagraphs();
+  }
+
+  if (maxLength > 0) {
+    markdown = MarkdownTruncator.formatText(markdown, limit: maxLength, ellipsis: true);
+  }
+
   // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)
   final StringBuffer tagBuffer = StringBuffer();
   for (final Tag tag in tags) {
@@ -59,7 +72,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
 
   // Add the tags to the start of the markdown as bolded text
   if (tagBuffer.isNotEmpty) {
-    markdown = '$markdown\n\n${tagBuffer.toString()}';
+    markdown = '$markdown\n${tagBuffer.toString()}';
   }
 
   return MarkdownWidget(
@@ -73,36 +86,59 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   );
 }
 
+void _onInternalLinkedTapped(void Function(String link)? onTapLink, String link) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  logger.d('Link tapped: $link');
+
+  if (onTapLink != null) {
+    onTapLink(link);
+  } else {
+    logger.d('No onTapLink function provided, attempting to launch URL: $link');
+    link.attemptToLaunchURL();
+  }
+}
+
 List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapLink, Brightness brightness = Brightness.light}) {
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
 
-  final Color textColor = brightness == Brightness.light ? colors.black : colors.white;
+  final Color textColor = brightness == Brightness.light ? colors.colorGray7 : colors.white;
+  final Color textBoldColor = brightness == Brightness.light ? colors.black : colors.white;
 
   return [
-    PreConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
+    PreConfig(
+      textStyle: typography.styleBody.copyWith(color: textColor),
+      decoration: BoxDecoration(
+        color: colors.colorGray1,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+    ),
     H1Config(style: typography.styleHeroMedium.copyWith(color: textColor)),
     H2Config(style: typography.styleHeroSmall.copyWith(color: textColor)),
     H3Config(style: typography.styleTitle.copyWith(color: textColor)),
     H4Config(style: typography.styleTitleTwo.copyWith(color: textColor)),
-    H5Config(style: typography.styleSubtitleBold.copyWith(color: textColor)),
-    H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
+    H5Config(style: typography.styleSubtitleBold.copyWith(color: textBoldColor)),
+    H6Config(style: typography.styleSubtextBold.copyWith(color: textBoldColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
-      //TODO The link style is applied to all types of link including @'s, meaning we cannot do the blue underline for links only without further look into the package
       style: typography.styleBold.copyWith(color: colors.black),
-      onTap: (link) {
-        if (onTapLink != null) {
-          onTapLink(link);
-        } else {
-          link.attemptToLaunchURL();
-        }
-      },
+      onTap: (link) => _onInternalLinkedTapped(onTapLink, link),
     ),
     CodeConfig(style: typography.styleSubtitle.copyWith(color: textColor, fontFamily: 'AlbertSans')),
     BlockquoteConfig(sideColor: colors.purple, textColor: textColor),
     TableConfig(bodyStyle: typography.styleBody.copyWith(color: textColor)),
-    const ListConfig(marginLeft: kPaddingMedium),
+    ListConfig(
+      marginLeft: kPaddingMedium,
+      marker: (isOrdered, depth, index) {
+        return Container(
+          margin: const EdgeInsets.only(left: kPaddingSmall),
+          child: Text(
+            isOrdered ? '${index + 1}.' : '•',
+            style: TextStyle(color: textColor),
+          ),
+        );
+      },
+    ),
     ImgConfig(
       builder: (url, attributes) => PositiveMediaImage(
         media: Media.fromImageUrl(url),

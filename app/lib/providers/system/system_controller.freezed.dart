@@ -12,7 +12,7 @@ part of 'system_controller.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$SystemControllerState {
@@ -20,6 +20,7 @@ mixin _$SystemControllerState {
   bool get showingSemanticsDebugger => throw _privateConstructorUsedError;
   bool get showingDebugMessages => throw _privateConstructorUsedError;
   dynamic get hasPerformedInitialSetup => throw _privateConstructorUsedError;
+  List<TargetFeed> get disabledFeeds => throw _privateConstructorUsedError;
   String? get appName => throw _privateConstructorUsedError;
   String? get packageName => throw _privateConstructorUsedError;
   String? get version => throw _privateConstructorUsedError;
@@ -41,6 +42,7 @@ abstract class $SystemControllerStateCopyWith<$Res> {
       bool showingSemanticsDebugger,
       bool showingDebugMessages,
       dynamic hasPerformedInitialSetup,
+      List<TargetFeed> disabledFeeds,
       String? appName,
       String? packageName,
       String? version,
@@ -65,6 +67,7 @@ class _$SystemControllerStateCopyWithImpl<$Res,
     Object? showingSemanticsDebugger = null,
     Object? showingDebugMessages = null,
     Object? hasPerformedInitialSetup = freezed,
+    Object? disabledFeeds = null,
     Object? appName = freezed,
     Object? packageName = freezed,
     Object? version = freezed,
@@ -87,6 +90,10 @@ class _$SystemControllerStateCopyWithImpl<$Res,
           ? _value.hasPerformedInitialSetup
           : hasPerformedInitialSetup // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      disabledFeeds: null == disabledFeeds
+          ? _value.disabledFeeds
+          : disabledFeeds // ignore: cast_nullable_to_non_nullable
+              as List<TargetFeed>,
       appName: freezed == appName
           ? _value.appName
           : appName // ignore: cast_nullable_to_non_nullable
@@ -121,6 +128,7 @@ abstract class _$$SystemControllerStateImplCopyWith<$Res>
       bool showingSemanticsDebugger,
       bool showingDebugMessages,
       dynamic hasPerformedInitialSetup,
+      List<TargetFeed> disabledFeeds,
       String? appName,
       String? packageName,
       String? version,
@@ -143,6 +151,7 @@ class __$$SystemControllerStateImplCopyWithImpl<$Res>
     Object? showingSemanticsDebugger = null,
     Object? showingDebugMessages = null,
     Object? hasPerformedInitialSetup = freezed,
+    Object? disabledFeeds = null,
     Object? appName = freezed,
     Object? packageName = freezed,
     Object? version = freezed,
@@ -164,6 +173,10 @@ class __$$SystemControllerStateImplCopyWithImpl<$Res>
       hasPerformedInitialSetup: freezed == hasPerformedInitialSetup
           ? _value.hasPerformedInitialSetup!
           : hasPerformedInitialSetup,
+      disabledFeeds: null == disabledFeeds
+          ? _value._disabledFeeds
+          : disabledFeeds // ignore: cast_nullable_to_non_nullable
+              as List<TargetFeed>,
       appName: freezed == appName
           ? _value.appName
           : appName // ignore: cast_nullable_to_non_nullable
@@ -194,10 +207,12 @@ class _$SystemControllerStateImpl
       required this.showingSemanticsDebugger,
       required this.showingDebugMessages,
       this.hasPerformedInitialSetup = bool,
+      final List<TargetFeed> disabledFeeds = const [],
       this.appName,
       this.packageName,
       this.version,
-      this.buildNumber});
+      this.buildNumber})
+      : _disabledFeeds = disabledFeeds;
 
   @override
   final SystemEnvironment environment;
@@ -208,6 +223,15 @@ class _$SystemControllerStateImpl
   @override
   @JsonKey()
   final dynamic hasPerformedInitialSetup;
+  final List<TargetFeed> _disabledFeeds;
+  @override
+  @JsonKey()
+  List<TargetFeed> get disabledFeeds {
+    if (_disabledFeeds is EqualUnmodifiableListView) return _disabledFeeds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_disabledFeeds);
+  }
+
   @override
   final String? appName;
   @override
@@ -219,7 +243,7 @@ class _$SystemControllerStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages, hasPerformedInitialSetup: $hasPerformedInitialSetup, appName: $appName, packageName: $packageName, version: $version, buildNumber: $buildNumber)';
+    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages, hasPerformedInitialSetup: $hasPerformedInitialSetup, disabledFeeds: $disabledFeeds, appName: $appName, packageName: $packageName, version: $version, buildNumber: $buildNumber)';
   }
 
   @override
@@ -233,6 +257,7 @@ class _$SystemControllerStateImpl
       ..add(DiagnosticsProperty('showingDebugMessages', showingDebugMessages))
       ..add(DiagnosticsProperty(
           'hasPerformedInitialSetup', hasPerformedInitialSetup))
+      ..add(DiagnosticsProperty('disabledFeeds', disabledFeeds))
       ..add(DiagnosticsProperty('appName', appName))
       ..add(DiagnosticsProperty('packageName', packageName))
       ..add(DiagnosticsProperty('version', version))
@@ -253,6 +278,8 @@ class _$SystemControllerStateImpl
                 other.showingDebugMessages == showingDebugMessages) &&
             const DeepCollectionEquality().equals(
                 other.hasPerformedInitialSetup, hasPerformedInitialSetup) &&
+            const DeepCollectionEquality()
+                .equals(other._disabledFeeds, _disabledFeeds) &&
             (identical(other.appName, appName) || other.appName == appName) &&
             (identical(other.packageName, packageName) ||
                 other.packageName == packageName) &&
@@ -268,6 +295,7 @@ class _$SystemControllerStateImpl
       showingSemanticsDebugger,
       showingDebugMessages,
       const DeepCollectionEquality().hash(hasPerformedInitialSetup),
+      const DeepCollectionEquality().hash(_disabledFeeds),
       appName,
       packageName,
       version,
@@ -287,6 +315,7 @@ abstract class _SystemControllerState implements SystemControllerState {
       required final bool showingSemanticsDebugger,
       required final bool showingDebugMessages,
       final dynamic hasPerformedInitialSetup,
+      final List<TargetFeed> disabledFeeds,
       final String? appName,
       final String? packageName,
       final String? version,
@@ -300,6 +329,8 @@ abstract class _SystemControllerState implements SystemControllerState {
   bool get showingDebugMessages;
   @override
   dynamic get hasPerformedInitialSetup;
+  @override
+  List<TargetFeed> get disabledFeeds;
   @override
   String? get appName;
   @override

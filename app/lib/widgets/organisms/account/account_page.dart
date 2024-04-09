@@ -59,10 +59,9 @@ class AccountPage extends HookConsumerWidget {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String currentUserUid = auth.currentUser?.uid ?? '';
 
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     ref.watch(notificationsControllerProvider);
 
-    final List<Widget> actions = currentProfile?.buildCommonProfilePageActions(
+    final List<Widget> actions = buildCommonProfilePageActions(
           color: foregroundColor,
           ringColorOverrideProfile: colors.white,
           onTapNotifications: () => onProfileNotificationsActionSelected(shouldReplace: true),
@@ -104,7 +103,7 @@ class AccountPage extends HookConsumerWidget {
             preferredSize: preferedAppBarSize,
             child: Column(
               children: <Widget>[
-                if (hasMultipleProfiles && viewModel.availableProfileCount <= 2)
+                if (hasMultipleProfiles && viewModel.availableProfileCount <= 2) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
                     child: PositiveProfileSegmentedSwitcher(
@@ -113,6 +112,7 @@ class AccountPage extends HookConsumerWidget {
                       onTapped: (int profileIndex) => viewModel.onProfileChange(profileIndex, viewModel),
                     ),
                   ),
+                ],
                 if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),

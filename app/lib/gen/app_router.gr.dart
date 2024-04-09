@@ -31,6 +31,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    AccountConnectEmailRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountConnectEmailPage(),
+      );
+    },
     AccountConnectSocialRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -79,6 +85,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountPromotedPostsPromotionPage(),
       );
     },
+    AccountSocialDisconnectionRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountSocialDisconnectionPage(),
+      );
+    },
     AccountUpdateEmailAddressRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -120,12 +132,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const BiometricsPreferencesPage(),
-      );
-    },
-    BirthdayDeleteAccountRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const BirthdayDeleteAccountPage(),
       );
     },
     ChatConversationsRoute.name: (routeData) {
@@ -317,6 +323,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const OnboardingYourPledgePage(),
       );
     },
+    OrganisationCompanySectorSelectRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OrganisationCompanySectorSelectPage(),
+      );
+    },
+    OrganisationNameSetupRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OrganisationNameSetupPage(),
+      );
+    },
     PostRoute.name: (routeData) {
       final args = routeData.argsAs<PostRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -326,6 +344,18 @@ abstract class _$AppRouter extends RootStackRouter {
           feed: args.feed,
           reactionId: args.reactionId,
           promotionId: args.promotionId,
+          key: args.key,
+        ),
+      );
+    },
+    PostReactionsRoute.name: (routeData) {
+      final args = routeData.argsAs<PostReactionsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PostReactionsPage(
+          activity: args.activity,
+          feed: args.feed,
+          reactionType: args.reactionType,
           key: args.key,
         ),
       );
@@ -359,16 +389,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfileBiographyEntryPage(),
       );
     },
+    ProfileBirthdayDeleteAccountRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileBirthdayDeleteAccountPage(),
+      );
+    },
     ProfileBirthdayEntryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProfileBirthdayEntryPage(),
-      );
-    },
-    ProfileCompanySectorSelectRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileCompanySectorSelectPage(),
       );
     },
     ProfileDetailsRoute.name: (routeData) {
@@ -607,6 +637,20 @@ class AccountConfirmPasswordRouteArgs {
 }
 
 /// generated route for
+/// [AccountConnectEmailPage]
+class AccountConnectEmailRoute extends PageRouteInfo<void> {
+  const AccountConnectEmailRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountConnectEmailRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountConnectEmailRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [AccountConnectSocialPage]
 class AccountConnectSocialRoute extends PageRouteInfo<void> {
   const AccountConnectSocialRoute({List<PageRouteInfo>? children})
@@ -714,6 +758,20 @@ class AccountPromotedPostsPromotionRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountPromotedPostsPromotionRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountSocialDisconnectionPage]
+class AccountSocialDisconnectionRoute extends PageRouteInfo<void> {
+  const AccountSocialDisconnectionRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountSocialDisconnectionRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountSocialDisconnectionRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -837,20 +895,6 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BiometricsPreferencesRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [BirthdayDeleteAccountPage]
-class BirthdayDeleteAccountRoute extends PageRouteInfo<void> {
-  const BirthdayDeleteAccountRoute({List<PageRouteInfo>? children})
-      : super(
-          BirthdayDeleteAccountRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'BirthdayDeleteAccountRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -1406,6 +1450,34 @@ class OnboardingYourPledgeRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [OrganisationCompanySectorSelectPage]
+class OrganisationCompanySectorSelectRoute extends PageRouteInfo<void> {
+  const OrganisationCompanySectorSelectRoute({List<PageRouteInfo>? children})
+      : super(
+          OrganisationCompanySectorSelectRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OrganisationCompanySectorSelectRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OrganisationNameSetupPage]
+class OrganisationNameSetupRoute extends PageRouteInfo<void> {
+  const OrganisationNameSetupRoute({List<PageRouteInfo>? children})
+      : super(
+          OrganisationNameSetupRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OrganisationNameSetupRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [PostPage]
 class PostRoute extends PageRouteInfo<PostRouteArgs> {
   PostRoute({
@@ -1454,6 +1526,54 @@ class PostRouteArgs {
   @override
   String toString() {
     return 'PostRouteArgs{activityId: $activityId, feed: $feed, reactionId: $reactionId, promotionId: $promotionId, key: $key}';
+  }
+}
+
+/// generated route for
+/// [PostReactionsPage]
+class PostReactionsRoute extends PageRouteInfo<PostReactionsRouteArgs> {
+  PostReactionsRoute({
+    required Activity activity,
+    required TargetFeed feed,
+    required String reactionType,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PostReactionsRoute.name,
+          args: PostReactionsRouteArgs(
+            activity: activity,
+            feed: feed,
+            reactionType: reactionType,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PostReactionsRoute';
+
+  static const PageInfo<PostReactionsRouteArgs> page =
+      PageInfo<PostReactionsRouteArgs>(name);
+}
+
+class PostReactionsRouteArgs {
+  const PostReactionsRouteArgs({
+    required this.activity,
+    required this.feed,
+    required this.reactionType,
+    this.key,
+  });
+
+  final Activity activity;
+
+  final TargetFeed feed;
+
+  final String reactionType;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'PostReactionsRouteArgs{activity: $activity, feed: $feed, reactionType: $reactionType, key: $key}';
   }
 }
 
@@ -1543,6 +1663,20 @@ class ProfileBiographyEntryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfileBirthdayDeleteAccountPage]
+class ProfileBirthdayDeleteAccountRoute extends PageRouteInfo<void> {
+  const ProfileBirthdayDeleteAccountRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileBirthdayDeleteAccountRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileBirthdayDeleteAccountRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ProfileBirthdayEntryPage]
 class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
   const ProfileBirthdayEntryRoute({List<PageRouteInfo>? children})
@@ -1552,20 +1686,6 @@ class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileBirthdayEntryRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileCompanySectorSelectPage]
-class ProfileCompanySectorSelectRoute extends PageRouteInfo<void> {
-  const ProfileCompanySectorSelectRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileCompanySectorSelectRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileCompanySectorSelectRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

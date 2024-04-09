@@ -79,14 +79,14 @@ export namespace RelationshipService {
 
   export function relationshipStatesForEntity(entityId: string, relationship: RelationshipJSON): Set<RelationshipState> {
     if (!entityId || !relationship || !relationship.members || relationship.members.length === 0) {
-        return new Set();
+      return new Set();
     }
 
-    const member = relationship?.members?.find(m => m.memberId === entityId);
-    const otherMembers = relationship?.members?.filter(m => m.memberId !== entityId);
+    const member = relationship?.members?.find((m) => m.memberId === entityId);
+    const otherMembers = relationship?.members?.filter((m) => m.memberId !== entityId);
 
     if (!member || !otherMembers || otherMembers.length === 0) {
-        return new Set();
+      return new Set();
     }
 
     const relationshipStates = new Set<RelationshipState>();
@@ -96,15 +96,14 @@ export namespace RelationshipService {
     if (member.hasFollowed) relationshipStates.add(RelationshipState.sourceFollowed);
     if (member.hasHidden) relationshipStates.add(RelationshipState.sourceHidden);
     if (member.hasMuted) relationshipStates.add(RelationshipState.sourceMuted);
-    if (otherMembers.some(element => element.hasBlocked)) relationshipStates.add(RelationshipState.targetBlocked);
-    if (otherMembers.some(element => element.hasConnected)) relationshipStates.add(RelationshipState.targetConnected);
-    if (otherMembers.some(element => element.hasFollowed)) relationshipStates.add(RelationshipState.targetFollowing);
-    if (otherMembers.some(element => element.hasHidden)) relationshipStates.add(RelationshipState.targetHidden);
-    if (otherMembers.some(element => element.hasMuted)) relationshipStates.add(RelationshipState.targetMuted);
+    if (otherMembers.some((element) => element.hasBlocked)) relationshipStates.add(RelationshipState.targetBlocked);
+    if (otherMembers.some((element) => element.hasConnected)) relationshipStates.add(RelationshipState.targetConnected);
+    if (otherMembers.some((element) => element.hasFollowed)) relationshipStates.add(RelationshipState.targetFollowing);
+    if (otherMembers.some((element) => element.hasHidden)) relationshipStates.add(RelationshipState.targetHidden);
+    if (otherMembers.some((element) => element.hasMuted)) relationshipStates.add(RelationshipState.targetMuted);
 
     return relationshipStates;
-}
-
+  }
 
   /**
    * Checks if the given relationship is connected.
@@ -196,11 +195,11 @@ export namespace RelationshipService {
   }
 
   /**
-  * Gets the blocked relationships for the given user.
-  * @param {string} uid the user to get the blocked relationships for.
-  * @param {Pagination} pagination the pagination.
-  * @return {RelationshipJSON[]} the blocked relationships as GUIDs.
-  */
+   * Gets the blocked relationships for the given user.
+   * @param {string} uid the user to get the blocked relationships for.
+   * @param {Pagination} pagination the pagination.
+   * @return {RelationshipJSON[]} the blocked relationships as GUIDs.
+   */
   export async function getBlockedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
     const cacheKey = BLOCKED_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
@@ -223,7 +222,7 @@ export namespace RelationshipService {
     const hasData = data.length !== 0;
     const responsePagination = {
       limit: pagination.limit,
-      cursor: '',
+      cursor: "",
     } as Pagination;
 
     if (!hasData) {
@@ -233,7 +232,7 @@ export namespace RelationshipService {
     CacheService.setInCache(cacheKey, data);
 
     const last = data[data.length - 1];
-    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? "";
     responsePagination.cursor = lastId;
 
     return {
@@ -271,7 +270,7 @@ export namespace RelationshipService {
     const hasData = data.length !== 0;
     const responsePagination = {
       limit: pagination.limit,
-      cursor: '',
+      cursor: "",
     } as Pagination;
 
     if (!hasData) {
@@ -281,7 +280,7 @@ export namespace RelationshipService {
     CacheService.setInCache(cacheKey, data);
 
     const last = data[data.length - 1];
-    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? "";
     responsePagination.cursor = lastId;
 
     return {
@@ -316,7 +315,7 @@ export namespace RelationshipService {
     const hasData = data.length !== 0;
     const responsePagination = {
       limit: pagination.limit,
-      cursor: '',
+      cursor: "",
     } as Pagination;
 
     if (!hasData) {
@@ -326,7 +325,7 @@ export namespace RelationshipService {
     CacheService.setInCache(cacheKey, data);
 
     const last = data[data.length - 1];
-    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? "";
     responsePagination.cursor = lastId;
 
     return {
@@ -356,7 +355,7 @@ export namespace RelationshipService {
     const hasData = data.length !== 0;
     const responsePagination = {
       limit: pagination.limit,
-      cursor: '',
+      cursor: "",
     } as Pagination;
 
     if (!hasData) {
@@ -366,7 +365,7 @@ export namespace RelationshipService {
     CacheService.setInCache(cacheKey, data);
 
     const last = data[data.length - 1];
-    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? "";
     responsePagination.cursor = lastId;
 
     return {
@@ -396,7 +395,7 @@ export namespace RelationshipService {
     const hasData = data.length !== 0;
     const responsePagination = {
       limit: pagination.limit,
-      cursor: '',
+      cursor: "",
     } as Pagination;
 
     if (!hasData) {
@@ -406,7 +405,7 @@ export namespace RelationshipService {
     CacheService.setInCache(cacheKey, data);
 
     const last = data[data.length - 1];
-    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? "";
     responsePagination.cursor = lastId;
 
     return {
@@ -436,7 +435,7 @@ export namespace RelationshipService {
     const hasData = data.length !== 0;
     const responsePagination = {
       limit: pagination.limit,
-      cursor: '',
+      cursor: "",
     } as Pagination;
 
     if (!hasData) {
@@ -446,7 +445,7 @@ export namespace RelationshipService {
     CacheService.setInCache(cacheKey, data);
 
     const last = data[data.length - 1];
-    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? "";
     responsePagination.cursor = lastId;
 
     return {
@@ -464,12 +463,7 @@ export namespace RelationshipService {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
-    const relationshipsSnapshot = await adminFirestore
-      .collection("fl_content")
-      .where("_fl_meta_.schema", "==", "relationships")
-      .where("searchIndexRelationshipMutes", "array-contains", uid)
-      .where("muted", "==", true)
-      .get();
+    const relationshipsSnapshot = await adminFirestore.collection("fl_content").where("_fl_meta_.schema", "==", "relationships").where("searchIndexRelationshipMutes", "array-contains", uid).where("muted", "==", true).get();
 
     relationshipsSnapshot.docs.forEach((doc) => {
       const data = doc.data();
@@ -505,12 +499,7 @@ export namespace RelationshipService {
     const adminFirestore = adminApp.firestore();
     const relationships = [] as string[];
 
-    const relationshipsSnapshot = await adminFirestore
-      .collection("fl_content")
-      .where("_fl_meta_.schema", "==", "relationships")
-      .where("searchIndexRelationshipHides", "array-contains", uid)
-      .where("hidden", "==", true)
-      .get();
+    const relationshipsSnapshot = await adminFirestore.collection("fl_content").where("_fl_meta_.schema", "==", "relationships").where("searchIndexRelationshipHides", "array-contains", uid).where("hidden", "==", true).get();
 
     relationshipsSnapshot.docs.forEach((doc) => {
       const data = doc.data();
@@ -662,7 +651,7 @@ export namespace RelationshipService {
       throw new Error("Target does not have a flamelink id or meta data");
     }
 
-    target._fl_meta_.ownedBy = '';
+    target._fl_meta_.ownedBy = "";
 
     return await DataService.updateDocument({
       schemaKey: "users",
@@ -842,7 +831,7 @@ export namespace RelationshipService {
       memberIds.push(member.memberId);
       if (member.memberId === sender) {
         member.hasConnected = true;
-        member.hasFollowed = true;  
+        member.hasFollowed = true;
       }
 
       if (!member.hasConnected) {
@@ -852,7 +841,7 @@ export namespace RelationshipService {
 
     relationship.connected = isConnected;
     relationship.followed = isConnected;
-    
+
     relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     await resetRelationshipPaginationCache(relationship);
 

@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
@@ -22,15 +21,11 @@ import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
-import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
-import '../helpers/profile_helpers.dart';
 import '../providers/profiles/profile_controller.dart';
 
 extension ProfileStringExtensions on String {
@@ -40,6 +35,46 @@ extension ProfileStringExtensions on String {
 }
 
 extension ProfileExtensions on Profile {
+  bool get isProfileSetup {
+    return isOrganisationProfileSetup || isUserProfileSetup;
+  }
+
+  bool get isOrganisationProfileSetup {
+    if (!isOrganisation) {
+      return false;
+    }
+
+    return hasName && hasDisplayName && hasAccentColor;
+  }
+
+  bool get isUserProfileSetup {
+    if (isOrganisation) {
+      return false;
+    }
+
+    return hasName && hasBirthday && hasDisplayName && hasHivStatus && hasAccentColor;
+  }
+
+  bool get hasName {
+    return name.isNotEmpty;
+  }
+
+  bool get hasDisplayName {
+    return displayName.isNotEmpty;
+  }
+
+  bool get hasBirthday {
+    return birthday.isNotEmpty;
+  }
+
+  bool get hasHivStatus {
+    return hivStatus.isNotEmpty;
+  }
+
+  bool get hasAccentColor {
+    return accentColor.isNotEmpty;
+  }
+
   Media? get profileImage {
     return media.firstWhereOrNull((element) => element.bucketPath.contains('/profile'));
   }
@@ -119,43 +154,6 @@ extension ProfileExtensions on Profile {
     }
 
     return true;
-  }
-
-  List<Widget> buildCommonProfilePageActions({
-    bool disableNotifications = false,
-    bool disableAccount = false,
-    bool includeSpacer = false,
-    Color? color,
-    Color? ringColorOverrideProfile,
-    Color? badgeColorOverride,
-    void Function()? onTapNotifications,
-    void Function()? onTapProfile,
-  }) {
-    final List<Widget> children = [];
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
-    final bool isUserProfile = profileController.isCurrentlyUserProfile;
-
-    if (profileController.hasSetupProfile) {
-      children.addAll([
-        PositiveNotificationsButton(
-          color: color,
-          isDisabled: disableNotifications,
-          includeBadge: isUserProfile && notificationsController.canDisplayNotificationFeedBadge,
-          badgeColor: badgeColorOverride,
-          onTap: onTapNotifications,
-        ),
-        if (includeSpacer) const SizedBox(width: kPaddingSmall),
-        PositiveProfileCircularIndicator(
-          profile: profileController.currentProfile,
-          isEnabled: !disableAccount,
-          onTap: onTapProfile ?? onProfileAccountActionSelected,
-          ringColorOverride: ringColorOverrideProfile,
-        ),
-      ]);
-    }
-
-    return children;
   }
 
   Map<String, bool> buildFormVisibilityFlags({bool isLoadedProfile = false}) {

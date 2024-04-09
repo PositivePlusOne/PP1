@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Package imports:
+import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
@@ -9,6 +10,8 @@ import 'package:app/constants/country_constants.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/localization/country.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/services/third_party.dart';
 
 extension StringExt on String {
   static const int maxTagLength = 30;
@@ -55,9 +58,20 @@ extension StringExt on String {
 
   Future<void> attemptToLaunchURL() async {
     final Uri? uri = Uri.tryParse(this);
-    if (uri != null) {
-      await launchUrl(uri);
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    if (uri == null) {
+      logger.e("Invalid URL: $this");
+      return;
     }
+
+    final bool canLaunch = await canLaunchUrl(uri);
+    if (!canLaunch) {
+      logger.e("Cannot launch URL: $this");
+      return;
+    }
+
+    await launchUrl(uri);
   }
 
   bool get isSvgUrl {
@@ -116,6 +130,10 @@ extension StringExt on String {
 
       return '[**${match.group(0)}**](${match.group(0)?.buildProfileStringLink(knownIdMap: knownIdMap)})';
     });
+  }
+
+  String squashParagraphs() {
+    return replaceAll(RegExp(r'\n+'), ' ');
   }
 }
 

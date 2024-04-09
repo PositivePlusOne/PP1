@@ -32,7 +32,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// ignore: depend_on_referenced_packages, implementation_imports
 import 'package:stream_chat/src/client/retry_policy.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 import 'package:universal_platform/universal_platform.dart';
@@ -40,6 +39,8 @@ import 'package:universal_platform/universal_platform.dart';
 // Project imports:
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/system_controller.dart';
+
+// ignore: depend_on_referenced_packages, implementation_imports
 
 // ignore: unused_import
 
@@ -233,6 +234,8 @@ Future<FirebaseRemoteConfig> firebaseRemoteConfig(FirebaseRemoteConfigRef ref) a
   await instance.setDefaults(<String, dynamic>{
     SystemController.kFirebaseRemoteConfigFeedPromotionFrequencyKey: 4,
     SystemController.kFirebaseRemoteConfigChatPromotionFrequencyKey: 4,
+    SystemController.kFirebaseRemoteConfigFeedUpdateCheckFrequencyKey: 60,
+    SystemController.kFirebaseRemoteConfigFeedRefreshTimeoutKey: 1000,
   });
 
   await instance.fetchAndActivate();

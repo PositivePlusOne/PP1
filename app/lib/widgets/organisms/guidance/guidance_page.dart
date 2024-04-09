@@ -8,8 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/widgets/molecules/banners/positive_banner.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -37,7 +37,7 @@ class GuidancePage extends ConsumerWidget {
     final List<Widget> actions = [];
 
     if (profileControllerState.currentProfile != null) {
-      actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
+      actions.addAll(buildCommonProfilePageActions());
     }
 
     return PositiveScaffold(

@@ -1,6 +1,7 @@
 import { NotificationAction } from "../../../../constants/notification_actions";
 import { NotificationTopic } from "../../../../constants/notification_topics";
 import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
+import { StringHelpers } from "../../../../helpers/string_helpers";
 import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
@@ -15,21 +16,21 @@ export namespace ChatConnectionRejectedNotification {
    */
   export async function sendNotification(userProfile: any, target: any): Promise<void> {
     await LocalizationsService.changeLanguageToProfile(target);
-    const displayName = userProfile.displayName || "";
+    const displayName = StringHelpers.asHandle(userProfile.displayName || "");
 
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(target);
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_rejected.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_rejected.body", { displayName });
-    
+
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
     }
-    
+
     const id = FlamelinkHelpers.generateIdentifier();
     const groupId = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
-    
+
     const payload = new NotificationPayload({
       id,
       group_id: groupId,

@@ -40,8 +40,12 @@ export namespace StreamHelpers {
     if (feed.slug === "timeline") {
       return `user:${feed.userId}`;
     }
-    
+
     return `${feed.slug}:${feed.userId}`;
+  }
+
+  export function getOriginFromPersonalizedApiResponse(uid: string): string {
+    return `personalized_feed:${uid}`;
   }
 
   export function getStreamFeedFromOrigin(origin: string, client: StreamClient<DefaultGenerics>): StreamFeed {
@@ -56,7 +60,7 @@ export namespace StreamHelpers {
   export function getFeedFromOrigin(origin: string): string {
     const parts = origin.split(":");
     if (parts.length !== 2) {
-      return ""; 
+      return "";
     }
 
     return parts[0];

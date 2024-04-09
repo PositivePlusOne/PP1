@@ -171,6 +171,9 @@
     "page_home_blocker_title": "Thanks for showing an interest in Positive+1",
     "page_home_blocker_body": "To be able to create content, view profiles and connect with people you'll need to sign in or register for an account.",
     
+    "page_organisation_name_title": "Organisation Name",
+    "page_organisation_name_body": "Let's start with the basics",
+
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your full name",
     "page_profile_name_entry_description_update": "Going for a new moniker? Cool! What's your new name?",
@@ -179,7 +182,7 @@
     "page_profile_name_entry_input_label": "Your Name",
     "page_profile_name_error_moderation_flagged": "This name violates our community guidelines, and cannot be used. Please enter a name that does not contain profanity or at-risk terms.",
 
-    "page_profile_display_name_entry_description": "Time to shine. How would you like to be known?",
+    "page_profile_display_name_body": "Time to shine. How would you like to be known?",
 
     "page_profile_birthday_title": "Your Birthday",
     "page_profile_birthday_description": "Positive+1 aims to support everyone, however due to the nature of some of the guidance and material others may post Positive+1 can only be used by people above the age of 13.",
@@ -233,16 +236,16 @@
     "page_profile_location_errors_search_failed": "We couldn’t find that location. Please try again or use the Find Me button above.",
     "page_profile_location_errors_location_failed": "We could not find you, please try again.",
 
-    "page_profile_biometrics_title": "Biometrics",
-    "page_profile_biometrics_instruction": "Enable Biometrics to get quick access to your account. If this is not enabled you will need to input your password whenever you return to your account.",
-    "page_profile_biometrics_action": "Turn On Biometrics",
-    "page_profile_biometrics_do_not_enable": "Do not enable biometrics",
-    "page_profile_biometrics_disabled_title": "Biometrics Disabled",
-    "page_profile_biometrics_disabled_body": "Biometrics were successfully removed",
-    "page_profile_biometrics_none_available": "There are no biometrics available on this device to use.\nPlease enable them on your phone if you want to use them",
+    "page_profile_biometrics_title": "Secure Your\nAccount",
+    "page_profile_biometrics_instruction": "Enabling Local authentication adds an extra layer of security to your P+1 account. When enabled, you will need to pass your device’s authentication (biometrics/PIN) to access your P+1 account after a period of inactivity.\n\nYou can change this at any time in App Preferences.",
+    "page_profile_biometrics_action": "Turn On Local Authentication",
+    "page_profile_biometrics_do_not_enable": "Do not enable Local Authentication",
+    "page_profile_biometrics_disabled_title": "Local Authentication Disabled",
+    "page_profile_biometrics_disabled_body": "Local Authentication was successfully removed",
+    "page_profile_biometrics_none_available": "There are no Local Authentication systems available on this device to use.\nPlease enable them on your phone if you would like to use them",
     "page_profile_biometrics_error_title": "Sorry",
     "page_profile_biometrics_success_title": "Thanks",
-    "page_profile_biometrics_success_body": "We have enabled enhanced protection through the use of your biometric data.",
+    "page_profile_biometrics_success_body": "We have enabled enhanced protection through the use of your devices Authentication",
 
     "page_profile_image_selfie_pending": "Position your face inside the oval",
     "page_profile_image_selfie_ready": "Selfie Ready!",
@@ -329,13 +332,24 @@
     "page_account_actions_change_return_account_details": "Back to Account Details",
 
     "page_account_actions_change_password": "Change Password",
+    "page_account_actions_change_disable_email_sign_in": "Disable Email/Password Sign In",
     "page_account_actions_change_disable_google_sign_in": "Disable Google Sign In",
     "page_account_actions_change_disable_apple_sign_in": "Disable Apple Sign In",
     "page_account_actions_change_disable_facebook_sign_in": "Disable Facebook Sign In",
+    "page_account_actions_change_connect_email_account": "Connect Email",
     "page_account_actions_change_connect_social_account": "Connect Social Account",
     "page_account_actions_change_delete_account": "Delete Account",
     "page_account_actions_change_undelete_account": "Cancel Account Deletion",
     "page_account_actions_change_delete_account_pending": "Your account has been flagged for deletion and will be deleted in the next 24 hours",
+
+    "page_account_actions_biometrics_face_ios": "FaceID",
+    "page_account_actions_biometrics_face_android": "Biometrics",
+    "page_account_actions_biometrics_iris": "Iris",
+    "page_account_actions_biometrics_bio": "Biometrics",
+    "page_account_actions_biometrics_pin": "Pin",
+    "page_account_actions_biometrics_na": "No valid biometrics found",
+
+    "page_account_actions_biometrics_body": "Enabling {biometric} adds an extra layer of security to your P+1 account. When enabled, you will need to pass your device's {biometric} authentication to access your P+1 account after a period of inactivity.",
 
     "page_account_actions_change_delete_account_splash_title": "We are sorry to see you go",
     "page_account_actions_change_delete_account_splash_body": "We will ask that you are absolutely sure that you wish to delete your account.",
@@ -431,6 +445,8 @@
     "page_account_verify_account_title": "Verify Account",
     "page_account_verify_account_body": "Can we confirm your password so we know that it is you!",
     "page_account_verify_account_password_forgotten": "Forgotten Password",
+    
+    "page_account_build_number": "Build Version: ",
 
     "page_chat_action_start_conversation": "Start Chat",
     "page_chat_label_user_type": "User Type",
@@ -718,7 +734,11 @@
     "shared_profile_tagline": "Positive+1 Member",
     "shared_profile_unknown_location": "Location not shared",
     "shared_profile_display_name": "Display Name",
+    "shared_profile_name": "Name",
     "shared_profile_title" : "Profile",
+
+    "shared_organisation_name": "Organisation Name",
+    "shared_organisation_display_name": "Organisation Display Name",
 
     "shared_profile_modal_action_view_profile": "View Profile",
     "shared_profile_modal_action_follow": "Follow {displayName}",

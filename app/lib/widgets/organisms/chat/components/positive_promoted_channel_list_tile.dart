@@ -13,7 +13,6 @@ import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
@@ -48,6 +47,7 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(kPaddingSmall),
+        constraints: const BoxConstraints(maxHeight: kIconHuge + 2 * kPaddingSmall),
         decoration: BoxDecoration(
           color: colors.white,
           borderRadius: BorderRadius.circular(40.0),
@@ -64,22 +64,26 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    owner.getSafeDisplayName(localizations),
-                    maxLines: 1,
-                    style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                  FittedBox(
+                    child: Text(
+                      promotion.title,
+                      maxLines: 1,
+                      style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                    ),
                   ),
                   if (promotedDescription.isNotEmpty) ...<Widget>[
-                    Text(
-                      promotedDescription,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: typography.styleSubtext.copyWith(color: colors.colorGray4),
+                    Flexible(
+                      child: Text(
+                        promotedDescription,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: typography.styleSubtext.copyWith(color: colors.colorGray4),
+                      ),
                     ),
                   ],
                   Text(
                     promotion.linkText.isEmpty ? localizations.shared_actions_view_more : promotion.linkText,
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: typography.styleSubtext.copyWith(color: colors.linkBlue),
                   ),
@@ -99,13 +103,13 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
                 children: <Widget>[
                   Icon(
                     UniconsLine.link_alt,
-                    color: colors.colorGray7,
+                    color: colors.colorGray6,
                     size: kIconExtraSmall,
                   ),
                   const SizedBox(width: kPaddingExtraSmall),
                   Text(
                     localizations.post_promoted_label,
-                    style: typography.styleSubtextBold.copyWith(color: colors.colorGray7),
+                    style: typography.styleSubtextBold.copyWith(color: colors.colorGray6),
                   ),
                 ],
               ),

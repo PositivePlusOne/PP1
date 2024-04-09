@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -17,17 +18,16 @@ import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/buttons/select_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import '../../../constants/design_constants.dart';
-import '../../../providers/system/design_controller.dart';
-import '../../atoms/buttons/enumerations/positive_button_style.dart';
-import '../../atoms/buttons/positive_button.dart';
-import '../../atoms/buttons/select_button.dart';
-import '../../atoms/indicators/positive_page_indicator.dart';
 
 @RoutePage()
 class ProfileHivStatusPage extends ConsumerWidget {

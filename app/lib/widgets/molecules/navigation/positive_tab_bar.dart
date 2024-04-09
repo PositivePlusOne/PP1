@@ -16,21 +16,30 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import '../../atoms/buttons/positive_button.dart';
 
+class PositiveTabEntry {
+  const PositiveTabEntry({
+    required this.title,
+    required this.colour,
+    this.isEnabled = true,
+  });
+
+  final String title;
+  final Color colour;
+  final bool isEnabled;
+}
+
 class PositiveTabBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveTabBar({
     required this.tabs,
     required this.onTapped,
-    required this.tabColours,
     this.margin = const EdgeInsets.all(kPaddingMedium),
     this.index = -1,
     super.key,
-  }) : assert(tabColours.length == tabs.length);
+  });
 
-  final List<String> tabs;
+  final List<PositiveTabEntry> tabs;
   final int index;
   final FutureOr<void> Function(int index) onTapped;
-
-  final List<Color> tabColours;
 
   final EdgeInsets? margin;
 
@@ -56,11 +65,12 @@ class PositiveTabBar extends ConsumerWidget implements PreferredSizeWidget {
       ),
       child: Row(
         children: <Widget>[
-          for (final String tab in tabs) ...<Widget>[
+          for (final tab in tabs.where((element) => element.isEnabled)) ...<Widget>[
             Expanded(
               child: PositiveTabItem(
-                label: tab,
-                primaryColour: tabColours[tabs.indexOf(tab)],
+                label: tab.title,
+                primaryColour: tab.colour,
+                isEnabled: tab.isEnabled,
                 isSelected: tabs.indexOf(tab) == index,
                 onTapped: () => onTapped(tabs.indexOf(tab)),
               ),
@@ -78,12 +88,14 @@ class PositiveTabItem extends ConsumerWidget {
     required this.onTapped,
     required this.primaryColour,
     this.isSelected = false,
+    this.isEnabled = true,
     super.key,
   });
 
   final String label;
   final FutureOr<void> Function() onTapped;
   final bool isSelected;
+  final bool isEnabled;
   final Color primaryColour;
 
   @override
@@ -92,6 +104,7 @@ class PositiveTabItem extends ConsumerWidget {
     final Color selectedTextColour = primaryColour.exceedsBrightnessUpperRestriction ? colours.colorGray7 : colours.white;
     return PositiveButton(
       colors: colours,
+      isDisabled: !isEnabled,
       iconColorOverride: isSelected ? selectedTextColour : colours.colorGray6,
       label: label,
       primaryColor: isSelected ? primaryColour : colours.white,

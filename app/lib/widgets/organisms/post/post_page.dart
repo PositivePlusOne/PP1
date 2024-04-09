@@ -20,10 +20,10 @@ import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/promotions_controller.dart';
@@ -123,7 +123,7 @@ class PostPage extends HookConsumerWidget {
     final List<Widget> actions = [];
 
     if (currentProfile != null) {
-      actions.addAll(currentProfile.buildCommonProfilePageActions());
+      actions.addAll(buildCommonProfilePageActions());
     }
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);

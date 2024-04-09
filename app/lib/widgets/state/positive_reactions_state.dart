@@ -17,6 +17,7 @@ class PositiveReactionsState with PositivePaginationControllerState {
     required this.pagingController,
     required this.activityId,
     required this.activityOrigin,
+    this.hasNewReactions = false,
     this.currentPaginationKey = '',
   });
 
@@ -33,6 +34,8 @@ class PositiveReactionsState with PositivePaginationControllerState {
 
   ReactionStatistics? _currentStatistics;
   ReactionStatistics? get currentStatistics => _currentStatistics;
+
+  bool hasNewReactions = false;
 
   @override
   String buildCacheKey() {

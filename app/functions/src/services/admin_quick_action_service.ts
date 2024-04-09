@@ -21,111 +21,117 @@ import { FixProfilesAction } from "./actions/fix_profiles_action";
 import { ClearServerCacheAction } from "./actions/clear_server_cache_action";
 
 export namespace AdminQuickActionService {
-    type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
+  type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
 
-    const actionMapping: { [key: string]: ActionFunction } = {
-        'deletePendingMembers': DeleteMemberAction.deletePendingMembers,
-        'removeOrganisationMember': RemoveOrganisationMemberAction.removeOrganisationMember,
-        'assignOrganisationMember': AssignOrganisationMemberAction.assignOrganisationMember,
-        'assignOrganisationOwner': AssignOrganisationOwnerAction.assignOrganisationOwner,
-        'removeOrganisationOwner': RemoveOrganisationOwnerAction.removeOrganisationOwner,
-        'clearFeed': ClearFeedAction.clearFeed,
-        'flagAccount': FlagAccountAction.flagAccount,
-        'removeAccountFlag': RemoveAccountFlagAction.removeAccountFlag,
-        'updateProfileImage': UpdateProfileImageAction.updateProfileImage,
-        'updateCoverImage': UpdateCoverImageAction.updateCoverImage,
-        'linkDirectoryEntry': LinkDirectoryEntryAction.linkDirectoryEntry,
-        'unlinkDirectoryEntry': UnlinkDirectoryEntryAction.unlinkDirectoryEntry,
-        'shufflePromotionSeeds': ShufflePromotionSeedsAction.shufflePromotionSeeds,
-        'fixProfileData': FixProfilesAction.fixProfiles,
-        'clearServerCache': ClearServerCacheAction.clearServerCache,
-    };
+  const actionMapping: { [key: string]: ActionFunction } = {
+    deletePendingMembers: DeleteMemberAction.deletePendingMembers,
+    removeOrganisationMember: RemoveOrganisationMemberAction.removeOrganisationMember,
+    assignOrganisationMember: AssignOrganisationMemberAction.assignOrganisationMember,
+    assignOrganisationOwner: AssignOrganisationOwnerAction.assignOrganisationOwner,
+    removeOrganisationOwner: RemoveOrganisationOwnerAction.removeOrganisationOwner,
+    clearFeed: ClearFeedAction.clearFeed,
+    flagAccount: FlagAccountAction.flagAccount,
+    removeAccountFlag: RemoveAccountFlagAction.removeAccountFlag,
+    updateProfileImage: UpdateProfileImageAction.updateProfileImage,
+    updateCoverImage: UpdateCoverImageAction.updateCoverImage,
+    linkDirectoryEntry: LinkDirectoryEntryAction.linkDirectoryEntry,
+    unlinkDirectoryEntry: UnlinkDirectoryEntryAction.unlinkDirectoryEntry,
+    shufflePromotionSeeds: ShufflePromotionSeedsAction.shufflePromotionSeeds,
+    fixProfileData: FixProfilesAction.fixProfiles,
+    clearServerCache: ClearServerCacheAction.clearServerCache,
+  };
 
-    export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {
-        try {
-            functions.logger.debug(`Processing quick action`, action);
-            if (!action.action) {
-                appendOutput(action, 'No action specified.');
-                updateStatus(action, 'error');
-                return;
-            }
+  export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {
+    try {
+      functions.logger.debug(`Processing quick action`, action);
+      if (!action.action) {
+        appendOutput(action, "No action specified.");
+        updateStatus(action, "error");
+        return;
+      }
 
-            appendOutput(action, `Processing action: ${action.action}`);
-            updateStatus(action, 'processing');
-            await saveQuickAction(action);
+      appendOutput(action, `Processing action: ${action.action}`);
+      updateStatus(action, "processing");
+      await saveQuickAction(action);
 
-            AdminQuickActionService.appendOutput(action, `Processing action ${action.action}`);
+      AdminQuickActionService.appendOutput(action, `Processing action ${action.action}`);
 
-            // Using dynamic function calls instead of the switch.
-            const actionFunction = getActionFunction(action.action);
-            if (actionFunction) {
-                await actionFunction(action);
-            } else {
-                appendOutput(action, `No action handler defined for action ${action.action}`);
-                updateStatus(action, 'error');
-            }
-        } catch (error) {
-            functions.logger.error(`Error processing quick action: ${error}`);
-            appendOutput(action, `Error processing action: ${error}`);
-            updateStatus(action, 'error');
-        } finally {
-            await saveQuickAction(action);
-        }
+      // Using dynamic function calls instead of the switch.
+      const actionFunction = getActionFunction(action.action);
+      if (actionFunction) {
+        await actionFunction(action);
+      } else {
+        appendOutput(action, `No action handler defined for action ${action.action}`);
+        updateStatus(action, "error");
+      }
+    } catch (error) {
+      functions.logger.error(`Error processing quick action: ${error}`);
+      appendOutput(action, `Error processing action: ${error}`);
+      updateStatus(action, "error");
+    } finally {
+      await saveQuickAction(action);
+    }
+  }
+
+  export function getActionFunction(actionName: string): ActionFunction | null {
+    return actionMapping[actionName] || null;
+  }
+
+  export async function saveQuickAction(action: AdminQuickActionJSON): Promise<void> {
+    const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
+    if (!action || !actionId) {
+      functions.logger.error(`No action ID specified`);
+      return Promise.resolve();
     }
 
-    export function getActionFunction(actionName: string): ActionFunction | null {
-        return actionMapping[actionName] || null;
+    return DataService.updateDocument({
+      schemaKey: "adminQuickActions",
+      entryId: actionId,
+      data: action,
+    });
+  }
+
+  export function appendOutput(action: AdminQuickActionJSON, output: string): AdminQuickActionJSON {
+    if (!output) {
+      functions.logger.warn(`No output specified, cannot persist output`);
+      return action;
     }
 
-    export async function saveQuickAction(action: AdminQuickActionJSON): Promise<void> {
-        const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
-        if (!action || !actionId) {
-            functions.logger.error(`No action ID specified`);
-            return Promise.resolve();
-        }
-
-        return DataService.updateDocument({
-            schemaKey: 'adminQuickActions',
-            entryId: actionId,
-            data: action,
-        });
+    functions.logger.debug(output);
+    const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
+    if (!action || !actionId) {
+      functions.logger.warn(`No action ID specified, cannot persist output`);
+      return action;
     }
 
-    export function appendOutput(action: AdminQuickActionJSON, output: string): AdminQuickActionJSON {
-        const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
-        if (!action || !actionId) {
-            functions.logger.error(`No action ID specified`);
-            return action;
-        }
+    const oldOutput = action.output || "";
+    const newOutput = output || "";
 
-        const oldOutput = action.output || '';
-        const newOutput = output || '';
-
-        if (oldOutput === newOutput) {
-            functions.logger.debug(`No output change for action ${actionId}`);
-            return action;
-        }
-
-        action.output = oldOutput + '\n' + newOutput;
-        return action;
+    if (oldOutput === newOutput) {
+      functions.logger.debug(`No output change for action ${actionId}`);
+      return action;
     }
 
-    export function updateStatus(action: AdminQuickActionJSON, status: string): AdminQuickActionJSON {
-        const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
-        if (!action || !actionId) {
-            functions.logger.error(`No action ID specified`);
-            return action;
-        }
+    action.output = oldOutput + "\n" + newOutput;
+    return action;
+  }
 
-        const oldStatus = action.status || '';
-        const newStatus = status || '';
-
-        if (oldStatus === newStatus) {
-            functions.logger.debug(`No status change for action ${actionId}`);
-            return action;
-        }
-
-        action.status = status;
-        return action;
+  export function updateStatus(action: AdminQuickActionJSON, status: string): AdminQuickActionJSON {
+    const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
+    if (!action || !actionId) {
+      functions.logger.warn(`No action ID specified`);
+      return action;
     }
+
+    const oldStatus = action.status || "";
+    const newStatus = status || "";
+
+    if (oldStatus === newStatus) {
+      functions.logger.debug(`No status change for action ${actionId}`);
+      return action;
+    }
+
+    action.status = status;
+    return action;
+  }
 }

@@ -525,13 +525,11 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       publisherRelationship: publisherRelationship,
     );
 
-    final bool isPublisher = currentProfileId == publisherId;
-
     return PositivePostActions(
       padding: EdgeInsets.symmetric(horizontal: sidePadding + kPaddingSmallMedium, vertical: kPaddingSmall),
       isLiked: isLiked,
       likes: totalLikes,
-      likesEnabled: !isBusy && !isPublisher && likesEnabled,
+      likesEnabled: !isBusy && likesEnabled,
       onLike: onLike,
       shareEnabled: !isBusy && canActShare,
       onShare: onShare,

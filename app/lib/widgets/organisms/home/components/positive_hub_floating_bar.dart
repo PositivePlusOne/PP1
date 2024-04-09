@@ -15,7 +15,6 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
   const PositiveHubFloatingBar({
     required this.tabs,
     required this.onTapped,
-    required this.tabColours,
     this.topics = const <Tag>[],
     this.margin = const EdgeInsets.all(kPaddingMedium),
     this.onTopicSelected,
@@ -25,11 +24,10 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
     super.key,
   });
 
-  final List<String> tabs;
+  final List<PositiveTabEntry> tabs;
   final int index;
   final Future<void> Function(int index) onTapped;
   final List<Tag> topics;
-  final List<Color> tabColours;
 
   final Profile? currentProfile;
 
@@ -56,6 +54,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bool hasMultipleTabs = tabs.where((element) => element.isEnabled).length > 1;
     return Column(
       children: [
         const SizedBox(height: kPaddingMedium),
@@ -68,12 +67,13 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
           ),
         },
         const SizedBox(height: kPaddingMedium),
-        PositiveTabBar(
-          index: index,
-          onTapped: onTapped,
-          tabColours: tabColours,
-          tabs: tabs,
-        ),
+        if (hasMultipleTabs) ...[
+          PositiveTabBar(
+            index: index,
+            onTapped: onTapped,
+            tabs: tabs,
+          ),
+        ],
       ],
     );
   }

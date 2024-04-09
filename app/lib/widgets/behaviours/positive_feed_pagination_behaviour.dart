@@ -1,7 +1,6 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -11,7 +10,6 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -26,11 +24,9 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
-import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/event_hook.dart';
 import 'package:app/hooks/paging_controller_hook.dart';
@@ -43,9 +39,11 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
-import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
+import 'package:app/widgets/behaviours/components/no_posts_placeholder.dart';
+import 'package:app/widgets/behaviours/components/sliver_no_posts_placeholder.dart';
 import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
+import 'package:app/widgets/organisms/home/events/notify_feed_seen_event.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';
@@ -55,6 +53,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     required this.currentProfile,
     required this.feed,
     required this.feedState,
+    this.shouldPersonalize = false,
     this.windowSize = 20,
     this.isSliver = true,
     this.onPageLoaded,
@@ -64,12 +63,14 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   });
 
   final Profile? currentProfile;
+  final bool shouldPersonalize;
+
   final TargetFeed feed;
   final PositiveFeedState feedState;
   final int windowSize;
   final void Function()? onPageLoaded;
-  final Widget? emptyDataWidget;
 
+  final Widget? emptyDataWidget;
   final Widget? noPostsWidget;
 
   final bool isSliver;
@@ -77,7 +78,31 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
   static const int kCacheExtentHeightMultiplier = 5;
 
-  Future<void> requestNextPage(String pageKey) async {
+  Future<void> checkForNextPageEntries() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
+    logger.d('Checking for next page entries for feed: ${feed.targetSlug}');
+
+    try {
+      final EndpointResponse endpointResponse = await postApiService.listActivities(
+        targetSlug: feed.targetSlug,
+        targetUserId: feed.targetUserId,
+        shouldPersonalize: shouldPersonalize,
+        pagination: const Pagination(cursor: ''),
+      );
+
+      final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
+      final bool hasNewEntries = appendPotentialNewEntries(data);
+      if (hasNewEntries) {
+        logger.d('checkForNextPageEntries() - New entries found, saving state');
+        saveActivitiesState();
+      }
+    } catch (ex) {
+      logger.e('checkForNextPageEntries() - ex: $ex');
+    }
+  }
+
+  Future<void> requestPreviousPage(String pageKey) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
     final ActivitiesController activitiesController = providerContainer.read(activitiesControllerProvider.notifier);
@@ -88,6 +113,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       final EndpointResponse endpointResponse = await postApiService.listActivities(
         targetSlug: feed.targetSlug,
         targetUserId: feed.targetUserId,
+        shouldPersonalize: shouldPersonalize,
         pagination: Pagination(
           cursor: feedState.currentPaginationKey,
         ),
@@ -143,6 +169,50 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     feedState.pagingController.appendSafePage(activities, next ?? '');
   }
 
+  bool appendPotentialNewEntries(Map<String, dynamic> data) {
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    final List<dynamic> activityData = data['activities'] as List<dynamic>;
+    final List<Activity> newActivities = [];
+
+    for (final dynamic activity in activityData) {
+      final Map<String, dynamic> activityMap = activity as Map<String, dynamic>;
+      final Activity activityObject = Activity.fromJson(activityMap);
+      final String activityId = activityObject.flMeta?.id ?? '';
+
+      if (activityId.isEmpty) {
+        continue;
+      }
+
+      if (feedState.knownActivities.contains(activityId)) {
+        continue;
+      }
+
+      feedState.knownActivities.add(activityId);
+      newActivities.add(activityObject);
+    }
+
+    if (newActivities.isEmpty) {
+      logger.d('appendPotentialNewEntries() - No activities to append');
+      return false;
+    }
+
+    logger.d('appendPotentialNewEntries() - activityList.length: ${newActivities.length}');
+
+    // Create a new copy of the item list, appending the new items to the start
+    final List<Activity> currentItems = feedState.pagingController.itemList ?? [];
+    final List<Activity> newItems = [...newActivities, ...currentItems];
+    feedState.pagingController.value = PagingState<String, Activity>(
+      itemList: newItems,
+      error: null,
+      nextPageKey: feedState.pagingController.nextPageKey,
+    );
+
+    // Add a flag so that the UI can let the user know that new items have been found!
+    feedState.hasNewItems = true;
+    return true;
+  }
+
   void saveActivitiesState() {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -186,11 +256,24 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
-          return element.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship);
+          return element.canDisplayOnFeed(
+            currentProfile: currentProfile,
+            relationshipWithActivityPublisher: relationship,
+            hideWhenMatchesPromotionKey: true,
+          );
         }) ??
         false;
 
     return !canDisplayAny;
+  }
+
+  void notifySeenItems() {
+    if (!feedState.hasNewItems) {
+      return;
+    }
+
+    feedState.hasNewItems = false;
+    saveActivitiesState();
   }
 
   @override
@@ -200,11 +283,20 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     usePagingController(
       controller: feedState.pagingController,
-      listener: requestNextPage,
+      onPreviousPage: requestPreviousPage,
+      onNextPage: checkForNextPageEntries,
+    );
+
+    useEventHook<NotifyFeedSeedEvent>(
+      onEvent: (_) {
+        notifySeenItems();
+      },
     );
 
     useEventHook<RequestRefreshEvent>(
-      onEvent: (_) => feedState.onRefresh(),
+      onEvent: (_) {
+        feedState.onRefresh();
+      },
     );
 
     final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts(currentProfile: currentProfile);
@@ -228,9 +320,16 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     const Widget loadingIndicator = PositivePostLoadingIndicator();
     if (isSliver) {
-      return buildSliverFeed(context, loadingIndicator, defaultNoPostsWidget);
+      return buildSliverFeed(
+        context: context,
+        loadingIndicator: loadingIndicator,
+        noPostsWidget: defaultNoPostsWidget,
+      );
     } else {
-      return buildFeed(context, loadingIndicator);
+      return buildFeed(
+        context: context,
+        loadingIndicator: loadingIndicator,
+      );
     }
   }
 
@@ -468,7 +567,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
     final Promotion? reposterPromotion = promotionsController.getPromotionFromActivityId(activityId: reposterActivityId, promotionType: PromotionType.feed);
 
-    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship) ?? false;
+    final bool canDisplay = activity?.canDisplayOnFeed(
+          currentProfile: currentProfile,
+          relationshipWithActivityPublisher: relationship,
+          hideWhenMatchesPromotionKey: true,
+        ) ??
+        false;
+
     if (!canDisplay) {
       return const SizedBox.shrink();
     }
@@ -529,7 +634,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return !states.contains(RelationshipState.targetBlocked) && !states.contains(RelationshipState.sourceHidden);
   }
 
-  Widget buildSliverFeed(BuildContext context, Widget loadingIndicator, Widget noPostsWidget) {
+  Widget buildSliverFeed({
+    required BuildContext context,
+    required Widget loadingIndicator,
+    required Widget noPostsWidget,
+  }) {
     final bool canDisplay = canDisplaySliverFeed;
     if (!canDisplay) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
@@ -556,7 +665,10 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     );
   }
 
-  Widget buildFeed(BuildContext context, Widget loadingIndicator) {
+  Widget buildFeed({
+    required BuildContext context,
+    required Widget loadingIndicator,
+  }) {
     final bool canDisplay = canDisplaySliverFeed;
     if (!canDisplay) {
       return const SizedBox.shrink();
@@ -580,112 +692,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
           feed: feed,
         ),
       ),
-    );
-  }
-}
-
-class SliverNoPostsPlaceholder extends StatelessWidget {
-  const SliverNoPostsPlaceholder({
-    super.key,
-    required this.typography,
-    required this.colors,
-    this.emptyDataWidget,
-  });
-
-  final DesignTypographyModel typography;
-  final DesignColorsModel colors;
-  final Widget? emptyDataWidget;
-
-  @override
-  Widget build(BuildContext context) {
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Size screenSize = mediaQueryData.size;
-    final double decorationBoxSize = min(screenSize.height / 2, 400);
-
-    return SliverStack(
-      positionedAlignment: Alignment.bottomCenter,
-      children: <Widget>[
-        SliverFillRemaining(
-          fillOverscroll: false,
-          hasScrollBody: false,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              height: decorationBoxSize,
-              width: decorationBoxSize,
-              child: Stack(children: buildType2ScaffoldDecorations(colors)),
-            ),
-          ),
-        ),
-        SliverPositioned(
-          left: 0.0,
-          right: 0.0,
-          top: kPaddingSmall,
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: emptyDataWidget ??
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 120.0),
-                  child: Text(
-                    appLocalizations.post_dialog_no_posts_to_display,
-                    textAlign: TextAlign.center,
-                    style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
-                  ),
-                ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class NoPostsPlaceholder extends StatelessWidget {
-  const NoPostsPlaceholder({
-    super.key,
-    required this.typography,
-    required this.colors,
-  });
-
-  final DesignTypographyModel typography;
-  final DesignColorsModel colors;
-
-  @override
-  Widget build(BuildContext context) {
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Size screenSize = mediaQueryData.size;
-    final double decorationBoxSize = min(screenSize.height / 2, 400);
-
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: <Widget>[
-        Positioned(
-          left: 0.0,
-          right: 0.0,
-          top: kPaddingSmall,
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 120.0),
-              child: Text(
-                'No Posts to Display',
-                textAlign: TextAlign.center,
-                style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
-              ),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: PositiveTileEntryAnimation(
-            direction: AxisDirection.down,
-            child: SizedBox(
-              height: decorationBoxSize,
-              width: decorationBoxSize,
-              child: Stack(children: buildType2ScaffoldDecorations(colors)),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

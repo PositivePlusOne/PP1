@@ -35,8 +35,8 @@ class _ForgottenPasswordRecoveryPageState extends ConsumerState<ForgottenPasswor
       title: localizations.page_registration_forgotten_password_recovery,
       body: localizations.page_registration_forgotten_password_recovery_body,
       canBack: true,
-      buttonText: localizations.page_registration_forgotten_password_recovery_button,
-      onContinueSelected: () => onContinueSelected(viewModel),
+      primaryActionText: localizations.page_registration_forgotten_password_recovery_button,
+      onPrimaryActionSelected: () => onContinueSelected(viewModel),
     );
   }
 }

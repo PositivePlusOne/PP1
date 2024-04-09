@@ -8,7 +8,6 @@ import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
 import { DataService } from "./data_service";
 import { FeedName } from "../constants/default_feeds";
-import { FeedEntry } from "../dto/stream";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FeedStatisticsService } from "./feed_statistics_service";
 import { ProfileJSON } from "../dto/profile";
@@ -67,10 +66,13 @@ export namespace ActivitiesService {
    * @return {Promise<ActivityJSON>} a promise that resolves to the activity.
    */
   export async function getActivity(id: string, skipCacheLookup = false): Promise<ActivityJSON> {
-    return await DataService.getDocument({
-      schemaKey: "activities",
-      entryId: id,
-    }, skipCacheLookup) as ActivityJSON;
+    return (await DataService.getDocument(
+      {
+        schemaKey: "activities",
+        entryId: id,
+      },
+      skipCacheLookup,
+    )) as ActivityJSON;
   }
 
   /**
@@ -79,27 +81,25 @@ export namespace ActivitiesService {
    * @return {Promise<ActivityJSON[]>} a promise that resolves to the activities.
    */
   export async function getActivities(ids: string[]): Promise<ActivityJSON[]> {
-    return await DataService.getBatchDocuments({
+    return (await DataService.getBatchDocuments({
       schemaKey: "activities",
       entryIds: ids,
-    }) as ActivityJSON[];
+    })) as ActivityJSON[];
   }
 
   export async function getActivitiesForProfile(profileId: string): Promise<ActivityJSON[]> {
-    return await DataService.getDocumentWindowRaw({
+    return (await DataService.getDocumentWindowRaw({
       schemaKey: "activities",
-      where: [
-        { fieldPath: "publisherInformation.publisherId", op: "==", value: profileId },
-      ],
-    }) as ActivityJSON[];
+      where: [{ fieldPath: "publisherInformation.publisherId", op: "==", value: profileId }],
+    })) as ActivityJSON[];
   }
 
   /**
    * Gets a list of activities from a list of feed entrys.
    * @param {FeedEntry[]} entrys the feed entrys to get the activities for.
-   * @return {Promise<ActivityJSON[]>} a promise that resolves to the activities.
+   * @return {Promise<any[]>} a promise that resolves to the activities.
    */
-  export async function getActivityFeedWindow(entrys: FeedEntry[]): Promise<any[]> {
+  export async function getActivityFeedWindow(entrys: any[]): Promise<any[]> {
     const activities = await getActivities(entrys.map((entry) => entry.object));
     return activities.filter((activity) => activity?._fl_meta_?.fl_id);
   }
@@ -132,15 +132,15 @@ export namespace ActivitiesService {
       foreign_id: activityObjectForeignId,
       time: creationTime,
     };
-    
+
     await feed.addActivity(getStreamActivity);
 
-    const activityResponse = await DataService.updateDocument({
+    const activityResponse = (await DataService.updateDocument({
       schemaKey: "activities",
       data: activity,
       entryId: activityObjectForeignId,
-    }) as ActivityJSON;
-    
+    })) as ActivityJSON;
+
     return activityResponse;
   }
 
@@ -227,7 +227,7 @@ export namespace ActivitiesService {
 
     // Perform relationship checks and remove any mentions that are not valid
     const tempMentions = [...newMentions];
-    const isEveryoneFlag = visibilityFlag === 'public';
+    const isEveryoneFlag = visibilityFlag === "public";
     newMentions = [];
 
     functions.logger.info("Sanitizing mentions", {
@@ -267,7 +267,7 @@ export namespace ActivitiesService {
             relationship,
           });
         }
-        
+
         continue;
       }
 
@@ -287,14 +287,14 @@ export namespace ActivitiesService {
       const isMentionedConnected = RelationshipHelpers.isUserConnected(mention.foreignKey, relationship);
       let canMention = true;
 
-      if (visibilityFlag === 'followers_and_connections' && !isMentionedFollowing) {
+      if (visibilityFlag === "followers_and_connections" && !isMentionedFollowing) {
         functions.logger.info("Mentioned user is not following", {
           mention,
           relationship,
         });
 
         canMention = false;
-      } else if (visibilityFlag === 'connections' && !isMentionedConnected) {
+      } else if (visibilityFlag === "connections" && !isMentionedConnected) {
         functions.logger.info("Mentioned user is not connected", {
           mention,
           relationship,
@@ -336,7 +336,7 @@ export namespace ActivitiesService {
 
     const publisherFeedStr = activity.publisherInformation?.originFeed ?? "";
     const reposterFeedStr = activity.repostConfiguration?.targetActivityOriginFeed ?? "";
-    
+
     // Split each feed into its components
     let originFeed = StreamHelpers.getFeedFromOrigin(publisherFeedStr);
     if (reposterFeedStr) {

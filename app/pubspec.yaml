@@ -45,12 +45,12 @@ dependencies:
   firebase_performance: ^0.9.3+3
   google_sign_in: ^6.1.4
   mixpanel_flutter: ^2.1.1
-  appsflyer_sdk: ^6.12.2
+  appsflyer_sdk: ^6.13.0+2
   freerasp: ^6.2.0
-  stream_chat_flutter: ^8.0.0-beta.1
+  stream_chat_flutter: ^8.0.0-beta.2
 
-  google_mlkit_face_detection: 0.6.0
-  google_mlkit_commons: 0.3.0
+  google_mlkit_face_detection: ^0.6.0
+  google_mlkit_commons: ^0.3.0
 
   # Logging and Tracing
   logger: ^2.0.1
@@ -78,19 +78,19 @@ dependencies:
   flutter_app_badger: ^1.5.0
 
   # Mapping
-  geolocator: ^10.0.0
+  geolocator: ^11.0.0
   google_maps_flutter: ^2.3.1
   flutter_google_maps_webservices: ^1.1.1
 
   # Routing, Linking, and Sharing
   auto_route: ^7.8.3
-  app_links: ^3.4.3
+  app_links: ^4.0.0
   share_plus: ^7.1.0
   
   # video and image
   camerawesome: ^2.0.0-dev.1
   mime: ^1.0.4
-  flutter_image_compress: ^2.0.4
+  flutter_image_compress: ^2.2.0
   video_editor: ^3.0.0
   ffmpeg_kit_flutter_full_gpl: ^6.0.3-LTS
   photo_view: ^0.14.0
@@ -98,12 +98,14 @@ dependencies:
   media_kit: ^1.1.10                             # Primary package.
   media_kit_video: ^1.2.4                        # For video rendering.
   media_kit_libs_video: ^1.0.4                   # Native video dependencies.
+  exif: ^3.3.0
+  image: ^4.1.4
 
   # Other
   path_provider: ^2.0.15
   transparent_image: ^2.0.1
-  open_settings_plus: 0.1.0
   package_info_plus: ^5.0.1
+  app_settings: ^5.1.1
   profanity_filter: ^2.0.0
   very_good_infinite_list: ^0.7.0
   url_launcher: ^6.1.12
@@ -125,7 +127,7 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   riverpod_lint: ^2.3.7
   import_sorter: ^4.6.0
-  custom_lint: ^0.5.2
+  custom_lint: ^0.6.0
 
   # Metaprogramming
   spider: ^4.2.1

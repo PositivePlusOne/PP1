@@ -42,10 +42,7 @@ export namespace ReactionGroupedCommentNotification {
       throw new Error("Unable to generate notification payload");
     }
 
-    const identifierParts = [
-      NotificationAction.POST_COMMENTED_GROUP, receiverId, activityId,
-    ];
-
+    const identifierParts = [NotificationAction.POST_COMMENTED_GROUP, receiverId, activityId];
 
     const id = FlamelinkHelpers.generateIdentifier();
     const groupId = FlamelinkHelpers.generateIdentifierFromStrings(identifierParts);

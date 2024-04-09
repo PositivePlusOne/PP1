@@ -9,7 +9,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/logger.dart';
+import 'package:logger/logger.dart' as logger;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +18,8 @@ import 'package:universal_platform/universal_platform.dart';
 // Project imports:
 import 'package:app/constants/application_constants.dart';
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
@@ -73,7 +75,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final PledgeControllerState pledgeController = await ref.read(asyncPledgeControllerProvider.future);
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final Logger log = ref.read(loggerProvider);
+    final logger.Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
     final bool exceedsEnumLength = newIndex >= SplashStyle.values.length;
@@ -91,17 +93,26 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
+    // Wait for the initial user state to be loaded, else the below checks will fail
+    final FirebaseAuth firebaseAuthInstance = ref.read(firebaseAuthProvider);
+    await firebaseAuthInstance.userChanges().first;
+
     // Check if the pledge has been completed or if the user has all required providers linked
     if (!userController.hasAnyProviderLinked || !pledgeController.arePledgesAccepted) {
       await userController.signOut(shouldNavigate: false);
     }
 
+    final bool isLoggedOut = firebaseAuth.currentUser == null;
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
+
+    if (!isLoggedOut) {
+      await systemController.biometricsReverification();
+    }
+
     try {
-      final SystemController systemController = ref.read(systemControllerProvider.notifier);
       await systemController.updateSystemConfiguration();
     } catch (ex) {
       log.e('Failed to preload build information. Error: $ex');
-      final bool isLoggedOut = firebaseAuth.currentUser == null;
 
       if (isLoggedOut) {
         await router.replace(const HomeRoute());
@@ -160,14 +171,19 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     //* Display various welcome back pages based on system state
     PageRouteInfo? nextRoute = const OnboardingWelcomeRoute();
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    if (profileController.currentProfileId != null && !profileController.hasSetupProfile) {
+    final Profile? currentProfile = profileController.currentProfile;
+    final bool hasProfile = currentProfile != null;
+    final bool hasSetupProfile = currentProfile?.isProfileSetup == true;
+
+    if (!hasSetupProfile) {
       nextRoute = ProfileWelcomeBackRoute(nextPage: const HomeRoute());
-    } else if (profileController.currentProfileId != null) {
+    } else if (hasProfile) {
       nextRoute = const HomeRoute();
     }
 
     // Add a delay so that the futures can complete and settle
     await Future<void>.delayed(kAnimationDurationFast);
+
     await router.replace(nextRoute);
   }
 }

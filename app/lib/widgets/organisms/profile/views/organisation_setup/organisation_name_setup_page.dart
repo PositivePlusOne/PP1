@@ -7,34 +7,38 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/formatters/lower_case_input_formatter.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/formatter_helpers.dart';
 import 'package:app/providers/enumerations/positive_togglable_state.dart';
+import 'package:app/providers/profiles/forms/profile_form_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import '../../../constants/design_constants.dart';
-import '../../../providers/system/design_controller.dart';
-import '../../atoms/indicators/positive_page_indicator.dart';
+import 'package:app/widgets/organisms/profile/views/organisation_setup/constants/organisation_setup_constants.dart';
 
 @RoutePage()
-class ProfileDisplayNameEntryPage extends ConsumerWidget {
-  const ProfileDisplayNameEntryPage({super.key});
+class OrganisationNameSetupPage extends ConsumerWidget {
+  const OrganisationNameSetupPage({super.key});
 
-  Color getTextFieldTintColor(ProfileFormController controller, DesignColorsModel colors) {
+  Color getDisplayNameTextFieldTintColor(ProfileFormController controller, DesignColorsModel colors) {
     if (controller.state.displayName.isEmpty) {
       return colors.purple;
     }
@@ -42,7 +46,15 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
     return controller.displayNameValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
-  PositiveTextFieldIcon? getTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors) {
+  Color getNameTextFieldTintColor(ProfileFormController controller, DesignColorsModel colors) {
+    if (controller.state.name.isEmpty) {
+      return colors.purple;
+    }
+
+    return controller.nameValidationResults.isNotEmpty ? colors.red : colors.green;
+  }
+
+  PositiveTextFieldIcon? getDisplayNameTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors) {
     if (controller.state.displayName.isEmpty) {
       return null;
     }
@@ -53,14 +65,37 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
           )
         : PositiveTextFieldIcon.success(
             backgroundColor: colors.green,
-            onTap: (context) => controller.onDisplayNameConfirmed(context),
+            onTap: (context) => controller.onProfileDisplayNameConfirmed(context),
           );
+  }
+
+  PositiveTextFieldIcon? getNameTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors) {
+    if (controller.state.name.isEmpty) {
+      return null;
+    }
+
+    return controller.nameValidationResults.isNotEmpty
+        ? PositiveTextFieldIcon.error(
+            backgroundColor: colors.red,
+          )
+        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
   }
 
   Widget getHint(BuildContext context, ProfileFormController controller, DesignColorsModel colors) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    if (controller.displayNameValidationResults.isNotEmpty && controller.state.displayName.isNotEmpty) {
-      final String errorMessage = localizations.fromObject(controller.displayNameValidationResults.first);
+    final bool isDisplayNameValid = controller.displayNameValidationResults.isEmpty && controller.state.displayName.isNotEmpty;
+    final bool isDisplayNameEmpty = controller.state.displayName.isEmpty;
+    final bool isNameValid = controller.nameValidationResults.isEmpty && controller.state.name.isNotEmpty;
+    final bool isNameEmpty = controller.state.name.isEmpty;
+
+    if (!isDisplayNameValid && !isNameValid && !isDisplayNameEmpty && !isNameEmpty) {
+      String errorMessage = '';
+      if (controller.displayNameValidationResults.isNotEmpty) {
+        errorMessage = localizations.fromObject(controller.displayNameValidationResults.first);
+      } else if (controller.nameValidationResults.isNotEmpty) {
+        errorMessage = localizations.fromObject(controller.nameValidationResults.first);
+      }
+
       return PositiveHint.fromError(errorMessage, colors);
     } else {
       return const PositiveVisibilityHint(
@@ -80,8 +115,11 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final Color tintColor = getTextFieldTintColor(controller, colors);
-    final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
+    final Color displayNameTintColor = getDisplayNameTextFieldTintColor(controller, colors);
+    final PositiveTextFieldIcon? displayNameSuffixIcon = getDisplayNameTextFieldSuffixIcon(controller, colors);
+
+    final Color nameTintColor = getNameTextFieldTintColor(controller, colors);
+    final PositiveTextFieldIcon? nameSuffixIcon = getNameTextFieldSuffixIcon(controller, colors);
 
     return PositiveScaffold(
       onWillPopScope: () async => controller.onBackSelected(ProfileDisplayNameEntryRoute),
@@ -98,7 +136,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
             return PositiveButton(
               colors: colors,
               primaryColor: colors.black,
-              onTapped: () => controller.onDisplayNameConfirmed(context),
+              onTapped: () => controller.onDisplayNameAndNameConfirmed(context),
               isDisabled: !controller.isDisplayNameValid || (isSameDisplayName && state.formMode == FormMode.edit),
               label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
             );
@@ -108,50 +146,60 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            Consumer(
-              builder: (context, ref, child) {
-                final state = ref.watch(profileFormControllerProvider);
-                return Row(
-                  children: [
-                    PositiveButton(
-                      colors: colors,
-                      primaryColor: colors.black,
-                      onTapped: () => controller.onBackSelected(ProfileDisplayNameEntryRoute),
-                      label: localizations.shared_actions_back,
-                      isDisabled: state.isBusy,
-                      style: PositiveButtonStyle.text,
-                      layout: PositiveButtonLayout.textOnly,
-                      size: PositiveButtonSize.small,
-                    ),
-                    if (state.formMode == FormMode.create)
-                      PositivePageIndicator(
-                        color: colors.black,
-                        pagesNum: 5,
-                        currentPage: 1,
-                      ),
-                  ],
-                );
-              },
+            Row(
+              children: [
+                PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.black,
+                  onTapped: () => controller.onBackSelected(OrganisationNameSetupPage),
+                  label: localizations.shared_actions_back,
+                  isDisabled: true,
+                  style: PositiveButtonStyle.text,
+                  layout: PositiveButtonLayout.textOnly,
+                  size: PositiveButtonSize.small,
+                ),
+                if (state.formMode == FormMode.create)
+                  PositivePageIndicator(
+                    color: colors.black,
+                    pagesNum: kOrganisationSetupTotalSteps,
+                    currentPage: 0,
+                  ),
+              ],
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.shared_profile_display_name,
-              style: typography.styleHero.copyWith(color: colors.black),
+              localizations.page_organisation_name_title,
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingSmall),
+            const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_profile_display_name_entry_description,
+              localizations.page_organisation_name_body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveTextField(
-              labelText: localizations.shared_profile_display_name,
-              initialText: state.displayName,
-              onTextChanged: controller.onDisplayNameChanged,
-              tintColor: tintColor,
-              suffixIcon: suffixIcon,
+              labelText: localizations.shared_organisation_name,
+              initialText: state.name,
+              onTextChanged: controller.onNameChanged,
+              tintColor: nameTintColor,
+              suffixIcon: nameSuffixIcon,
               isEnabled: !state.isBusy,
               textInputType: TextInputType.text,
+              inputformatters: [removeNumbersFormatter()],
+              textCapitalization: TextCapitalization.none,
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveTextField(
+              labelText: localizations.shared_organisation_display_name,
+              initialText: state.displayName,
+              onTextChanged: controller.onDisplayNameChanged,
+              tintColor: displayNameTintColor,
+              suffixIcon: displayNameSuffixIcon,
+              isEnabled: !state.isBusy,
+              textInputType: TextInputType.text,
+              prefixIcon: const PositiveTextFieldText(
+                text: '@',
+              ),
               inputformatters: [LowerCaseInputFormatter()],
               textCapitalization: TextCapitalization.none,
             ),

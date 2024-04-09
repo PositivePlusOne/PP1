@@ -8,6 +8,9 @@ import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 
 part 'reactions.freezed.dart';
 part 'reactions.g.dart';
@@ -104,6 +107,7 @@ class TargetFeed with _$TargetFeed {
   const factory TargetFeed({
     @Default('') String targetSlug,
     @Default('') String targetUserId,
+    @Default(false) bool shouldPersonalize,
   }) = _TargetFeed;
 
   factory TargetFeed.fromJson(Map<String, dynamic> json) => _$TargetFeedFromJson(json);
@@ -121,14 +125,19 @@ class TargetFeed with _$TargetFeed {
 
   static TargetFeed fromOrigin(String origin) {
     final List<String> parts = origin.split(':');
-    if (parts.length != 2) {
+    if (parts.isEmpty) {
       return TargetFeed.empty();
     }
 
     final String feed = parts[0];
     final String slug = parts[1];
+    final bool shouldPersonalize = (parts.length > 2 ? parts[2] : '').toLowerCase() == 'should_personalize';
 
-    return TargetFeed(targetSlug: feed, targetUserId: slug);
+    return TargetFeed(
+      targetSlug: feed,
+      targetUserId: slug,
+      shouldPersonalize: shouldPersonalize,
+    );
   }
 
   static TargetFeed search() {
@@ -143,6 +152,34 @@ class TargetFeed with _$TargetFeed {
     return const TargetFeed(targetSlug: '', targetUserId: '');
   }
 
+  static bool isFeedDisabled(TargetFeed feed, List<TargetFeed> disabledFeeds) {
+    final bool isDisabled = disabledFeeds.contains(feed);
+    if (isDisabled) {
+      return true;
+    }
+
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final Profile? profile = profileController.currentProfile;
+
+    if (profile == null && feed.targetUserId.isEmpty) {
+      return true;
+    }
+
+    //! The disabled feeds may concain regex patterns, we need to check if the feed is disabled by a regex pattern
+    for (final TargetFeed disabledFeed in disabledFeeds) {
+      final bool isUniversalTargetUser = disabledFeed.targetUserId == '*';
+      final bool isUniversalTargetSlug = disabledFeed.targetSlug == '*';
+      final bool matchesTargetUser = disabledFeed.targetUserId == feed.targetUserId;
+      final bool matchesTargetSlug = disabledFeed.targetSlug == feed.targetSlug;
+
+      if ((isUniversalTargetUser || matchesTargetUser) && (isUniversalTargetSlug || matchesTargetSlug)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   static String toOrigin(TargetFeed targetFeed) {
     String slug = targetFeed.targetSlug;
 
@@ -151,6 +188,15 @@ class TargetFeed with _$TargetFeed {
       slug = 'user';
     }
 
-    return '$slug:${targetFeed.targetUserId}';
+    final StringBuffer buffer = StringBuffer();
+    buffer.write(slug);
+    buffer.write(':');
+    buffer.write(targetFeed.targetUserId);
+
+    if (targetFeed.shouldPersonalize) {
+      buffer.write(':should_personalize');
+    }
+
+    return buffer.toString();
   }
 }

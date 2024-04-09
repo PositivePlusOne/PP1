@@ -17,14 +17,14 @@ import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 
 @RoutePage()
-class BirthdayDeleteAccountPage extends ConsumerStatefulWidget {
-  const BirthdayDeleteAccountPage({super.key});
+class ProfileBirthdayDeleteAccountPage extends ConsumerStatefulWidget {
+  const ProfileBirthdayDeleteAccountPage({super.key});
 
   @override
-  ConsumerState<BirthdayDeleteAccountPage> createState() => _BirthdayDeleteAccountPageState();
+  ConsumerState<ProfileBirthdayDeleteAccountPage> createState() => _ProfileBirthdayDeleteAccountPageState();
 }
 
-class _BirthdayDeleteAccountPageState extends ConsumerState<BirthdayDeleteAccountPage> {
+class _ProfileBirthdayDeleteAccountPageState extends ConsumerState<ProfileBirthdayDeleteAccountPage> {
   bool _isDeleting = false;
   bool get isDeleting => _isDeleting;
   set isDeleting(bool value) {
@@ -64,9 +64,8 @@ class _BirthdayDeleteAccountPageState extends ConsumerState<BirthdayDeleteAccoun
     return PositiveGenericPage(
       title: localizations.page_profile_delete_account_title,
       body: localizations.page_profile_delete_account_body,
-      style: PositiveGenericPageStyle.decorated,
-      buttonText: localizations.shared_actions_continue_to_positive_plus_one,
-      onContinueSelected: onDeleteAccountSelected,
+      primaryActionText: localizations.shared_actions_continue_to_positive_plus_one,
+      onPrimaryActionSelected: onDeleteAccountSelected,
       isBusy: isDeleting,
       canBack: true,
       currentStepIndex: 2,

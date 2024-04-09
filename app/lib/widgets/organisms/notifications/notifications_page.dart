@@ -10,8 +10,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -41,8 +41,6 @@ class NotificationsPage extends HookConsumerWidget {
 
     final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
     ref.watch(notificationsViewModelProvider);
-
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     ref.watch(notificationsControllerProvider);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
@@ -57,8 +55,9 @@ class NotificationsPage extends HookConsumerWidget {
 
     String notificationCacheKey = '';
     if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) {
-      actions.addAll(currentProfile!.buildCommonProfilePageActions(disableNotifications: true));
-      notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(currentProfile.flMeta!.id!);
+      actions.addAll(buildCommonProfilePageActions(disableNotifications: true));
+      notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(currentProfile?.flMeta?.id ?? '');
+
       final PositiveNotificationsState? cachedFeedState = cacheController.get(notificationCacheKey);
       hasNotifications = cachedFeedState?.pagingController.itemList?.isNotEmpty ?? false;
       cacheKeys.add(notificationCacheKey);
@@ -121,10 +120,7 @@ class NotificationsPage extends HookConsumerWidget {
                           mode: CommunitiesDialogMode.select,
                           canCallToAction: false,
                           selectedProfiles: [profileState.currentProfile?.flMeta?.id ?? ''],
-                          onProfileSelected: (String id) {
-                            viewModel.switchProfile(id);
-                            Navigator.of(context).pop();
-                          },
+                          onProfileSelected: viewModel.onProfileSelected,
                         ),
                       );
                     },

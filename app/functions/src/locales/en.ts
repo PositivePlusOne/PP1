@@ -65,24 +65,24 @@ export const enTranslations = {
   notifications: {
     connection_accepted: {
       title: "Connection request accepted",
-      body: "**@{{displayName}}** has accepted your connection request.",
+      body: "**{{displayName}}** has accepted your connection request.",
     },
     connection_rejected: {
       title: "Connection request rejected",
-      body: "**@{{displayName}}** has rejected your connection request.",
+      body: "**{{displayName}}** has rejected your connection request.",
     },
     connection_received: {
       title: "Connection request received",
-      body: "Connection request from **@{{displayName}}**",
+      body: "Connection request from **{{displayName}}**",
     },
     connection_sent: {
       title: "Connection request sent",
-      body: "You have sent a new connection request to **@{{displayName}}**",
+      body: "You have sent a new connection request to **{{displayName}}**",
     },
     post_comment: {
       title: "New comment",
-      body: "**@{{displayName}}** commented on **{{shortBody}}**",
-      body_empty: "**@{{displayName}}** commented on your post",
+      body: "**{{displayName}}** commented on **{{shortBody}}**",
+      body_empty: "**{{displayName}}** commented on your post",
     },
     post_comment_grouped: {
       title: "New comment",
@@ -91,8 +91,8 @@ export const enTranslations = {
     },
     post_liked: {
       title: "New like",
-      body: "**@{{displayName}}** liked **{{shortBody}}**",
-      body_empty: "**@{{displayName}}** liked your post",
+      body: "**{{displayName}}** liked **{{shortBody}}**",
+      body_empty: "**{{displayName}}** liked your post",
     },
     post_liked_grouped: {
       title: "New like",
@@ -101,8 +101,8 @@ export const enTranslations = {
     },
     post_shared: {
       title: "New share",
-      body: "**@{{displayName}}** shared **{{shortBody}}**",
-      body_empty: "**@{{displayName}}** shared your post",
+      body: "**{{displayName}}** shared **{{shortBody}}**",
+      body_empty: "**{{displayName}}** shared your post",
     },
     post_shared_grouped: {
       title: "New share",
@@ -111,8 +111,8 @@ export const enTranslations = {
     },
     post_bookmarked: {
       title: "New bookmark",
-      body: "**@{{displayName}}** bookmarked **{{shortBody}}**",
-      body_empty: "**@{{displayName}}** bookmarked your post",
+      body: "**{{displayName}}** bookmarked **{{shortBody}}**",
+      body_empty: "**{{displayName}}** bookmarked your post",
     },
     post_bookmarked_grouped: {
       title: "New bookmark",
@@ -120,12 +120,16 @@ export const enTranslations = {
       body_empty: "**{{count}}** bookmarks on your post",
     },
     post_mentioned: {
-      title: "New Mention",
-      body: "**{{displayName}}** has mentioned you in their post: **{{shortBody}}**",
+      title: "New mention",
+      body: "**{{displayName}}** has mentioned you in their post: {{shortBody}}",
     },
     reaction_mentioned: {
-      title: "New Mention",
-      body: "**{{displayName}}** has mentioned you in a comment: **{{shortBody}}**",
+      title: "New mention",
+      body: "**{{displayName}}** has mentioned you in a comment: {{shortBody}}",
+    },
+    profile_followed: {
+      title: "New follower",
+      body: "**{{displayName}}** is now following you",
     },
   },
 };
