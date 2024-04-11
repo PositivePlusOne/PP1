@@ -171,8 +171,9 @@ class TargetFeed with _$TargetFeed {
       final bool isUniversalTargetSlug = disabledFeed.targetSlug == '*';
       final bool matchesTargetUser = disabledFeed.targetUserId == feed.targetUserId;
       final bool matchesTargetSlug = disabledFeed.targetSlug == feed.targetSlug;
+      final bool matchesPersonalize = disabledFeed.shouldPersonalize == feed.shouldPersonalize;
 
-      if ((isUniversalTargetUser || matchesTargetUser) && (isUniversalTargetSlug || matchesTargetSlug)) {
+      if ((isUniversalTargetUser || matchesTargetUser) && (isUniversalTargetSlug || matchesTargetSlug) && matchesPersonalize) {
         return true;
       }
     }

@@ -79,7 +79,7 @@ class HomePage extends HookConsumerWidget {
     );
 
     final TargetFeed followingFeed = TargetFeed(
-      targetSlug: 'user',
+      targetSlug: 'timeline',
       targetUserId: currentProfileId,
     );
 
@@ -92,25 +92,8 @@ class HomePage extends HookConsumerWidget {
       isSliver: true,
     );
 
-    final TargetFeed popularFeed = TargetFeed(
-      targetSlug: 'timeline',
-      targetUserId: currentProfileId,
-      shouldPersonalize: true,
-    );
-
-    final String expectedPopularFeedStateKey = PositiveFeedState.buildFeedCacheKey(popularFeed);
-    final PositiveFeedState popularFeedState = cacheController.get(expectedPopularFeedStateKey) ?? PositiveFeedState.buildNewState(feed: popularFeed, currentProfileId: currentProfileId);
-    final Widget popularFeedWidget = PositiveFeedPaginationBehaviour(
-      currentProfile: currentProfile,
-      feedState: popularFeedState,
-      feed: popularFeed,
-      isSliver: true,
-      shouldPersonalize: true,
-    );
-
     final List<TargetFeed> allTargetFeeds = <TargetFeed>[
       newFeed,
-      popularFeed,
       followingFeed,
     ];
 
@@ -119,15 +102,13 @@ class HomePage extends HookConsumerWidget {
 
     final Widget currentFeedWidget = switch (state.currentTabIndex) {
       0 => newFeedWidget,
-      1 => popularFeedWidget,
-      2 => followingFeedWidget,
+      1 => followingFeedWidget,
       (_) => const SizedBox.shrink(),
     };
 
     final PositiveFeedState currentFeedState = switch (state.currentTabIndex) {
       0 => newFeedState,
-      1 => popularFeedState,
-      2 => followingFeedState,
+      1 => followingFeedState,
       (_) => newFeedState,
     };
 
@@ -156,7 +137,6 @@ class HomePage extends HookConsumerWidget {
     final bool isCurrentTabDisabled = disabledFeeds.contains(currentTargetFeed);
 
     final bool isNewFeedDisabled = TargetFeed.isFeedDisabled(newFeed, disabledFeeds);
-    final bool isPopularFeedDisabled = TargetFeed.isFeedDisabled(popularFeed, disabledFeeds);
     final bool isFollowingFeedDisabled = TargetFeed.isFeedDisabled(followingFeed, disabledFeeds);
 
     return PositiveScaffold(
@@ -198,11 +178,6 @@ class HomePage extends HookConsumerWidget {
                     title: 'New',
                     colour: colors.green,
                     isEnabled: !isNewFeedDisabled,
-                  ),
-                  PositiveTabEntry(
-                    title: 'Popular',
-                    colour: colors.purple,
-                    isEnabled: !isPopularFeedDisabled,
                   ),
                   PositiveTabEntry(
                     title: 'Following',
