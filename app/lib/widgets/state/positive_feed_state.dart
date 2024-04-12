@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Package imports:
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 
@@ -10,6 +11,7 @@ import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/state/positive_pagination_controller_state.dart';
 
@@ -66,16 +68,18 @@ class PositiveFeedState with PositivePaginationControllerState {
         () async {
           final Logger logger = providerContainer.read(loggerProvider);
           final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+          final FirebaseRemoteConfig remoteConfig = await providerContainer.read(firebaseRemoteConfigProvider.future);
+
+          final int feedRefreshTimeout = remoteConfig.getInt(SystemController.kFirebaseRemoteConfigFeedRefreshTimeoutKey);
+          final Duration feedRefreshTimeoutDuration = Duration(seconds: feedRefreshTimeout);
+          final DateTime timeoutDatetime = DateTime.now().add(feedRefreshTimeoutDuration);
+
           logger.d('onRefresh()');
           cacheController.remove(buildCacheKey());
 
           // Wait until the first page is loaded
-          int counter = 0;
           bool isSuccessful = false;
-          while (counter < 10) {
-            await Future.delayed(const Duration(milliseconds: 500));
-            counter++;
-
+          while (DateTime.now().isBefore(timeoutDatetime)) {
             final PositiveFeedState? feedState = cacheController.get(buildCacheKey());
             if (feedState?.pagingController.itemList?.isNotEmpty == true) {
               isSuccessful = true;
@@ -86,11 +90,15 @@ class PositiveFeedState with PositivePaginationControllerState {
             if (feedState?.pagingController.error != null) {
               throw feedState?.pagingController.error!;
             }
+
+            await Future<void>.delayed(const Duration(milliseconds: 100));
           }
 
           if (!isSuccessful) {
             throw Exception('Failed to refresh feed');
           }
+
+          logger.d('onRefresh() completed');
         },
       );
 

@@ -63,7 +63,7 @@ class ProfileGenderSelectPage extends ConsumerWidget {
 
     return PositiveScaffold(
       onWillPopScope: () async => formController.onBackSelected(ProfileGenderSelectRoute),
-      controller: scrollController,
+      scrollController: scrollController,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: [

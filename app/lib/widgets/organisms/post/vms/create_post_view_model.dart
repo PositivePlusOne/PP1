@@ -1,9 +1,7 @@
 // Dart imports:
-import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/providers/system/system_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +17,7 @@ import 'package:unicons/unicons.dart';
 import 'package:video_editor/video_editor.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/mentions.dart';
@@ -38,6 +37,7 @@ import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:app/services/clip_ffmpeg_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
@@ -61,6 +61,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool isUploadingMedia,
     @Default(false) bool isCreatingPost,
     @Default(false) bool isEditingPost,
+    @Default(false) bool isMediaPreCompressed,
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.entry) CreatePostCurrentPage currentCreatePostPage,
     @Default('') String currentActivityID,
@@ -107,7 +108,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
   final TextEditingController promotionKeyTextController = TextEditingController();
 
   VideoEditorController? videoEditorController;
-  io.File? uneditedVideoFile;
+  File? uneditedVideoFile;
 
   bool get isRepost => state.previousActivity.postType == PostType.repost;
 
@@ -402,7 +403,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
       case CreatePostCurrentPage.createPostEditClip:
         try {
           state = state.copyWith(isProcessingMedia: true, isBusy: true);
-          final ({io.File file, Size size}) completer = await onClipEditFinish();
+          final ({File file, Size size}) completer = await onClipEditFinish();
           await onClipExported(completer.file, completer.size);
         } finally {
           state = state.copyWith(isProcessingMedia: false, isBusy: false);
@@ -724,7 +725,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
 
   //? Create video Post here
   Future<void> onVideoEditRequest(XFile xFile) async {
-    uneditedVideoFile = io.File(xFile.path);
+    uneditedVideoFile = File(xFile.path);
     await loadUneditedVideo();
   }
 
@@ -779,7 +780,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     return (file: outputFile, size: size);
   }
 
-  Future<void> onClipExported(io.File file, Size size) async {
+  Future<void> onClipExported(File file, Size size) async {
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
@@ -835,6 +836,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
       currentPostType: PostType.image,
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
+      isMediaPreCompressed: false,
     );
 
     return;
@@ -883,7 +885,11 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     state = state.copyWith(isBusy: true);
 
     try {
-      final List<XFile> media = await picker.pickMultiImage();
+      final List<XFile> media = await picker.pickMultiImage(
+        maxHeight: kImageCompressMaxWidth.toDouble(),
+        maxWidth: kImageCompressMaxHeight.toDouble(),
+        imageQuality: kImageCompressMaxQuality,
+      );
       if (media.isEmpty) {
         logger.d("onMultiImagePicker: image list is empty");
         return;
@@ -911,6 +917,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
           currentPostType: PostType.multiImage,
           activeButton: PositivePostNavigationActiveButton.flex,
           activeButtonFlexText: localisations.page_create_post_create,
+          isMediaPreCompressed: true,
         );
       } else {
         state = state.copyWith(
@@ -921,6 +928,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
           currentPostType: PostType.image,
           activeButton: PositivePostNavigationActiveButton.flex,
           activeButtonFlexText: localisations.shared_actions_done,
+          isMediaPreCompressed: true,
         );
       }
     } finally {
@@ -994,6 +1002,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
             filter: state.currentFilter,
             altText: altTextController.text.trim(),
             mimeType: e.mimeType ?? "",
+            forceCompression: !state.isMediaPreCompressed,
           ),
         ));
       }

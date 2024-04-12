@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:logger/logger.dart';
 import 'package:markdown_widget/config/all.dart';
 import 'package:markdown_widget/widget/all.dart';
 
@@ -16,6 +17,7 @@ import 'package:app/extensions/tag_extensions.dart';
 import 'package:app/helpers/markdown_truncator.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration_model.dart';
 import '../dtos/system/design_colors_model.dart';
@@ -70,7 +72,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
 
   // Add the tags to the start of the markdown as bolded text
   if (tagBuffer.isNotEmpty) {
-    markdown = '$markdown\n\n${tagBuffer.toString()}';
+    markdown = '$markdown\n${tagBuffer.toString()}';
   }
 
   return MarkdownWidget(
@@ -84,11 +86,24 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   );
 }
 
+void _onInternalLinkedTapped(void Function(String link)? onTapLink, String link) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  logger.d('Link tapped: $link');
+
+  if (onTapLink != null) {
+    onTapLink(link);
+  } else {
+    logger.d('No onTapLink function provided, attempting to launch URL: $link');
+    link.attemptToLaunchURL();
+  }
+}
+
 List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapLink, Brightness brightness = Brightness.light}) {
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
 
-  final Color textColor = brightness == Brightness.light ? colors.black : colors.white;
+  final Color textColor = brightness == Brightness.light ? colors.colorGray7 : colors.white;
+  final Color textBoldColor = brightness == Brightness.light ? colors.black : colors.white;
 
   return [
     PreConfig(
@@ -102,19 +117,12 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
     H2Config(style: typography.styleHeroSmall.copyWith(color: textColor)),
     H3Config(style: typography.styleTitle.copyWith(color: textColor)),
     H4Config(style: typography.styleTitleTwo.copyWith(color: textColor)),
-    H5Config(style: typography.styleSubtitleBold.copyWith(color: textColor)),
-    H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
+    H5Config(style: typography.styleSubtitleBold.copyWith(color: textBoldColor)),
+    H6Config(style: typography.styleSubtextBold.copyWith(color: textBoldColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
-      //TODO The link style is applied to all types of link including @'s, meaning we cannot do the blue underline for links only without further look into the package
       style: typography.styleBold.copyWith(color: colors.black),
-      onTap: (link) {
-        if (onTapLink != null) {
-          onTapLink(link);
-        } else {
-          link.attemptToLaunchURL();
-        }
-      },
+      onTap: (link) => _onInternalLinkedTapped(onTapLink, link),
     ),
     CodeConfig(style: typography.styleSubtitle.copyWith(color: textColor, fontFamily: 'AlbertSans')),
     BlockquoteConfig(sideColor: colors.purple, textColor: textColor),

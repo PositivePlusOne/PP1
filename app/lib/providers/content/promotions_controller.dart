@@ -57,6 +57,7 @@ abstract class IPromotionsController {
   Future<void> appendPromotions({Iterable<Promotion> promotions});
   Future<void> refreshValidPromotions();
   Promotion? getPromotionFromActivityId({required String activityId, required PromotionType promotionType});
+  bool isActivityPromoted({required String activityId, required PromotionType promotionType});
 }
 
 @Riverpod(keepAlive: true)
@@ -217,10 +218,6 @@ class PromotionsController extends _$PromotionsController implements IPromotions
       }
     }
 
-    logger.i('Found ${validFeedPromotionIds.length} valid feed promotions');
-    logger.i('Found ${validChatPromotionIds.length} valid chat promotions');
-    logger.i('Found ${validOwnedPromotionIds.length} valid owned promotions');
-
     final Map<String, Set<String>> validOwnedPromotionIdsMap = {
       ...state.validOwnedPromotionIds,
     };
@@ -286,5 +283,26 @@ class PromotionsController extends _$PromotionsController implements IPromotions
     }
 
     return null;
+  }
+
+  @override
+  bool isActivityPromoted({
+    required String activityId,
+    required PromotionType promotionType,
+  }) {
+    final Set<String> validPromotionIds = promotionType == PromotionType.feed ? state.validFeedPromotionIds : state.validChatPromotionIds;
+    if (validPromotionIds.isEmpty) {
+      return false;
+    }
+
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    for (final String promotionId in validPromotionIds) {
+      final Promotion? promotion = cacheController.get(promotionId);
+      if (promotion?.activityId == activityId) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

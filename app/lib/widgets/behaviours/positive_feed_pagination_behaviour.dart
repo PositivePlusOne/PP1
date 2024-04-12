@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:collection/collection.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -44,6 +43,7 @@ import 'package:app/widgets/behaviours/components/no_posts_placeholder.dart';
 import 'package:app/widgets/behaviours/components/sliver_no_posts_placeholder.dart';
 import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
+import 'package:app/widgets/organisms/home/events/notify_feed_seen_event.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';
@@ -69,8 +69,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   final PositiveFeedState feedState;
   final int windowSize;
   final void Function()? onPageLoaded;
-  final Widget? emptyDataWidget;
 
+  final Widget? emptyDataWidget;
   final Widget? noPostsWidget;
 
   final bool isSliver;
@@ -84,14 +84,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     logger.d('Checking for next page entries for feed: ${feed.targetSlug}');
 
     try {
-      // TODO -> Maybe API this somehow to make it better?
       final EndpointResponse endpointResponse = await postApiService.listActivities(
         targetSlug: feed.targetSlug,
         targetUserId: feed.targetUserId,
         shouldPersonalize: shouldPersonalize,
-        pagination: const Pagination(
-          cursor: '',
-        ),
+        pagination: const Pagination(cursor: ''),
       );
 
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
@@ -259,18 +256,24 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
-          return element.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship);
+          return element.canDisplayOnFeed(
+            currentProfile: currentProfile,
+            relationshipWithActivityPublisher: relationship,
+            hideWhenMatchesPromotionKey: true,
+          );
         }) ??
         false;
 
     return !canDisplayAny;
   }
 
-  void onScrollOccured(ScrollController controller) {
-    if (controller.offset <= 20.0 && feedState.hasNewItems) {
-      feedState.hasNewItems = false;
-      saveActivitiesState();
+  void notifySeenItems() {
+    if (!feedState.hasNewItems) {
+      return;
     }
+
+    feedState.hasNewItems = false;
+    saveActivitiesState();
   }
 
   @override
@@ -278,17 +281,22 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    final ScrollController scrollController = useScrollController();
-    scrollController.addListener(() => onScrollOccured(scrollController));
-
     usePagingController(
       controller: feedState.pagingController,
       onPreviousPage: requestPreviousPage,
       onNextPage: checkForNextPageEntries,
     );
 
+    useEventHook<NotifyFeedSeedEvent>(
+      onEvent: (_) {
+        notifySeenItems();
+      },
+    );
+
     useEventHook<RequestRefreshEvent>(
-      onEvent: (_) => feedState.onRefresh(),
+      onEvent: (_) {
+        feedState.onRefresh();
+      },
     );
 
     final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts(currentProfile: currentProfile);
@@ -314,14 +322,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     if (isSliver) {
       return buildSliverFeed(
         context: context,
-        scrollController: scrollController,
         loadingIndicator: loadingIndicator,
         noPostsWidget: defaultNoPostsWidget,
       );
     } else {
       return buildFeed(
         context: context,
-        scrollController: scrollController,
         loadingIndicator: loadingIndicator,
       );
     }
@@ -561,7 +567,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
     final Promotion? reposterPromotion = promotionsController.getPromotionFromActivityId(activityId: reposterActivityId, promotionType: PromotionType.feed);
 
-    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship) ?? false;
+    final bool canDisplay = activity?.canDisplayOnFeed(
+          currentProfile: currentProfile,
+          relationshipWithActivityPublisher: relationship,
+          hideWhenMatchesPromotionKey: true,
+        ) ??
+        false;
+
     if (!canDisplay) {
       return const SizedBox.shrink();
     }
@@ -624,7 +636,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   Widget buildSliverFeed({
     required BuildContext context,
-    required ScrollController scrollController,
     required Widget loadingIndicator,
     required Widget noPostsWidget,
   }) {
@@ -656,7 +667,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   Widget buildFeed({
     required BuildContext context,
-    required ScrollController scrollController,
     required Widget loadingIndicator,
   }) {
     final bool canDisplay = canDisplaySliverFeed;
@@ -667,7 +677,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return PagedListView.separated(
       pagingController: feedState.pagingController,
       separatorBuilder: buildSeparator,
-      scrollController: scrollController,
       addAutomaticKeepAlives: true,
       cacheExtent: MediaQuery.of(context).size.height * kCacheExtentHeightMultiplier,
       builderDelegate: PagedChildBuilderDelegate<Activity>(

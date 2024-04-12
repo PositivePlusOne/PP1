@@ -2,7 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/extensions/time_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,6 +24,7 @@ import 'package:app/extensions/chat_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/time_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
@@ -391,10 +391,9 @@ class ChatSelfUsernameRow extends StatelessWidget {
         ),
         const SizedBox(width: kPaddingExtraSmall),
         if (message.isEdited) ...<Widget>[
-          Icon(
-            UniconsLine.edit_alt,
-            color: colors.colorGray6,
-            size: kUniconIndicator,
+          Text(
+            '(Edited)',
+            style: typography.styleSubtext.copyWith(color: colors.colorGray6),
           ),
         ],
       ],
@@ -451,10 +450,9 @@ class ChatMemberUsernameRow extends StatelessWidget {
         if (message.isEdited) ...<Widget>[
           Padding(
             padding: const EdgeInsets.only(right: kPaddingExtraSmall),
-            child: Icon(
-              UniconsLine.edit_alt,
-              size: kUniconIndicator,
-              color: colors.colorGray6,
+            child: Text(
+              '(Edited)',
+              style: typography.styleSubtext.copyWith(color: colors.colorGray6),
             ),
           ),
         ],

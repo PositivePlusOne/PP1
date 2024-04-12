@@ -27,6 +27,7 @@ import { SystemService } from "../services/system_service";
 import { CacheService } from "../services/cache_service";
 import { PostMentionNotification } from "../services/builders/notifications/activities/post_mention_notification";
 import { MentionJSON } from "../dto/mentions";
+import { PostSharedNotification } from "../services/builders/notifications/activities/post_shared_notification";
 
 export namespace PostEndpoints {
   export const listActivities = functions
@@ -255,7 +256,6 @@ export namespace PostEndpoints {
       const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
       functions.logger.info(`Got validated tags`, { validatedTags });
-
       const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
       await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);
 
@@ -324,6 +324,14 @@ export namespace PostEndpoints {
 
         functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
         await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, userActivity);
+      }
+
+      if (repostTargetActivityPublisherId) {
+        const targetProfile = (await ProfileService.getProfile(repostTargetActivityPublisherId)) as ProfileJSON;
+        if (targetProfile) {
+          functions.logger.info(`Sending notification to repost target`, { targetProfile });
+          await PostSharedNotification.sendNotification(publisherProfile, targetProfile, userActivity);
+        }
       }
 
       functions.logger.info("Posted user activity", { feedActivity: userActivity });

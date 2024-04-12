@@ -296,7 +296,7 @@ export namespace ProfileEndpoints {
         displayName,
       });
 
-      const isValid = displayName.length >= 3 && displayName.length <= 15 && StringHelpers.isLowercaseAlphanumericWithSpecialChars(displayName);
+      const isValid = StringHelpers.isValidDisplayName(displayName);
       if (!isValid) {
         throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name string of at least 3 characters and no more than 15 characters");
       }

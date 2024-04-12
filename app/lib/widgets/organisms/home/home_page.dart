@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -15,18 +16,20 @@ import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/third_party.dart';
+import 'package:app/widgets/behaviours/hooks/feed_notifier_hook.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/home/events/notify_feed_seen_event.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import 'components/hub_app_bar_content.dart';
@@ -51,7 +54,6 @@ class HomePage extends HookConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     useLifecycleHook(viewModel);
-    usePageRefreshHook();
 
     final bool isLoggedOut = userController.currentUser == null;
     final List<Widget> actions = [
@@ -77,7 +79,7 @@ class HomePage extends HookConsumerWidget {
     );
 
     final TargetFeed followingFeed = TargetFeed(
-      targetSlug: 'user',
+      targetSlug: 'timeline',
       targetUserId: currentProfileId,
     );
 
@@ -90,46 +92,44 @@ class HomePage extends HookConsumerWidget {
       isSliver: true,
     );
 
-    final TargetFeed popularFeed = TargetFeed(
-      targetSlug: 'timeline',
-      targetUserId: currentProfileId,
-      shouldPersonalize: true,
-    );
-
-    final String expectedPopularFeedStateKey = PositiveFeedState.buildFeedCacheKey(popularFeed);
-    final PositiveFeedState popularFeedState = cacheController.get(expectedPopularFeedStateKey) ?? PositiveFeedState.buildNewState(feed: popularFeed, currentProfileId: currentProfileId);
-    final Widget popularFeedWidget = PositiveFeedPaginationBehaviour(
-      currentProfile: currentProfile,
-      feedState: popularFeedState,
-      feed: popularFeed,
-      isSliver: true,
-      shouldPersonalize: true,
-    );
-
     final List<TargetFeed> allTargetFeeds = <TargetFeed>[
       newFeed,
-      popularFeed,
       followingFeed,
     ];
 
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [...allTargetFeeds]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
-    final ScrollController controller = useScrollController();
-
     final Widget currentFeedWidget = switch (state.currentTabIndex) {
       0 => newFeedWidget,
-      1 => popularFeedWidget,
-      2 => followingFeedWidget,
+      1 => followingFeedWidget,
       (_) => const SizedBox.shrink(),
     };
 
     final PositiveFeedState currentFeedState = switch (state.currentTabIndex) {
       0 => newFeedState,
-      1 => popularFeedState,
-      2 => followingFeedState,
+      1 => followingFeedState,
       (_) => newFeedState,
     };
+
+    void Function()? scrollToTop;
+    String fabTitle = '';
+
+    final ScrollController scrollController = useScrollController();
+    final bool hasNewItems = useFeedNotifier(feedState: currentFeedState);
+    final EventBus eventBus = ref.read(eventBusProvider);
+
+    if (hasNewItems) {
+      fabTitle = 'New Posts';
+      scrollToTop = () {
+        eventBus.fire(NotifyFeedSeedEvent());
+        scrollController.animateTo(
+          0,
+          duration: kAnimationDurationRegular,
+          curve: kAnimationCurveDefault,
+        );
+      };
+    }
 
     // Check enabled state of the tabs
     final List<TargetFeed> disabledFeeds = ref.watch(systemControllerProvider.select((value) => value.disabledFeeds));
@@ -137,14 +137,15 @@ class HomePage extends HookConsumerWidget {
     final bool isCurrentTabDisabled = disabledFeeds.contains(currentTargetFeed);
 
     final bool isNewFeedDisabled = TargetFeed.isFeedDisabled(newFeed, disabledFeeds);
-    final bool isPopularFeedDisabled = TargetFeed.isFeedDisabled(popularFeed, disabledFeeds);
     final bool isFollowingFeedDisabled = TargetFeed.isFeedDisabled(followingFeed, disabledFeeds);
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
       onRefresh: () => currentFeedState.onRefresh(),
       appBarColor: colors.colorGray1,
-      controller: controller,
+      scrollController: scrollController,
+      floatingActionLabel: fabTitle,
+      onFloatingActionPressed: scrollToTop,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
@@ -153,7 +154,7 @@ class HomePage extends HookConsumerWidget {
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQueryData,
         index: NavigationBarIndex.hub,
-        scrollController: controller,
+        scrollController: scrollController,
       ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
@@ -177,11 +178,6 @@ class HomePage extends HookConsumerWidget {
                     title: 'New',
                     colour: colors.green,
                     isEnabled: !isNewFeedDisabled,
-                  ),
-                  PositiveTabEntry(
-                    title: 'Popular',
-                    colour: colors.purple,
-                    isEnabled: !isPopularFeedDisabled,
                   ),
                   PositiveTabEntry(
                     title: 'Following',

@@ -40,6 +40,14 @@ export namespace StringHelpers {
     return pattern.test(input);
   }
 
+  export function isValidDisplayName(input: string): boolean {
+    if (!input) {
+      return false;
+    }
+
+    return input.length <= 15 && input.length >= 3 && isLowercaseAlphanumericWithSpecialChars(input);
+  }
+
   export function isLowercaseAlphanumericWithSpecialChars(input: string): boolean {
     const pattern = /^[a-z0-9-_']+$/;
     return pattern.test(input);
