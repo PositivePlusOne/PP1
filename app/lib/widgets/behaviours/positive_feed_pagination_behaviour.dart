@@ -385,12 +385,10 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       relationship: relationship,
     );
 
+    // Prevent showing promoted posts if they are not supplied as a promotion
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
     final bool isPromoted = promotionsController.isActivityPromoted(activityId: activityId, promotionType: PromotionType.feed);
-    final bool isPromotionSupplied = activity != null;
-
-    // Prevent showing promoted posts if they are not supplied as a promotion
-    if (isPromoted && !isPromotionSupplied) {
+    if (isPromoted) {
       return const SizedBox.shrink();
     }
 
