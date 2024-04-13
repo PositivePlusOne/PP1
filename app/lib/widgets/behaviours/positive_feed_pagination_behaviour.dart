@@ -369,6 +369,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   Widget buildSeparator(BuildContext context, int index) {
     final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
+    final String activityId = activity?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String targetProfileId = activity?.publisherInformation?.publisherId ?? '';
 
@@ -383,6 +384,15 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       feed: feed,
       relationship: relationship,
     );
+
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+    final bool isPromoted = promotionsController.isActivityPromoted(activityId: activityId, promotionType: PromotionType.feed);
+    final bool isPromotionSupplied = activity != null;
+
+    // Prevent showing promoted posts if they are not supplied as a promotion
+    if (isPromoted && !isPromotionSupplied) {
+      return const SizedBox.shrink();
+    }
 
     final bool hasContent = doesItemHaveContent(feed: feed, item: activity ?? const Activity());
     if (!hasContent) {
@@ -542,6 +552,15 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String publisherId = item.publisherInformation?.publisherId ?? '';
     final String reposterId = item.repostConfiguration?.targetActivityPublisherId ?? '';
+
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+    final bool isPromoted = promotionsController.isActivityPromoted(activityId: activityId, promotionType: PromotionType.feed);
+    final bool isPromotionSupplied = promotion != null;
+
+    // Prevent showing promoted posts if they are not supplied as a promotion
+    if (isPromoted && !isPromotionSupplied) {
+      return const SizedBox.shrink();
+    }
 
     if (!doesItemHaveContent(feed: feed, item: item)) {
       return const SizedBox.shrink();
