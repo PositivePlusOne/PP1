@@ -201,7 +201,7 @@ extension ActivityExt on Activity {
   bool canDisplayOnFeed({
     required Profile? currentProfile,
     required Relationship? relationshipWithActivityPublisher,
-    required TargetFeed feed,
+    required TargetFeed? currentFeed,
     bool hideWhenMatchesPromotionKey = false,
   }) {
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
@@ -232,11 +232,11 @@ extension ActivityExt on Activity {
     // This logic needs to take into account the current user's relationship with the publisher and the security modes of the activities
     final ActivitySecurityConfigurationMode viewMode = securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
 
-    final bool isUserTimelineFeed = feed.targetSlug == 'timeline' && feed.targetUserId == currentProfileId;
+    final bool isUserTimelineFeed = currentFeed?.targetSlug == 'timeline' && currentFeed?.targetUserId == currentProfileId;
     final bool isFollowingFeed = states.contains(RelationshipState.sourceFollowed);
 
     // This is a safety measure to ensure that we don't show the post in the wrong feed
-    if (isUserTimelineFeed && !isFollowingFeed) {
+    if (isLoggedIn && isUserTimelineFeed && !isFollowingFeed) {
       return false;
     }
 
