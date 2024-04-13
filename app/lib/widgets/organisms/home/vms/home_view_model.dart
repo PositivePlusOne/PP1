@@ -77,33 +77,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
       logger.e('onFirstRender() - error requesting location permission: $e');
     }
 
-    checkFeedRefreshRequired();
     performProfileChecks();
-  }
-
-  Future<void> checkFeedRefreshRequired() async {
-    final Logger logger = ref.read(loggerProvider);
-    const TargetFeed everyoneTargetFeed = TargetFeed(
-      targetSlug: 'tags',
-      targetUserId: 'everyone',
-    );
-
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-    final String everyoneFeedStateKey = PositiveFeedState.buildFeedCacheKey(everyoneTargetFeed);
-    final PositiveFeedState? everyoneFeedState = cacheController.get(everyoneFeedStateKey);
-
-    if (everyoneFeedState == null) {
-      logger.d('checkFeedRefreshRequired() - everyoneFeedState is null');
-      return;
-    }
-
-    bool shouldRefresh = everyoneFeedState.pagingController.value.status == PagingStatus.noItemsFound;
-    if (shouldRefresh) {
-      logger.d('checkFeedRefreshRequired() - refreshing everyone feed');
-      await everyoneFeedState.onRefresh();
-    }
-
-    everyoneFeedState.pagingController.notifyListeners();
   }
 
   Future<void> performProfileChecks() async {
@@ -148,8 +122,6 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
   Future<void> onTabSelected(int index) async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onTabSelected() - index: $index');
-
-    checkFeedRefreshRequired();
 
     state = state.copyWith(currentTabIndex: index);
   }

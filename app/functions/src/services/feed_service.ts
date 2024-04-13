@@ -7,7 +7,7 @@ import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/defa
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
-import { TagsService } from "./tags_service";
+// import { TagsService } from "./tags_service";
 
 export namespace FeedService {
   let streamClient = null as StreamClient<DefaultGenerics> | null;
@@ -81,19 +81,23 @@ export namespace FeedService {
     }
 
     // We add the feed promotion tag to the user's tags to ensure that the user's timeline feed is subscribed to the feed promotion feed.
-    const additionalTags = [...(profile.tags ?? [])].map((tag) => TagsService.formatTag(tag));
+    // const additionalTags = [...(profile.tags ?? [])].map((tag) => TagsService.formatTag(tag));
 
     try {
       // Assumption check: The users flat feed should include predefined feeds including their own user feed.
       functions.logger.info("Verifying default timeline feed subscriptions for user", { userId });
       const expectedFeeds = [...DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS, { targetSlug: "user", targetUserId: userId }] as FeedRequestJSON[];
-      for (const additionalTag of additionalTags) {
-        if (additionalTag.length === 0) {
-          continue;
-        }
 
-        expectedFeeds.push({ targetSlug: "tags", targetUserId: additionalTag });
-      }
+
+      // The timeline for now will not be following any tags, but we will want to follow the user's tags in the future.
+      // To do this, we may want two timelines, one for the user's tags and one for the user's friends' tags.
+      // for (const additionalTag of additionalTags) {
+      //   if (additionalTag.length === 0) {
+      //     continue;
+      //   }
+
+      //   expectedFeeds.push({ targetSlug: "tags", targetUserId: additionalTag });
+      // }
 
       try {
         const userTimelineFeed = client.feed("timeline", userId);
