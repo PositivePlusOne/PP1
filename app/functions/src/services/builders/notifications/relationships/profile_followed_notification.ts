@@ -35,9 +35,6 @@ export namespace ProfileFollowedNotification {
       user_id: receiverId,
       title,
       body,
-      extra_data: {
-        origin,
-      },
       action: NotificationAction.NEW_FOLLOWER,
     });
 

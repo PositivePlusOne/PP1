@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -96,6 +97,11 @@ mixin ProfileSwitchMixin {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.i('[ProfileSwitchMixin.requestSwitchProfileDialog] - start');
 
+    // Prevent the onPause from the dialog causing the bio verification to be triggered.
+    // As we know we are already in a secure state.
+    final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
+    await systemController.updateBiometricsLastVerifiedTime();
+
     final String? newProfileId = await PositiveDialog.show(
       context: context,
       title: title,
@@ -112,15 +118,15 @@ mixin ProfileSwitchMixin {
     );
 
     logger.i('[ProfileSwitchMixin.requestSwitchProfileDialog] - end');
-
     if (newProfileId != null) {
       logger.d('[ProfileSwitchMixin.requestSwitchProfileDialog] - newProfileId: $newProfileId');
       if (requestSwitchProfile) {
         await switchProfile(newProfileId);
       }
-      
+
       return newProfileId;
     }
+
     return "";
   }
 
