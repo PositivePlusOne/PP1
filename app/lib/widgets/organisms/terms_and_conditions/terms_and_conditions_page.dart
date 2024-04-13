@@ -51,10 +51,7 @@ class TermsAndConditionsPage extends ConsumerWidget {
                   data: kTermsAndConditionsMarkdown,
                   selectable: false,
                   config: MarkdownConfig(
-                    configs: buildMarkdownWidgetConfig(
-                      brightness: Brightness.dark,
-                      onTapLink: (str) {},
-                    ),
+                    configs: buildMarkdownWidgetConfig(brightness: Brightness.dark),
                   ),
                 )
               ],

@@ -253,7 +253,15 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       'channel_type': channel.type,
     });
 
+    // Skip the chat list if we are already on the chat page
+    // This was we preserve having the home page in the stack
+    if (appRouter.current.name == ChatConversationsRoute.name) {
+      await appRouter.push(const ChatRoute());
+      return;
+    }
+
     await appRouter.replaceAll([
+      const HomeRoute(),
       const ChatConversationsRoute(),
       const ChatRoute(),
     ]);

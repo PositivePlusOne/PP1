@@ -260,6 +260,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
             currentProfile: currentProfile,
             relationshipWithActivityPublisher: relationship,
             hideWhenMatchesPromotionKey: true,
+            currentFeed: feed,
           );
         }) ??
         false;
@@ -388,7 +389,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final bool meetsRelationshipCheck = meetsRelationshipCheckForDisplay(relationship: relationship);
+    final bool meetsRelationshipCheck = meetsRelationshipCheckForDisplay(
+      relationship: relationship,
+      feed: feed,
+      currentProfileId: currentProfileId,
+    );
+
     if (!meetsRelationshipCheck) {
       return const SizedBox.shrink();
     }
@@ -436,12 +442,22 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String promotedActivityRelationshipId = [promotedActivityPublisherId, currentProfileId].asGUID;
     final Relationship? promotedActivityRelationship = cacheController.get(promotedActivityRelationshipId);
 
-    final bool canDisplayPromotedActivity = promotedActivity.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: promotedActivityRelationship);
+    final bool canDisplayPromotedActivity = promotedActivity.canDisplayOnFeed(
+      currentProfile: currentProfile,
+      relationshipWithActivityPublisher: promotedActivityRelationship,
+      currentFeed: feed,
+    );
+
     if (!canDisplayPromotedActivity) {
       return null;
     }
 
-    final bool meetsRelationshipCheck = meetsRelationshipCheckForDisplay(relationship: relationship);
+    final bool meetsRelationshipCheck = meetsRelationshipCheckForDisplay(
+      relationship: relationship,
+      feed: feed,
+      currentProfileId: currentProfileId,
+    );
+
     if (!meetsRelationshipCheck) {
       return null;
     }
@@ -487,16 +503,28 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   static bool meetsRelationshipCheckForDisplay({
-    Relationship? relationship,
+    required Relationship? relationship,
+    required TargetFeed? feed,
+    required String currentProfileId,
   }) {
-    if (relationship != null) {
-      final String currentProfileId = providerContainer.read(profileControllerProvider.select((value) => value.currentProfile?.flMeta?.id)) ?? '';
-      final Set<RelationshipState> states = relationship.relationshipStatesForEntity(currentProfileId);
-      final bool isBlocked = states.contains(RelationshipState.targetBlocked);
-      final bool isHidden = states.contains(RelationshipState.sourceHidden);
-      if (isBlocked || isHidden) {
+    final Set<RelationshipState> states = relationship?.relationshipStatesForEntity(currentProfileId) ?? <RelationshipState>{};
+    final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
+
+    if (feed != null) {
+      final bool isUserTimelineFeed = feed.targetSlug == 'timeline' && feed.targetUserId == currentProfileId;
+      if (isUserTimelineFeed && !isFollowing) {
         return false;
       }
+    }
+
+    if (relationship == null) {
+      return true;
+    }
+
+    final bool isBlocked = states.contains(RelationshipState.targetBlocked);
+    final bool isHidden = states.contains(RelationshipState.sourceHidden);
+    if (isBlocked || isHidden) {
+      return false;
     }
 
     return true;
@@ -571,6 +599,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
           currentProfile: currentProfile,
           relationshipWithActivityPublisher: relationship,
           hideWhenMatchesPromotionKey: true,
+          currentFeed: feed,
         ) ??
         false;
 
