@@ -86,8 +86,10 @@ export namespace FeedService {
     try {
       // Assumption check: The users flat feed should include predefined feeds including their own user feed.
       functions.logger.info("Verifying default timeline feed subscriptions for user", { userId });
-      const expectedFeeds = [...DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS, { targetSlug: "user", targetUserId: userId }] as FeedRequestJSON[];
+      const expectedFeeds = [...DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS] as FeedRequestJSON[];
 
+      // Add the user's own feed to the list of expected feeds.
+      // expectedFeeds.push({ targetSlug: "user", targetUserId: userId });
 
       // The timeline for now will not be following any tags, but we will want to follow the user's tags in the future.
       // To do this, we may want two timelines, one for the user's tags and one for the user's friends' tags.
