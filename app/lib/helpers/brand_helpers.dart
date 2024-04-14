@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -86,9 +87,21 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   );
 }
 
-void _onInternalLinkedTapped(void Function(String link)? onTapLink, String link) {
+Future<void> _onInternalLinkedTapped(void Function(String link)? onTapLink, String link) async {
   final Logger logger = providerContainer.read(loggerProvider);
   logger.d('Link tapped: $link');
+
+  // Check if the URL is a PP1 custom schema
+  // If it is, we can handle it internally
+  final Uri? uri = Uri.tryParse(link);
+  if (uri != null) {
+    final UniversalLinksController universalLinksController = providerContainer.read(universalLinksControllerProvider.notifier);
+    final bool canHandleInternally = await universalLinksController.canHandleLink(uri);
+    if (canHandleInternally) {
+      await universalLinksController.handleLink(uri);
+      return;
+    }
+  }
 
   if (onTapLink != null) {
     onTapLink(link);
