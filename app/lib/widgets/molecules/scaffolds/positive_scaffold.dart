@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -207,6 +208,9 @@ class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
       );
     }
 
+    final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
+    final bool shouldSecureScreen = systemControllerState.secureScreen;
+
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (widget.onWillPopScope ?? () async => true),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -249,6 +253,9 @@ class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
                         ),
                       ),
                     ),
+                  ],
+                  if (shouldSecureScreen) ...<Widget>[
+                    Positioned.fill(child: ColoredBox(color: colors.white)),
                   ],
                 ],
               ),

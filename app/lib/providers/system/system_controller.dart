@@ -53,8 +53,9 @@ class SystemControllerState with _$SystemControllerState {
     required SystemEnvironment environment,
     required bool showingSemanticsDebugger,
     required bool showingDebugMessages,
-    @Default(bool) hasPerformedInitialSetup,
+    @Default(false) hasPerformedInitialSetup,
     @Default([]) List<TargetFeed> disabledFeeds,
+    @Default(false) secureScreen,
     String? appName,
     String? packageName,
     String? version,
@@ -141,17 +142,23 @@ class SystemController extends _$SystemController {
       return;
     }
 
-    //? Authenticate via biometrics if the user is required to
-    final bool hasReauthenticated = await localAuthentication.authenticate(localizedReason: "Positive+1 needs to verify it's you");
-    await sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
-    if (!hasReauthenticated) {
-      final UserController userController = providerContainer.read(userControllerProvider.notifier);
-      final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-      final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
-      await userController.signOut();
-      profileController.resetState();
-      relationshipController.resetState();
-      await router.replace(LoginRoute(senderRoute: HomeRoute));
+    try {
+      //? Authenticate via biometrics if the user is required to
+      state = state.copyWith(secureScreen: true);
+      final bool hasReauthenticated = await localAuthentication.authenticate(localizedReason: "Positive+1 needs to verify it's you");
+      await sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
+
+      if (!hasReauthenticated) {
+        final UserController userController = providerContainer.read(userControllerProvider.notifier);
+        final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+        final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
+        await userController.signOut();
+        profileController.resetState();
+        relationshipController.resetState();
+        await router.replace(LoginRoute(senderRoute: HomeRoute));
+      }
+    } finally {
+      state = state.copyWith(secureScreen: false);
     }
   }
 

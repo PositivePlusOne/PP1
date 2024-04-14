@@ -21,6 +21,7 @@ mixin _$SystemControllerState {
   bool get showingDebugMessages => throw _privateConstructorUsedError;
   dynamic get hasPerformedInitialSetup => throw _privateConstructorUsedError;
   List<TargetFeed> get disabledFeeds => throw _privateConstructorUsedError;
+  dynamic get secureScreen => throw _privateConstructorUsedError;
   String? get appName => throw _privateConstructorUsedError;
   String? get packageName => throw _privateConstructorUsedError;
   String? get version => throw _privateConstructorUsedError;
@@ -43,6 +44,7 @@ abstract class $SystemControllerStateCopyWith<$Res> {
       bool showingDebugMessages,
       dynamic hasPerformedInitialSetup,
       List<TargetFeed> disabledFeeds,
+      dynamic secureScreen,
       String? appName,
       String? packageName,
       String? version,
@@ -68,6 +70,7 @@ class _$SystemControllerStateCopyWithImpl<$Res,
     Object? showingDebugMessages = null,
     Object? hasPerformedInitialSetup = freezed,
     Object? disabledFeeds = null,
+    Object? secureScreen = freezed,
     Object? appName = freezed,
     Object? packageName = freezed,
     Object? version = freezed,
@@ -94,6 +97,10 @@ class _$SystemControllerStateCopyWithImpl<$Res,
           ? _value.disabledFeeds
           : disabledFeeds // ignore: cast_nullable_to_non_nullable
               as List<TargetFeed>,
+      secureScreen: freezed == secureScreen
+          ? _value.secureScreen
+          : secureScreen // ignore: cast_nullable_to_non_nullable
+              as dynamic,
       appName: freezed == appName
           ? _value.appName
           : appName // ignore: cast_nullable_to_non_nullable
@@ -129,6 +136,7 @@ abstract class _$$SystemControllerStateImplCopyWith<$Res>
       bool showingDebugMessages,
       dynamic hasPerformedInitialSetup,
       List<TargetFeed> disabledFeeds,
+      dynamic secureScreen,
       String? appName,
       String? packageName,
       String? version,
@@ -152,6 +160,7 @@ class __$$SystemControllerStateImplCopyWithImpl<$Res>
     Object? showingDebugMessages = null,
     Object? hasPerformedInitialSetup = freezed,
     Object? disabledFeeds = null,
+    Object? secureScreen = freezed,
     Object? appName = freezed,
     Object? packageName = freezed,
     Object? version = freezed,
@@ -177,6 +186,8 @@ class __$$SystemControllerStateImplCopyWithImpl<$Res>
           ? _value._disabledFeeds
           : disabledFeeds // ignore: cast_nullable_to_non_nullable
               as List<TargetFeed>,
+      secureScreen:
+          freezed == secureScreen ? _value.secureScreen! : secureScreen,
       appName: freezed == appName
           ? _value.appName
           : appName // ignore: cast_nullable_to_non_nullable
@@ -208,6 +219,7 @@ class _$SystemControllerStateImpl
       required this.showingDebugMessages,
       this.hasPerformedInitialSetup = bool,
       final List<TargetFeed> disabledFeeds = const [],
+      this.secureScreen = false,
       this.appName,
       this.packageName,
       this.version,
@@ -233,6 +245,9 @@ class _$SystemControllerStateImpl
   }
 
   @override
+  @JsonKey()
+  final dynamic secureScreen;
+  @override
   final String? appName;
   @override
   final String? packageName;
@@ -243,7 +258,7 @@ class _$SystemControllerStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages, hasPerformedInitialSetup: $hasPerformedInitialSetup, disabledFeeds: $disabledFeeds, appName: $appName, packageName: $packageName, version: $version, buildNumber: $buildNumber)';
+    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages, hasPerformedInitialSetup: $hasPerformedInitialSetup, disabledFeeds: $disabledFeeds, secureScreen: $secureScreen, appName: $appName, packageName: $packageName, version: $version, buildNumber: $buildNumber)';
   }
 
   @override
@@ -258,6 +273,7 @@ class _$SystemControllerStateImpl
       ..add(DiagnosticsProperty(
           'hasPerformedInitialSetup', hasPerformedInitialSetup))
       ..add(DiagnosticsProperty('disabledFeeds', disabledFeeds))
+      ..add(DiagnosticsProperty('secureScreen', secureScreen))
       ..add(DiagnosticsProperty('appName', appName))
       ..add(DiagnosticsProperty('packageName', packageName))
       ..add(DiagnosticsProperty('version', version))
@@ -280,6 +296,8 @@ class _$SystemControllerStateImpl
                 other.hasPerformedInitialSetup, hasPerformedInitialSetup) &&
             const DeepCollectionEquality()
                 .equals(other._disabledFeeds, _disabledFeeds) &&
+            const DeepCollectionEquality()
+                .equals(other.secureScreen, secureScreen) &&
             (identical(other.appName, appName) || other.appName == appName) &&
             (identical(other.packageName, packageName) ||
                 other.packageName == packageName) &&
@@ -296,6 +314,7 @@ class _$SystemControllerStateImpl
       showingDebugMessages,
       const DeepCollectionEquality().hash(hasPerformedInitialSetup),
       const DeepCollectionEquality().hash(_disabledFeeds),
+      const DeepCollectionEquality().hash(secureScreen),
       appName,
       packageName,
       version,
@@ -316,6 +335,7 @@ abstract class _SystemControllerState implements SystemControllerState {
       required final bool showingDebugMessages,
       final dynamic hasPerformedInitialSetup,
       final List<TargetFeed> disabledFeeds,
+      final dynamic secureScreen,
       final String? appName,
       final String? packageName,
       final String? version,
@@ -331,6 +351,8 @@ abstract class _SystemControllerState implements SystemControllerState {
   dynamic get hasPerformedInitialSetup;
   @override
   List<TargetFeed> get disabledFeeds;
+  @override
+  dynamic get secureScreen;
   @override
   String? get appName;
   @override
