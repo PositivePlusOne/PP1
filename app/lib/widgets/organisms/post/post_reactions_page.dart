@@ -28,25 +28,18 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 
 @RoutePage()
-class PostReactionsPage extends StatefulHookConsumerWidget {
+class PostReactionsPage extends HookConsumerWidget {
   const PostReactionsPage({
     required this.activity,
-    required this.feed,
     required this.reactionType,
     super.key,
   });
 
   final Activity activity;
-  final TargetFeed feed;
   final String reactionType;
 
   @override
-  ConsumerState<PostReactionsPage> createState() => _PostReactionsPageState();
-}
-
-class _PostReactionsPageState extends ConsumerState<PostReactionsPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final MediaQueryData mediaData = MediaQuery.of(context);
 
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
@@ -56,27 +49,26 @@ class _PostReactionsPageState extends ConsumerState<PostReactionsPage> {
 
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
-    final String activityId = widget.activity.publisherInformation?.publisherId ?? '';
-    final String activityOrigin = TargetFeed.toOrigin(widget.feed);
+    final String activityId = activity.flMeta?.id ?? '';
 
     final Profile? currentProfile = profileState.currentProfile;
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
 
-    final String publisherId = widget.activity.publisherInformation?.publisherId ?? '';
+    final String publisherId = activity.publisherInformation?.publisherId ?? '';
     final String expectedTargetRelationshipKey = [currentProfileId, publisherId].asGUID;
     final Relationship? targetRelationship = cacheController.get(expectedTargetRelationshipKey);
 
-    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId, activityOrigin: activityOrigin);
+    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId);
     PositiveReactionsState? reactionsState = cacheController.get(expectedReactionsKey);
-    reactionsState ??= PositiveReactionsState.createNewFeedState(activityId: activityId, activityOrigin: activityOrigin, profileId: currentProfileId);
+    reactionsState ??= PositiveReactionsState.createNewFeedState(activityId: activityId, profileId: currentProfileId);
 
-    final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: widget.activity, currentProfile: currentProfile);
+    final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: activity, currentProfile: currentProfile);
     final List<Reaction> uniqueActivityReactions = cacheController.list(expectedUniqueReactionKeys);
 
-    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [widget.activity, reactionsState, ...uniqueActivityReactions]).toList();
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [activity, reactionsState, ...uniqueActivityReactions]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
-    final String title = switch (widget.reactionType) {
+    final String title = switch (reactionType) {
       'like' => 'Liked by',
       'comment' => 'Commented by',
       'share' => 'Shared by',
@@ -101,12 +93,11 @@ class _PostReactionsPageState extends ConsumerState<PostReactionsPage> {
             <Widget>[
               Container(height: kPaddingExtraSmall, color: colors.colorGray1),
               PositiveReactionPaginationBehaviour(
-                kind: widget.reactionType,
-                activity: widget.activity,
+                kind: reactionType,
+                activity: activity,
                 publisherRelationship: targetRelationship,
                 reactionsState: reactionsState,
-                feed: widget.feed,
-                reactionMode: widget.activity.securityConfiguration?.commentMode,
+                reactionMode: activity.securityConfiguration?.commentMode,
               ),
             ],
           ),

@@ -217,7 +217,7 @@ class _$SystemControllerStateImpl
       {required this.environment,
       required this.showingSemanticsDebugger,
       required this.showingDebugMessages,
-      this.hasPerformedInitialSetup = bool,
+      this.hasPerformedInitialSetup = false,
       final List<TargetFeed> disabledFeeds = const [],
       this.secureScreen = false,
       this.appName,

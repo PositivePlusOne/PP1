@@ -79,11 +79,10 @@ class PostPage extends HookConsumerWidget {
     final bool isSignedOut = currentProfile == null;
 
     final Activity? activity = cacheController.get(activityId);
-    final String activityOrigin = TargetFeed.toOrigin(feed);
+    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId);
 
-    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId, activityOrigin: activityOrigin);
     PositiveReactionsState? reactionsState = cacheController.get(expectedReactionsKey);
-    reactionsState ??= PositiveReactionsState.createNewFeedState(activityId: activityId, activityOrigin: activityOrigin, profileId: currentProfileId);
+    reactionsState ??= PositiveReactionsState.createNewFeedState(activityId: activityId, profileId: currentProfileId);
 
     final Promotion? promotion = cacheController.get(promotionId);
 
@@ -283,7 +282,6 @@ class PostPage extends HookConsumerWidget {
                     activity: activity,
                     publisherRelationship: targetRelationship,
                     reactionsState: reactionsState,
-                    feed: feed,
                     reactionMode: activity?.securityConfiguration?.commentMode,
                   ),
                   SliverToBoxAdapter(child: SizedBox(height: commentBoxSize)),

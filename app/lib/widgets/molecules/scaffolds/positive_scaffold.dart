@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/providers/system/system_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -21,6 +20,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/content/events/deep_link_handling_event.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';

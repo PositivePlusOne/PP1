@@ -38,7 +38,6 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     required this.currentProfile,
     required this.publisher,
     required this.publisherRelationship,
-    required this.origin,
     required this.onOptions,
     this.padding = const EdgeInsets.symmetric(horizontal: kPaddingMedium),
     this.promotion,
@@ -51,7 +50,6 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
 
   final Profile? currentProfile;
   final Profile? publisher;
-  final String origin;
 
   final Relationship? publisherRelationship;
 

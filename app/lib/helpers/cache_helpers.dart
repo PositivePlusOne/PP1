@@ -225,11 +225,11 @@ List<String> buildExpectedCacheKeysForActivity(Profile? currentProfile, Activity
   // Generate the tag target feed keys
   for (final TargetFeed targetFeed in targetFeeds) {
     cacheKeys.addAll(buildExpectedCacheKeysForTargetFeed(currentProfile, targetFeed));
-
-    final String origin = TargetFeed.toOrigin(targetFeed);
-    final String reactionStateKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId, activityOrigin: origin);
-    cacheKeys.add(reactionStateKey);
   }
+
+  // Generate the reactions key
+  final String reactionStateKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId);
+  cacheKeys.add(reactionStateKey);
 
   // Generate a relationship key for the publisher
   if (currentProfileId.isNotEmpty && activityPublisherId.isNotEmpty) {
