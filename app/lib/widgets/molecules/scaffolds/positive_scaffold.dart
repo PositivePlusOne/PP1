@@ -20,6 +20,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/content/events/deep_link_handling_event.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
@@ -207,6 +208,9 @@ class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
       );
     }
 
+    final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
+    final bool shouldSecureScreen = systemControllerState.secureScreen;
+
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (widget.onWillPopScope ?? () async => true),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -249,6 +253,9 @@ class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
                         ),
                       ),
                     ),
+                  ],
+                  if (shouldSecureScreen) ...<Widget>[
+                    Positioned.fill(child: ColoredBox(color: colors.white)),
                   ],
                 ],
               ),

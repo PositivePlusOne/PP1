@@ -52,7 +52,7 @@ extension ProfileExtensions on Profile {
       return false;
     }
 
-    return hasName && hasBirthday && hasDisplayName && hasHivStatus && hasAccentColor;
+    return hasName && hasDisplayName && hasAccentColor;
   }
 
   bool get hasName {

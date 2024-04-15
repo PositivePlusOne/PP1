@@ -49,7 +49,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     required this.activity,
     required this.publisherRelationship,
     required this.reactionsState,
-    required this.feed,
     required this.kind,
     this.highlightedReactionId = '',
     this.reactionMode,
@@ -60,7 +59,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
   final Activity? activity;
   final Relationship? publisherRelationship;
   final PositiveReactionsState reactionsState;
-  final TargetFeed feed;
   final String kind;
 
   final String highlightedReactionId;
@@ -182,7 +180,10 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     final Widget loadingIndicator = Container(
       alignment: Alignment.center,
       color: colours.white,
-      child: const PositiveLoadingIndicator(),
+      child: const Align(
+        alignment: Alignment.center,
+        child: PositiveLoadingIndicator(),
+      ),
     );
 
     // Attempt to move the highlighted reaction to the top of the list
@@ -213,7 +214,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
           activity: activity,
           publisherRelationship: publisherRelationship,
           reactionsState: reactionsState,
-          feed: feed,
         );
       default:
         return ReactionLikeList(
@@ -304,7 +304,6 @@ Widget buildCommentItem({
   required Reaction item,
   required Activity activity,
   required PositiveReactionsState reactionsState,
-  required TargetFeed feed,
   required Profile? currentProfile,
   required int index,
 }) {
@@ -312,7 +311,6 @@ Widget buildCommentItem({
     activity: activity,
     comment: item,
     currentProfile: currentProfile,
-    feedOrigin: TargetFeed.toOrigin(feed),
     isFirst: index == 0,
     onOptionSelected: (comment, publisherProfile) => comment.onReactionOptionsSelected(
       context: context,
@@ -373,7 +371,6 @@ class ReactionCommentList extends ConsumerWidget {
     required this.activity,
     required this.publisherRelationship,
     required this.reactionsState,
-    required this.feed,
     required this.currentProfile,
     required this.loadingIndicator,
     required this.pagingController,
@@ -383,7 +380,6 @@ class ReactionCommentList extends ConsumerWidget {
   final Activity? activity;
   final Relationship? publisherRelationship;
   final PositiveReactionsState reactionsState;
-  final TargetFeed feed;
 
   final Profile? currentProfile;
 
@@ -451,7 +447,6 @@ class ReactionCommentList extends ConsumerWidget {
                 item: reaction,
                 activity: activity!,
                 reactionsState: reactionsState,
-                feed: feed,
                 currentProfile: currentProfile,
                 index: index,
               ),

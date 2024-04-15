@@ -354,7 +354,6 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: PostReactionsPage(
           activity: args.activity,
-          feed: args.feed,
           reactionType: args.reactionType,
           key: args.key,
         ),
@@ -1534,7 +1533,6 @@ class PostRouteArgs {
 class PostReactionsRoute extends PageRouteInfo<PostReactionsRouteArgs> {
   PostReactionsRoute({
     required Activity activity,
-    required TargetFeed feed,
     required String reactionType,
     Key? key,
     List<PageRouteInfo>? children,
@@ -1542,7 +1540,6 @@ class PostReactionsRoute extends PageRouteInfo<PostReactionsRouteArgs> {
           PostReactionsRoute.name,
           args: PostReactionsRouteArgs(
             activity: activity,
-            feed: feed,
             reactionType: reactionType,
             key: key,
           ),
@@ -1558,14 +1555,11 @@ class PostReactionsRoute extends PageRouteInfo<PostReactionsRouteArgs> {
 class PostReactionsRouteArgs {
   const PostReactionsRouteArgs({
     required this.activity,
-    required this.feed,
     required this.reactionType,
     this.key,
   });
 
   final Activity activity;
-
-  final TargetFeed feed;
 
   final String reactionType;
 
@@ -1573,7 +1567,7 @@ class PostReactionsRouteArgs {
 
   @override
   String toString() {
-    return 'PostReactionsRouteArgs{activity: $activity, feed: $feed, reactionType: $reactionType, key: $key}';
+    return 'PostReactionsRouteArgs{activity: $activity, reactionType: $reactionType, key: $key}';
   }
 }
 

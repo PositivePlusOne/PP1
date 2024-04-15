@@ -25,7 +25,6 @@ class PositiveComment extends ConsumerWidget {
     required this.currentProfile,
     required this.comment,
     required this.activity,
-    required this.feedOrigin,
     required this.onOptionSelected,
     this.isFirst = false,
     super.key,
@@ -34,7 +33,6 @@ class PositiveComment extends ConsumerWidget {
   final Profile? currentProfile;
   final Reaction comment;
   final Activity? activity;
-  final String feedOrigin;
 
   final bool isFirst;
   final FutureOr<void> Function(Reaction comment, Profile? publisherProfile) onOptionSelected;
@@ -66,7 +64,6 @@ class PositiveComment extends ConsumerWidget {
             currentProfile: currentProfile,
             publisher: publisherProfile ?? Profile.empty(),
             publisherRelationship: relationship,
-            origin: feedOrigin,
             onOptions: () => onOptionSelected(comment, publisherProfile),
           ),
           const SizedBox(height: kPaddingSmall),

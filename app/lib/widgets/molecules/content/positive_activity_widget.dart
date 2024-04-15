@@ -113,12 +113,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     // If so, go to the post reactions page
     final bool isPublisher = widget.activity?.publisherInformation?.publisherId == widget.currentProfile?.flMeta?.id;
     if (isPublisher) {
-      await appRouter.push(PostReactionsRoute(
-        activity: widget.activity!,
-        reactionType: 'like',
-        feed: widget.targetFeed,
-      ));
-
+      await appRouter.push(PostReactionsRoute(activity: widget.activity!, reactionType: 'like'));
       return;
     }
 
@@ -247,7 +242,6 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               publisher: widget.targetProfile,
               publisherRelationship: widget.targetRelationship,
               currentProfile: widget.currentProfile,
-              origin: widget.activity?.repostConfiguration?.targetActivityOriginFeed ?? '',
               activity: widget.activity,
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSuperSmall),
               isOptionsHidden: widget.isShared,
@@ -332,7 +326,6 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               padding: EdgeInsets.symmetric(horizontal: widget.isShared ? kPaddingSmall : kPaddingMedium, vertical: kPaddingSuperSmall),
               publisher: widget.targetProfile,
               publisherRelationship: widget.targetRelationship,
-              origin: widget.activity?.publisherInformation?.originFeed ?? '',
               currentProfile: widget.currentProfile,
               promotion: widget.activityPromotion,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
@@ -439,6 +432,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     if (!widget.isFullscreen) {
       int lastIndex = 0;
       int removeFromCharacter = 0;
+
       //? Find the first few instances of carriage returns, new lines, or tabs, and record the position of the last one
       for (var i = 0; i < kMaximumNumberOfReturnsInFeedItem; i++) {
         lastIndex = parsedMarkdown.indexOf(RegExp('[\r\n\t]'), removeFromCharacter);
@@ -448,6 +442,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
           removeFromCharacter = (lastIndex + 1).clamp(0, parsedMarkdown.length - 1);
         }
       }
+
       //?  replace all carriage returns after the the removeFromCharacter point
       parsedMarkdown = parsedMarkdown.substring(0, removeFromCharacter) + parsedMarkdown.substring(removeFromCharacter).replaceAll(RegExp('[\r\n\t]'), ' ');
     }

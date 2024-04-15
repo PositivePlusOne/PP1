@@ -112,14 +112,12 @@ class ReactionsController extends _$ReactionsController {
     required Profile? currentProfile,
   }) {
     final String activityId = activity.flMeta?.id ?? '';
-    final String activityOrigin = activity.publisherInformation?.publisherId ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     if (activityId.isEmpty || currentProfileId.isEmpty) {
       logger.w('Cannot build positive reactions state for activity: $activityId and profile: $currentProfileId');
       return PositiveReactionsState.createNewFeedState(
         activityId: activityId,
-        activityOrigin: activityOrigin,
         profileId: currentProfileId,
       );
     }
@@ -127,7 +125,6 @@ class ReactionsController extends _$ReactionsController {
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final String cacheKey = PositiveReactionsState.buildReactionsCacheKey(
       activityId: activityId,
-      activityOrigin: activityOrigin,
       profileId: currentProfileId,
     );
 
@@ -140,7 +137,6 @@ class ReactionsController extends _$ReactionsController {
     logger.i('Adding positive reactions state to cache: $cacheKey');
     final PositiveReactionsState state = PositiveReactionsState.createNewFeedState(
       activityId: activityId,
-      activityOrigin: activityOrigin,
       profileId: currentProfileId,
     );
 
@@ -291,7 +287,6 @@ class ReactionsController extends _$ReactionsController {
   }) async {
     final Logger logger = ref.read(loggerProvider);
     final String activityId = activity.flMeta?.id ?? '';
-    final String activityOrigin = activity.publisherInformation?.originFeed ?? '';
 
     logger.i('Posting comment');
 
@@ -322,14 +317,12 @@ class ReactionsController extends _$ReactionsController {
 
     final String reactionsCacheKey = PositiveReactionsState.buildReactionsCacheKey(
       activityId: activityId,
-      activityOrigin: activityOrigin,
       profileId: profileController.currentProfileId ?? '',
     );
 
     final PositiveReactionsState reactionsState = cacheController.get<PositiveReactionsState>(reactionsCacheKey) ??
         PositiveReactionsState.createNewFeedState(
           activityId: activityId,
-          activityOrigin: activityOrigin,
           profileId: profileController.currentProfileId ?? '',
         );
 

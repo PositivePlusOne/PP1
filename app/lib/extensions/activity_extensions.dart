@@ -261,12 +261,10 @@ extension ActivityExt on Activity {
     );
 
     final String activityId = flMeta?.id ?? '';
-    final String originFeed = publisherInformation?.originFeed ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String expectedCacheKey = PositiveReactionsState.buildReactionsCacheKey(
       activityId: activityId,
       profileId: currentProfileId,
-      activityOrigin: originFeed,
     );
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -475,7 +473,6 @@ extension ActivityExt on Activity {
     final String activityFeedStateCacheKey = PositiveReactionsState.buildReactionsCacheKey(
       activityId: activityId,
       profileId: currentProfile?.flMeta?.id ?? '',
-      activityOrigin: originFeed,
     );
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
