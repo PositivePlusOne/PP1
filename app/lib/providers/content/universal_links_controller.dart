@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import 'package:app_links/app_links.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:event_bus/event_bus.dart';
@@ -316,8 +317,12 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     bool isOnRoute = appRouter.current.name == ProfileRoute.name;
 
     if (isOnRoute) {
-      logger.i('Already on route: $route');
-      return HandleLinkResult.handledWithoutNavigation;
+      final ProfileViewModelState state = ref.read(profileViewModelProvider);
+      final String currentViewingProfileId = state.targetProfileId ?? '';
+      if (currentViewingProfileId.isNotEmpty && currentViewingProfileId == profile.flMeta?.id) {
+        logger.i('Already on route: $route');
+        return HandleLinkResult.handledWithoutNavigation;
+      }
     }
 
     await profile.navigateToProfile(replace: replaceRouteOnNavigate);
