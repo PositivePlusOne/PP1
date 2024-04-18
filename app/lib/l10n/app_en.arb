@@ -344,6 +344,7 @@
 
     "page_account_actions_biometrics_face_ios": "FaceID",
     "page_account_actions_biometrics_face_android": "biometrics",
+    "page_account_actions_biometrics_face_android_title": "Biometrics",
     "page_account_actions_biometrics_iris": "Iris",
     "page_account_actions_biometrics_bio": "biometrics",
     "page_account_actions_biometrics_pin": "Pin",
