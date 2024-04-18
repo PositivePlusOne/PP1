@@ -75,6 +75,17 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     }
 
     performProfileChecks();
+    cleanupRouter();
+  }
+
+  // If we land on the home page, we want to clear the router stack
+  // And verify the only route is the home route
+  Future<void> cleanupRouter() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('cleanupRouter()');
+    appRouter.stack.removeWhere((element) => element.routeData.name != HomeRoute.name);
   }
 
   Future<void> performProfileChecks() async {
