@@ -111,15 +111,15 @@ extension ActivityExt on Activity {
       final PagingController<String, Activity> pagingController = userFeedState.pagingController;
       final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
 
-      final bool exists = currentItems.any((Activity activity) => activity.flMeta?.id == flMeta?.id);
+      final bool exists = userFeedState.knownActivities.contains(flMeta?.id);
       if (exists) {
         final int index = currentItems.indexWhere((Activity activity) => activity.flMeta?.id == flMeta?.id);
-        currentItems[index] = this;
-      } else {
-        currentItems.insert(0, this);
+        currentItems.removeAt(index);
       }
 
-      pagingController.itemList = currentItems;
+      currentItems.insert(0, this);
+      userFeedState.knownActivities.add(flMeta?.id ?? '');
+      userFeedState.pagingController.itemList = currentItems;
 
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       pagingController.notifyListeners();
@@ -131,15 +131,15 @@ extension ActivityExt on Activity {
       final PagingController<String, Activity> pagingController = timelineFeedState.pagingController;
       final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
 
-      final bool exists = currentItems.any((Activity activity) => activity.flMeta?.id == flMeta?.id);
+      final bool exists = timelineFeedState.knownActivities.contains(flMeta?.id);
       if (exists) {
         final int index = currentItems.indexWhere((Activity activity) => activity.flMeta?.id == flMeta?.id);
-        currentItems[index] = this;
-      } else {
-        currentItems.insert(0, this);
+        currentItems.removeAt(index);
       }
 
-      pagingController.itemList = currentItems;
+      currentItems.insert(0, this);
+      timelineFeedState.knownActivities.add(flMeta?.id ?? '');
+      timelineFeedState.pagingController.itemList = currentItems;
 
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       pagingController.notifyListeners();
@@ -156,15 +156,15 @@ extension ActivityExt on Activity {
         final PagingController<String, Activity> pagingController = tagFeedState.pagingController;
         final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
 
-        final bool exists = currentItems.any((Activity activity) => activity.flMeta?.id == flMeta?.id);
+        final bool exists = tagFeedState.knownActivities.contains(flMeta?.id);
         if (exists) {
           final int index = currentItems.indexWhere((Activity activity) => activity.flMeta?.id == flMeta?.id);
-          currentItems[index] = this;
-        } else {
-          currentItems.insert(0, this);
+          currentItems.removeAt(index);
         }
 
-        pagingController.itemList = currentItems;
+        currentItems.insert(0, this);
+        tagFeedState.knownActivities.add(flMeta?.id ?? '');
+        tagFeedState.pagingController.itemList = currentItems;
 
         // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
         pagingController.notifyListeners();
