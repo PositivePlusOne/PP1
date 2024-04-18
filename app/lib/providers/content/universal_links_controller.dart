@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import 'package:app_links/app_links.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:event_bus/event_bus.dart';
@@ -22,6 +21,7 @@ import 'package:app/providers/content/events/deep_link_handling_event.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 
 part 'universal_links_controller.freezed.dart';
 part 'universal_links_controller.g.dart';

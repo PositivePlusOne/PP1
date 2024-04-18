@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,6 +16,7 @@ import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/tag_extensions.dart';
 import 'package:app/helpers/markdown_truncator.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
