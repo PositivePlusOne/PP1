@@ -23,6 +23,7 @@ import 'package:app/helpers/image_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class UploadResult {
   UploadResult({
@@ -274,37 +275,39 @@ class GalleryEntry {
       );
 
       decodedToImage = decodeImage(data)!;
-      for (var i = 0; i < exifOrientationList.length; i++) {
-        final int useCounterClockwise = exifOrientationList.contains('CCW') ? -1 : 1;
-        switch (exifOrientationList[i].toLowerCase()) {
-          case "90":
-            decodedToImage = copyRotate(
-              decodedToImage,
-              angle: 90 * useCounterClockwise,
-            );
-            break;
-          case "180":
-            decodedToImage = copyRotate(
-              decodedToImage,
-              angle: 180 * useCounterClockwise,
-            );
-            break;
-          case "270":
-            decodedToImage = copyRotate(
-              decodedToImage,
-              angle: 270 * useCounterClockwise,
-            );
-            break;
-          case "360":
-          case "0":
-            decodedToImage = copyRotate(
-              decodedToImage,
-              angle: 0,
-            );
-            break;
-          case "horizontal":
-            decodedToImage = flipHorizontal(decodedToImage);
-          default:
+      if (UniversalPlatform.isAndroid) {
+        for (var i = 0; i < exifOrientationList.length; i++) {
+          final int useCounterClockwise = exifOrientationList.contains('CCW') ? -1 : 1;
+          switch (exifOrientationList[i].toLowerCase()) {
+            case "90":
+              decodedToImage = copyRotate(
+                decodedToImage,
+                angle: 90 * useCounterClockwise,
+              );
+              break;
+            case "180":
+              decodedToImage = copyRotate(
+                decodedToImage,
+                angle: 180 * useCounterClockwise,
+              );
+              break;
+            case "270":
+              decodedToImage = copyRotate(
+                decodedToImage,
+                angle: 270 * useCounterClockwise,
+              );
+              break;
+            case "360":
+            case "0":
+              decodedToImage = copyRotate(
+                decodedToImage,
+                angle: 0,
+              );
+              break;
+            case "horizontal":
+              decodedToImage = flipHorizontal(decodedToImage);
+            default:
+          }
         }
       }
     } else {
