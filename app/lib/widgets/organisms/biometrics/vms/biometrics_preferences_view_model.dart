@@ -91,8 +91,7 @@ class BiometricsPreferencesViewModel extends _$BiometricsPreferencesViewModel wi
     await analyticsController.trackEvent(AnalyticEvents.biometricsPreferencesEnabled);
     await sharedPreferences.setBool(kBiometricsAcceptedKey, true);
 
-    appRouter.removeWhere((route) => true);
-    appRouter.push(const HomeRoute());
+    await appRouter.replaceAll([const HomeRoute()]);
   }
 
   Future<void> onDenySelected() async {
@@ -103,7 +102,6 @@ class BiometricsPreferencesViewModel extends _$BiometricsPreferencesViewModel wi
     await analyticsController.trackEvent(AnalyticEvents.biometricsPreferencesDisabled);
     await sharedPreferences.setBool(kBiometricsAcceptedKey, false);
 
-    appRouter.removeWhere((route) => true);
-    await appRouter.push(const HomeRoute());
+    await appRouter.replaceAll([const HomeRoute()]);
   }
 }

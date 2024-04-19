@@ -42,8 +42,7 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     logger.d('Restarting app');
-    appRouter.removeWhere((route) => true);
-    await appRouter.push(SplashRoute());
+    await appRouter.replaceAll([SplashRoute()]);
   }
 
   Future<void> toggleSelectablePostIDs() async {

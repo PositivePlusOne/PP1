@@ -117,8 +117,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
 
     logger.i("Pop Search page, push Home page");
-    router.removeWhere((route) => true);
-    router.push(const HomeRoute());
+    await router.replaceAll([const HomeRoute()]);
     return false;
   }
 

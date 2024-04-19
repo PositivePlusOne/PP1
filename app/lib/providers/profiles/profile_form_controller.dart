@@ -1083,7 +1083,6 @@ class ProfileFormController extends _$ProfileFormController {
     final Logger logger = ref.read(loggerProvider);
 
     logger.i('Navigating to $route');
-    appRouter.removeWhere((route) => true);
-    await appRouter.push(route);
+    await appRouter.replaceAll([route]);
   }
 }

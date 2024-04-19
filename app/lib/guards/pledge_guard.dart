@@ -22,8 +22,7 @@ class PledgeGuard extends AutoRouteGuard {
       return;
     }
 
-    router.removeWhere((route) => true);
-    router.push(const OnboardingWelcomeRoute());
+    router.replaceAll([const OnboardingWelcomeRoute()]);
     resolver.next(false);
   }
 }

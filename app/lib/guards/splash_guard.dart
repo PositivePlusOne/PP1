@@ -30,8 +30,7 @@ class SplashGuard extends AutoRouteGuard {
     final SharedPreferences sharedPreferences = sharedPreferencesValue.value!;
     final bool hasSplashKey = sharedPreferences.containsKey(kSplashOnboardedKey) && sharedPreferences.getBool(kSplashOnboardedKey)!;
     if (hasSplashKey) {
-      router.removeWhere((route) => true);
-      router.push(SplashRoute(style: SplashStyle.tomorrowStartsNow));
+      router.replaceAll([SplashRoute(style: SplashStyle.tomorrowStartsNow)]);
       resolver.next(false);
       return;
     }

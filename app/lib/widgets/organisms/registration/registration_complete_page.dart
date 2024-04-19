@@ -53,7 +53,7 @@ class _RegistrationCompletePageState extends ConsumerState<RegistrationCompleteP
       await getStreamController.connectStreamUser();
 
       await analyticsController.trackEvent(AnalyticEvents.registrationComplete);
-      await appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } finally {
       isBusy = false;
     }

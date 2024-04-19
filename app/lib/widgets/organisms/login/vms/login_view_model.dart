@@ -267,8 +267,7 @@ class LoginViewModel extends _$LoginViewModel {
 
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
-      appRouter.removeWhere((route) => true);
-      appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } catch (e) {
       if (e is FirebaseAuthException && (e.code == 'wrong-password' || e.code == 'user-not-found')) {
         state = state.copyWith(serverError: localisations.page_login_password_error);
@@ -353,7 +352,6 @@ class LoginViewModel extends _$LoginViewModel {
     final Logger logger = ref.read(loggerProvider);
 
     logger.d('onWelcomeBackContinueSelected');
-    appRouter.removeWhere((route) => true);
-    await appRouter.push(const HomeRoute());
+    await appRouter.replaceAll([const HomeRoute()]);
   }
 }

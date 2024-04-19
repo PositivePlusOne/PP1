@@ -149,8 +149,7 @@ class UserController extends _$UserController with TwoFactorHandler, PasswordAut
     log.d('[UserController] registerAppleProvider()');
     if (isUserLoggedIn) {
       log.d('[UserController] registerAppleProvider() user is already logged in');
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
       return null;
     }
 

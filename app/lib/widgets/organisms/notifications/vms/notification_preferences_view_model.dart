@@ -43,8 +43,7 @@ class NotificationPreferencesViewModel extends _$NotificationPreferencesViewMode
     await notificationsController.setupPushNotificationListeners();
     await notificationsController.toggleTopicPreferences(true);
 
-    appRouter.removeWhere((route) => true);
-    appRouter.push(const HomeRoute());
+    await appRouter.replaceAll([const HomeRoute()]);
   }
 
   Future<void> onDenySelected() async {
@@ -58,7 +57,6 @@ class NotificationPreferencesViewModel extends _$NotificationPreferencesViewMode
 
     await notificationsController.toggleTopicPreferences(false);
 
-    appRouter.removeWhere((route) => true);
-    await appRouter.push(const HomeRoute());
+    await appRouter.replaceAll([const HomeRoute()]);
   }
 }

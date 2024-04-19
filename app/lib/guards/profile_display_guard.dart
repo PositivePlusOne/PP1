@@ -14,8 +14,7 @@ class ProfileDisplayGuard extends AutoRouteGuard {
 
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (!hasProfile) {
-      router.removeWhere((route) => true);
-      router.push(kDefaultRoute);
+      router.replaceAll([kDefaultRoute]);
       resolver.next(false);
       return;
     }

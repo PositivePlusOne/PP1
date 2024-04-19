@@ -297,14 +297,12 @@ class AccountFormController extends _$AccountFormController {
         body: 'Your account deletion has been started and you will no longer be able to access your account. You will receive an email once your account has been deleted.',
         buttonText: 'Close App',
         onContinueSelected: () async {
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
         },
       );
 
       state = state.copyWith(isBusy: false);
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(route);
+      await appRouter.replaceAll([route]);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -363,9 +361,7 @@ class AccountFormController extends _$AccountFormController {
       //TODO which we might want to track
       // analyticsController.trackEvent(AnalyticEvents.accountNameUpdated);
 
-      // and remove the page showing
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } catch (ex) {
       logger.e('Error updating name. $ex');
       state = state.copyWith(isBusy: false);
@@ -417,8 +413,7 @@ class AccountFormController extends _$AccountFormController {
       );
 
       state = state.copyWith(isBusy: false);
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(route);
+      await appRouter.replaceAll([route]);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -495,8 +490,7 @@ class AccountFormController extends _$AccountFormController {
       );
 
       state = state.copyWith(isBusy: false);
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(route);
+      await appRouter.replaceAll([route]);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -545,8 +539,7 @@ class AccountFormController extends _$AccountFormController {
       );
 
       state = state.copyWith(isBusy: false);
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(route);
+      await appRouter.replaceAll([route]);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -578,8 +571,7 @@ class AccountFormController extends _$AccountFormController {
 
       await userController.updatePhoneNumber(actualPhoneNumber);
       await profileController.updatePhoneNumber(phoneNumber: actualPhoneNumber);
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } catch (ex) {
       logger.e('Error verifying phone number. $ex');
       state = state.copyWith(isBusy: false);
