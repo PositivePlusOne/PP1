@@ -401,9 +401,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ProfileDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileDetailsRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileDetailsPage(),
+        child: ProfileDetailsPage(
+          profileId: args.profileId,
+          key: args.key,
+        ),
       );
     },
     ProfileDisplayNameEntryRoute.name: (routeData) {
@@ -456,9 +460,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfilePage(),
+        child: ProfilePage(
+          profileId: args.profileId,
+          key: args.key,
+        ),
       );
     },
     ProfilePhotoSelectionRoute.name: (routeData) {
@@ -1686,16 +1694,40 @@ class ProfileBirthdayEntryRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ProfileDetailsPage]
-class ProfileDetailsRoute extends PageRouteInfo<void> {
-  const ProfileDetailsRoute({List<PageRouteInfo>? children})
-      : super(
+class ProfileDetailsRoute extends PageRouteInfo<ProfileDetailsRouteArgs> {
+  ProfileDetailsRoute({
+    required String profileId,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           ProfileDetailsRoute.name,
+          args: ProfileDetailsRouteArgs(
+            profileId: profileId,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ProfileDetailsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<ProfileDetailsRouteArgs> page =
+      PageInfo<ProfileDetailsRouteArgs>(name);
+}
+
+class ProfileDetailsRouteArgs {
+  const ProfileDetailsRouteArgs({
+    required this.profileId,
+    this.key,
+  });
+
+  final String profileId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileDetailsRouteArgs{profileId: $profileId, key: $key}';
+  }
 }
 
 /// generated route for
@@ -1838,16 +1870,40 @@ class ProfileNameEntryRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ProfilePage]
-class ProfileRoute extends PageRouteInfo<void> {
-  const ProfileRoute({List<PageRouteInfo>? children})
-      : super(
+class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
+  ProfileRoute({
+    required String profileId,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           ProfileRoute.name,
+          args: ProfileRouteArgs(
+            profileId: profileId,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ProfileRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<ProfileRouteArgs> page =
+      PageInfo<ProfileRouteArgs>(name);
+}
+
+class ProfileRouteArgs {
+  const ProfileRouteArgs({
+    required this.profileId,
+    this.key,
+  });
+
+  final String profileId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileRouteArgs{profileId: $profileId, key: $key}';
+  }
 }
 
 /// generated route for

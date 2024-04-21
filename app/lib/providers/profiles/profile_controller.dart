@@ -32,7 +32,6 @@ import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
-import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../services/third_party.dart';
 
 part 'profile_controller.freezed.dart';
@@ -230,18 +229,14 @@ class ProfileController extends _$ProfileController {
   }
 
   Future<void> viewProfile(Profile profile, Map<String, Object?> analyticsProperties) async {
-    final ProfileViewModel profileViewModel = ref.read(profileViewModelProvider.notifier);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-
     final String id = profile.flMeta?.id ?? '';
     if (id.isEmpty) {
       logger.e('Profile has no id, cannot view profile: $profile');
       return;
     }
 
-    await profileViewModel.preloadUserProfile(id);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     final bool isFromPost = propertiesSourcedFromPost(analyticsProperties);
     final bool isFromSearch = propertiesSourcedFromSearch(analyticsProperties);
@@ -264,7 +259,7 @@ class ProfileController extends _$ProfileController {
     await analyticsController.trackEvent(AnalyticEvents.profileViewed);
 
     logger.i('Navigating to profile: ${profile.flMeta?.id}');
-    await appRouter.push(const ProfileRoute());
+    await profile.navigateToProfile();
   }
 
   Future<Profile> getProfile(String uid, {bool skipCacheLookup = false}) async {

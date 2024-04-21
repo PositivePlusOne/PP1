@@ -31,7 +31,6 @@ import 'package:app/services/api.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_sign_out_dialog.dart';
-import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 import '../../../molecules/dialogs/positive_dialog.dart';
@@ -90,7 +89,6 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   }
 
   Future<void> onViewProfileButtonSelected(Profile? currentProfile) async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
     if (currentProfile == null) {
@@ -102,19 +100,10 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     state = state.copyWith(isBusy: true);
 
     try {
-      final ProfileViewModel profileViewModel = ref.read(profileViewModelProvider.notifier);
-      final String currentProfileId = currentProfile.flMeta?.id ?? '';
-      if (currentProfileId.isEmpty) {
-        logger.e('onViewProfileButtonSelected: currentProfileId is empty');
-        return;
-      }
-
-      await profileViewModel.preloadUserProfile(currentProfileId);
+      await currentProfile.navigateToProfile();
     } finally {
       state = state.copyWith(isBusy: false);
     }
-
-    appRouter.push(const ProfileRoute());
   }
 
   Future<void> onAccountDetailsButtonSelected() async {

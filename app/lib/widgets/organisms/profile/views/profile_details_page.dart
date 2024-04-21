@@ -29,11 +29,18 @@ import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 
 @RoutePage()
 class ProfileDetailsPage extends HookConsumerWidget {
-  const ProfileDetailsPage({super.key});
+  const ProfileDetailsPage({
+    required this.profileId,
+    super.key,
+  });
+
+  final String profileId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ProfileViewModelState state = ref.watch(profileViewModelProvider);
+    final ProfileViewModelProvider provider = profileViewModelProvider(profileId);
+    final ProfileViewModelState state = ref.watch(provider);
+
     final ProfileControllerState controllerState = ref.watch(profileControllerProvider);
 
     final CacheController cacheController = ref.read(cacheControllerProvider);

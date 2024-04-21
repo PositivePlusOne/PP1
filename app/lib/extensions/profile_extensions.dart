@@ -23,7 +23,6 @@ import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../providers/profiles/profile_controller.dart';
@@ -395,14 +394,18 @@ extension ProfileExtensions on Profile {
       return;
     }
 
-    final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
-    await profileViewModel.preloadUserProfile(targetProfileId);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final bool containsProfile = cacheController.contains(targetProfileId);
+    if (!containsProfile) {
+      await profileController.getProfile(targetProfileId);
+    }
 
     if (replace) {
       logger.d('Removing all routes before navigating to profile route');
-      await appRouter.replaceAll([const ProfileRoute()]);
+      await appRouter.replaceAll([ProfileRoute(profileId: targetProfileId)]);
     } else {
-      await appRouter.push(const ProfileRoute());
+      await appRouter.push(ProfileRoute(profileId: targetProfileId));
     }
   }
 
@@ -429,10 +432,13 @@ extension ProfileExtensions on Profile {
       }
     }
 
-    final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
-    await profileViewModel.preloadUserProfile(targetProfileId);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final bool containsProfile = cacheController.contains(targetProfileId);
+    if (!containsProfile) {
+      await profileController.getProfile(targetProfileId);
+    }
 
-    await appRouter.push(const ProfileDetailsRoute());
+    await appRouter.push(ProfileDetailsRoute(profileId: targetProfileId));
   }
 }
 

@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileViewModelState {
-  String? get targetProfileId => throw _privateConstructorUsedError;
+  String get targetProfileId => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +30,7 @@ abstract class $ProfileViewModelStateCopyWith<$Res> {
           $Res Function(ProfileViewModelState) then) =
       _$ProfileViewModelStateCopyWithImpl<$Res, ProfileViewModelState>;
   @useResult
-  $Res call({String? targetProfileId, bool isBusy});
+  $Res call({String targetProfileId, bool isBusy});
 }
 
 /// @nodoc
@@ -47,14 +47,14 @@ class _$ProfileViewModelStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? targetProfileId = freezed,
+    Object? targetProfileId = null,
     Object? isBusy = null,
   }) {
     return _then(_value.copyWith(
-      targetProfileId: freezed == targetProfileId
+      targetProfileId: null == targetProfileId
           ? _value.targetProfileId
           : targetProfileId // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -72,7 +72,7 @@ abstract class _$$ProfileViewModelStateImplCopyWith<$Res>
       __$$ProfileViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? targetProfileId, bool isBusy});
+  $Res call({String targetProfileId, bool isBusy});
 }
 
 /// @nodoc
@@ -87,14 +87,14 @@ class __$$ProfileViewModelStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? targetProfileId = freezed,
+    Object? targetProfileId = null,
     Object? isBusy = null,
   }) {
     return _then(_$ProfileViewModelStateImpl(
-      targetProfileId: freezed == targetProfileId
+      targetProfileId: null == targetProfileId
           ? _value.targetProfileId
           : targetProfileId // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -107,10 +107,10 @@ class __$$ProfileViewModelStateImplCopyWithImpl<$Res>
 
 class _$ProfileViewModelStateImpl implements _ProfileViewModelState {
   const _$ProfileViewModelStateImpl(
-      {this.targetProfileId, this.isBusy = false});
+      {required this.targetProfileId, this.isBusy = false});
 
   @override
-  final String? targetProfileId;
+  final String targetProfileId;
   @override
   @JsonKey()
   final bool isBusy;
@@ -143,11 +143,11 @@ class _$ProfileViewModelStateImpl implements _ProfileViewModelState {
 
 abstract class _ProfileViewModelState implements ProfileViewModelState {
   const factory _ProfileViewModelState(
-      {final String? targetProfileId,
+      {required final String targetProfileId,
       final bool isBusy}) = _$ProfileViewModelStateImpl;
 
   @override
-  String? get targetProfileId;
+  String get targetProfileId;
   @override
   bool get isBusy;
   @override

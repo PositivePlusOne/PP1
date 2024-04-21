@@ -342,7 +342,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         onTapped: () => PositiveDialog.show(
           title: 'Remove Connection',
           context: context,
-          child: const ProfileDisconnectDialog(),
+          child: ProfileDisconnectDialog(profileId: flamelinkId),
         ),
         label: localizations.shared_actions_connect,
         icon: UniconsLine.hourglass,
@@ -379,7 +379,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         onTapped: () => PositiveDialog.show(
           title: 'Remove Connection',
           context: context,
-          child: const ProfileDisconnectDialog(),
+          child: ProfileDisconnectDialog(profileId: flamelinkId),
         ),
         icon: UniconsLine.user_check,
         tooltip: hasPendingConnectionToTargetUser ? localizations.shared_actions_connection_pending : localizations.shared_actions_disconnect,

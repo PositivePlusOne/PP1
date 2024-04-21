@@ -18,10 +18,10 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/events/deep_link_handling_event.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 
 part 'universal_links_controller.freezed.dart';
 part 'universal_links_controller.g.dart';
@@ -310,24 +310,30 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
 
     final String id = routeDetails.id!;
 
-    final Map<String, dynamic> profileData = await profileApiService.getProfile(uid: id);
-    final Profile profile = Profile.fromJson(profileData);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    Profile? profile = cacheController.get(id);
+
+    if (profile == null) {
+      final Map<String, dynamic> profileData = await profileApiService.getProfile(uid: id);
+      profile = Profile.fromJson(profileData);
+    }
 
     // Check if already on the route
+    // If so, check if it is the same profile
     bool isOnRoute = appRouter.current.name == ProfileRoute.name;
-
     if (isOnRoute) {
-      final ProfileViewModelState state = ref.read(profileViewModelProvider);
-      final String currentViewingProfileId = state.targetProfileId ?? '';
-      if (currentViewingProfileId.isNotEmpty && currentViewingProfileId == profile.flMeta?.id) {
+      final String targetUserId = (appRouter.current.args as ProfileRouteArgs).profileId;
+      final bool matchesCurrentProfile = targetUserId == profile.flMeta?.id;
+
+      if (matchesCurrentProfile) {
         logger.i('Already on route: $route');
         return HandleLinkResult.handledWithoutNavigation;
       }
     }
 
     await profile.navigateToProfile(replace: replaceRouteOnNavigate);
-
     logger.i('Handling route link: $routeDetails');
+
     state = state.copyWith(isUniversalLinkHandled: true);
     return HandleLinkResult.handledWithNavigation;
   }
