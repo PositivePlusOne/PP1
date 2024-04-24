@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:cron/cron.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -45,6 +46,7 @@ class PagingControllerHook extends Hook<void> {
 }
 
 class PagingControllerHookState extends HookState<void, PagingControllerHook> {
+  ScheduledTask? nextPageCheckTask;
   Timer? periodicCheckTimer;
 
   @override
@@ -54,30 +56,9 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
   }
 
   @override
-  void didUpdateHook(PagingControllerHook oldHook) {
-    super.didUpdateHook(oldHook);
-
-    if (hook.controller == oldHook.controller) {
-      return;
-    }
-
-    rebindListeners();
-  }
-
-  @override
   void dispose() {
     disposeListeners();
     super.dispose();
-  }
-
-  Future<void> rebindListeners() async {
-    await disposeListeners();
-    await setupListeners();
-
-    // If the controller is empty, we need to request the first page
-    if (hook.controller.itemList?.isEmpty ?? true) {
-      requestPreviousPage();
-    }
   }
 
   Future<void> setupListeners() async {
@@ -86,21 +67,18 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     final FirebaseRemoteConfig remoteConfig = await providerContainer.read(firebaseRemoteConfigProvider.future);
     final int periodicCheckFrequency = remoteConfig.getInt(SystemController.kFirebaseRemoteConfigFeedUpdateCheckFrequencyKey);
 
+    await Future.delayed(Duration(seconds: periodicCheckFrequency));
     periodicCheckTimer = Timer.periodic(Duration(seconds: periodicCheckFrequency), (Timer timer) {
-      if (!context.mounted) {
-        return;
-      }
-
       onNextPageRequested();
     });
   }
 
   Future<void> disposeListeners() async {
     hook.controller.removePageRequestListener(onPreviousPageRequested);
-    periodicCheckTimer?.cancel();
+    await nextPageCheckTask?.cancel();
   }
 
-  void requestPreviousPage() {
+  void requestPage() {
     final bool isLastPage = hook.controller.nextPageKey == null;
     if (isLastPage) {
       return;
@@ -113,10 +91,19 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     await hook.onPreviousPageRequest(pageKey);
   }
 
-  Future<void> onNextPageRequested() async {
-    await runWithMutex(() async {
-      await hook.onNextPagePageRequest?.call();
-    });
+  Future<void> onNextPageRequested() => runWithMutex(
+        () async {
+          await hook.onNextPagePageRequest?.call();
+        },
+      );
+
+  @override
+  void didUpdateHook(PagingControllerHook oldHook) {
+    super.didUpdateHook(oldHook);
+
+    if (hook.controller == oldHook.controller) {
+      return;
+    }
   }
 
   @override

@@ -46,8 +46,11 @@ import 'package:app/widgets/state/positive_feed_state.dart';
 @RoutePage()
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
+    required this.profileId,
     super.key,
   });
+
+  final String profileId;
 
   Widget buildBlockedProfilePage() {
     return PositiveGenericPage(
@@ -60,8 +63,9 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ProfileViewModelState state = ref.watch(profileViewModelProvider);
-    final ProfileViewModel viewModel = ref.read(profileViewModelProvider.notifier);
+    final ProfileViewModelProvider provider = profileViewModelProvider(profileId);
+    final ProfileViewModelState state = ref.watch(provider);
+    final ProfileViewModel viewModel = ref.read(provider.notifier);
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ProfileControllerState controllerState = ref.watch(profileControllerProvider);

@@ -75,7 +75,6 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
     final RouteMatch route = router.current.route;
     if (route.name == ChatRoute.name) {
-      logger.i("Pop chat page, pop Home page");
       return true;
     }
 

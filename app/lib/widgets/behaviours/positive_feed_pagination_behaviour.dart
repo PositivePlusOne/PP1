@@ -407,11 +407,15 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final bool isEveryoneFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'everyone';
+    final bool isTimelineFeed = feed.targetSlug == 'timeline' && feed.targetUserId == currentProfileId;
+    final bool canDisplayPromotion = isEveryoneFeed || isTimelineFeed;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         buildVisualSeparator(context),
-        if (promotedPost != null) ...<Widget>[
+        if (promotedPost != null && canDisplayPromotion) ...<Widget>[
           promotedPost,
           buildVisualSeparator(context),
         ],

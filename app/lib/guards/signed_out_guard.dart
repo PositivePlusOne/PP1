@@ -14,8 +14,7 @@ class SignedOutGuard extends AutoRouteGuard {
     final User? user = userController.currentUser;
 
     if (user != null) {
-      router.removeWhere((route) => true);
-      router.push(kDefaultRoute);
+      router.replaceAll([kDefaultRoute]);
       resolver.next(false);
       return;
     }

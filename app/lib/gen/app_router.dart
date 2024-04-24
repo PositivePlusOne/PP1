@@ -12,7 +12,6 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/organisation_setup_guard.dart';
-import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/guards/security_guard.dart';
 import 'package:app/widgets/organisms/account/account_communities_page.dart';
 import 'package:app/widgets/organisms/account/account_connect_email_page.dart';
@@ -122,7 +121,6 @@ class AppRouter extends _$AppRouter {
   final BiometricsGuard biometricsGuard = BiometricsGuard();
   final ProfileSetupGuard profileSetupGuard = ProfileSetupGuard();
   final OrganisationSetupGuard organisationSetupGuard = OrganisationSetupGuard();
-  final ProfileDisplayGuard profileDisplayGuard = ProfileDisplayGuard();
   final SplashGuard splashGuard = SplashGuard();
   final SecurityGuard securityGuard = SecurityGuard();
 
@@ -182,8 +180,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard]),
         AutoRoute(page: ProfileEditThanksRoute.page, path: '/profile/setup/thanks', guards: kCommonGuards),
         //* Profile
-        AutoRoute(page: ProfileRoute.page, path: '/profile/view', guards: [profileDisplayGuard]),
-        AutoRoute(page: ProfileDetailsRoute.page, path: '/profile/details/view', guards: [profileDisplayGuard]),
+        AutoRoute(page: ProfileRoute.page, path: '/profile/view/{profileId}'),
+        AutoRoute(page: ProfileDetailsRoute.page, path: '/profile/view/details/{profileId}'),
         AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard]),
         //* Home and direct affiliates
         AutoRoute(page: HomeRoute.page, path: '/home', guards: [pledgeGuard, authSetupGuard, profileSetupGuard, organisationSetupGuard, notificationGuard, biometricsGuard, securityGuard]),

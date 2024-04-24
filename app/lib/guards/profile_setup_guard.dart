@@ -54,8 +54,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final bool hasDisplayName = currentProfile?.displayName.isNotEmpty ?? false;
     if (!hasDisplayName) {
       profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfileDisplayNameEntryRoute());
+      router.replaceAll([const ProfileDisplayNameEntryRoute()]);
       resolver.next(false);
       return;
     }
@@ -63,8 +62,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final bool hasBirthday = currentProfile?.birthday.isNotEmpty ?? false;
     if (!hasBirthday) {
       profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfileBirthdayEntryRoute());
+      router.replaceAll([const ProfileBirthdayEntryRoute()]);
       resolver.next(false);
       return;
     }
@@ -131,8 +129,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final bool hasProfileImage = currentProfile?.profileImage != null;
     if (!hasProfileImage) {
       profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfilePhotoSelectionRoute());
+      router.replaceAll([const ProfilePhotoSelectionRoute()]);
       resolver.next(false);
       return;
     }
@@ -140,8 +137,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     final bool hasAccentColor = currentProfile?.accentColor.isNotEmpty ?? false;
     if (!hasAccentColor) {
       profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfileBiographyEntryRoute());
+      router.replaceAll([const ProfileBiographyEntryRoute()]);
       resolver.next(false);
       return;
     }

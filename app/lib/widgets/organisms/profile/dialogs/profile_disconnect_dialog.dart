@@ -21,15 +21,19 @@ import '../../../../providers/system/design_controller.dart';
 class ProfileDisconnectDialog extends ConsumerWidget {
   const ProfileDisconnectDialog({
     super.key,
+    required this.profileId,
   });
+
+  final String profileId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final ProfileViewModel viewModel = ref.read(profileViewModelProvider.notifier);
-    final ProfileViewModelState state = ref.watch(profileViewModelProvider);
+    final ProfileViewModelProvider provider = profileViewModelProvider(profileId);
+    final ProfileViewModel viewModel = ref.read(provider.notifier);
+    final ProfileViewModelState state = ref.watch(provider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 

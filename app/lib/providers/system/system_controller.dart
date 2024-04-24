@@ -334,8 +334,7 @@ class SystemController extends _$SystemController {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     logger.e('handleFatalException: $errorMessage');
-    appRouter.removeWhere((route) => true);
-    await appRouter.push(ErrorRoute(errorMessage: errorMessage));
+    await appRouter.replaceAll([ErrorRoute(errorMessage: errorMessage)]);
   }
 
   Future<void> openSettings() async {

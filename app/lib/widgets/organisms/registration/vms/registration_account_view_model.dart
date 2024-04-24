@@ -65,8 +65,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
         return;
       }
 
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -89,8 +88,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
         return;
       }
 
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } catch (e) {
       // when the login doesn't work - we are happy it just closing
       logger.e('login canceled / failed', error: e);
@@ -140,8 +138,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       });
 
       logger.i('Profile created, navigating to home screen');
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } finally {
       state = state.copyWith(isBusy: false);
     }

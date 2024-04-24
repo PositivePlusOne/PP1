@@ -70,8 +70,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
       await profileController.updateReferenceImage(result);
       logger.i("Reference image saved, navigating to profile");
 
-      appRouter.removeWhere((route) => true);
-      appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -94,8 +93,7 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     logger.i("Profile image completed, navigating to profile");
-    appRouter.removeWhere((route) => true);
-    appRouter.push(const HomeRoute());
+    await appRouter.replaceAll([const HomeRoute()]);
   }
 
   void onFaceDetected(FaceDetectionModel? model) {

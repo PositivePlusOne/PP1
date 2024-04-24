@@ -26,8 +26,7 @@ class NotificationGuard extends AutoRouteGuard {
     final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
     final bool notificationPreferencesSet = sharedPreferences.getBool(kNotificationsAcceptedKey) != null;
     if (!notificationPreferencesSet) {
-      router.removeWhere((route) => true);
-      router.push(const NotificationPreferencesRoute());
+      router.replaceAll([const NotificationPreferencesRoute()]);
       resolver.next(false);
       return;
     }

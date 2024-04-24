@@ -80,6 +80,8 @@ class PositiveFeedState with PositivePaginationControllerState {
           // Wait until the first page is loaded
           bool isSuccessful = false;
           while (DateTime.now().isBefore(timeoutDatetime)) {
+            await Future.delayed(feedRefreshTimeoutDuration);
+
             final PositiveFeedState? feedState = cacheController.get(buildCacheKey());
             if (feedState?.pagingController.itemList?.isNotEmpty == true) {
               isSuccessful = true;
@@ -90,15 +92,11 @@ class PositiveFeedState with PositivePaginationControllerState {
             if (feedState?.pagingController.error != null) {
               throw feedState?.pagingController.error!;
             }
-
-            await Future<void>.delayed(const Duration(milliseconds: 100));
           }
 
           if (!isSuccessful) {
             throw Exception('Failed to refresh feed');
           }
-
-          logger.d('onRefresh() completed');
         },
       );
 

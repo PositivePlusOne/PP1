@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -73,7 +72,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
 
   // Add the tags to the start of the markdown as bolded text
   if (tagBuffer.isNotEmpty) {
-    markdown = '$markdown\n${tagBuffer.toString()}';
+    markdown = '$markdown\n\n${tagBuffer.toString()}';
   }
 
   return MarkdownWidget(
@@ -87,21 +86,9 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   );
 }
 
-Future<void> _onInternalLinkedTapped(void Function(String link)? onTapLink, String link) async {
+void _onInternalLinkedTapped(void Function(String link)? onTapLink, String link) {
   final Logger logger = providerContainer.read(loggerProvider);
   logger.d('Link tapped: $link');
-
-  // Check if the URL is a PP1 custom schema
-  // If it is, we can handle it internally
-  final Uri? uri = Uri.tryParse(link);
-  if (uri != null) {
-    final UniversalLinksController universalLinksController = providerContainer.read(universalLinksControllerProvider.notifier);
-    final bool canHandleInternally = await universalLinksController.canHandleLink(uri);
-    if (canHandleInternally) {
-      await universalLinksController.handleLink(uri);
-      return;
-    }
-  }
 
   if (onTapLink != null) {
     onTapLink(link);
@@ -115,8 +102,7 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
 
-  final Color textColor = brightness == Brightness.light ? colors.colorGray7 : colors.white;
-  final Color textBoldColor = brightness == Brightness.light ? colors.black : colors.white;
+  final Color textColor = brightness == Brightness.light ? colors.black : colors.white;
 
   return [
     PreConfig(
@@ -130,11 +116,11 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
     H2Config(style: typography.styleHeroSmall.copyWith(color: textColor)),
     H3Config(style: typography.styleTitle.copyWith(color: textColor)),
     H4Config(style: typography.styleTitleTwo.copyWith(color: textColor)),
-    H5Config(style: typography.styleSubtitleBold.copyWith(color: textBoldColor)),
-    H6Config(style: typography.styleSubtextBold.copyWith(color: textBoldColor)),
+    H5Config(style: typography.styleSubtitleBold.copyWith(color: textColor)),
+    H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
-      style: typography.styleBold.copyWith(color: textBoldColor),
+      style: typography.styleBold.copyWith(color: colors.black),
       onTap: (link) => _onInternalLinkedTapped(onTapLink, link),
     ),
     CodeConfig(style: typography.styleSubtitle.copyWith(color: textColor, fontFamily: 'AlbertSans')),

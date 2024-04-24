@@ -14,7 +14,7 @@
     "editor.formatOnType": true,
     "editor.rulers": [512],
     "editor.selectionHighlight": false,
-    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": true,
     "editor.suggestSelection": "first",
     "editor.tabCompletion": "onlySnippets",
     "editor.wordBasedSuggestions": "off"

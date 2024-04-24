@@ -122,7 +122,7 @@ TERMS AND CONDITIONS - PLEASE READ THESE LICENCE TERMS CAREFULLY
 
 **3\. ADDITIONAL TERMS FOR SPECIFIC SERVICES**
 
-In addition your use of the App and Services that you subscribe to and purchase will be governed by the terms of use and privacy policies of Positive Plus One Limited and such other policies as we may notify you from time to time. Please review our Privacy Policy here [www.positiveplusone.com/privacy-policy](http://www.positiveplusone.com/privacy-policy) to check out other relevant organisations and their policies.
+In addition your use of the App and Services that you subscribe to and purchase will be governed by the terms of use and privacy policies of Positive Plus One Limited and such other policies as we may notify you from time to time. Please review our Privacy Policy here [www.positiveplusone.com/privacypolicy](http://www.positiveplusone.com/privacypolicy) to check out other relevant organisations and their policies.
 
 **4\. ELIGIBILITY**
 
@@ -162,11 +162,11 @@ In addition your use of the App and Services that you subscribe to and purchase 
 
 5.3.5. should you continue to engage with a user in another platform (e.g WhatsApp) we recommend that you apply a high level of personal security precautions.
 
-5.4. Your login details must not be shared under any circumstances.
+5.4. Positive+1 is committed to your safety and wellbeing – please accordingly review our recommended personal security recommendations appearing at [Positiveplusone.com/faqs](http://Positiveplusone.com/faqs)
 
-**6\. APP STORE TERMS ALSO APPLY**
+5.5. Your login details must not be shared under any circumstances.
 
-The ways in which you can use the App may also be controlled by the rules and policies of the third party web or mobile application platforms or storefronts authorised by us (including but not limited to the Apple App Store and/or Google Play Store) (the “Appstore”) and such rules and policies will apply instead of these terms to the extent that there are differences between the two.
+**6\. APP STORE TERMS ALSO APPLY**The ways in which you can use the App may also be controlled by the rules and policies of the third party web or mobile application platforms or storefronts authorised by us (including but not limited to the Apple App Store and/or Google Play Store) (the “Appstore”) and such rules and policies will apply instead of these terms to the extent that there are differences between the two.
 
 **7\. OPERATING SYSTEM REQUIREMENTS**
 
@@ -202,9 +202,7 @@ This App requires operating systems of iOS 10 or Android 5.1 (as applicable) or 
 
 9.1.2. receive and use any free supplementary software code or update of the App incorporating "patches" and corrections of errors or arising out of version updates as we may provide to you.
 
-**10\. YOU MAY NOT TRANSFER THE APP TO SOMEONE ELSE**
-
-Your account will be registered to you through your personal AppStore account. Accordingly, your right to use the App and the Services are personal to you. You may not otherwise transfer the App or the Services or any credits that you may have associated with the purchase of a Service to someone else, whether for money, for anything else or for free. If you sell any device on which the App is installed, you must remove the App from it.
+**10\. YOU MAY NOT TRANSFER THE APP TO SOMEONE ELSE**Your account will be registered to you through your personal AppStore account. Accordingly, your right to use the App and the Services are personal to you. You may not otherwise transfer the App or the Services or any credits that you may have associated with the purchase of a Service to someone else, whether for money, for anything else or for free. If you sell any device on which the App is installed, you must remove the App from it.
 
 **11\. CHANGES TO THESE TERMS**
 
@@ -222,9 +220,7 @@ Your account will be registered to you through your personal AppStore account. A
 
 12.3. We will not act in a way that is contrary to your rights or make your obligations owed to us more onerous where your consumer rights are relevant.
 
-**13\. IF SOMEONE ELSE OWNS THE PHONE OR DEVICE YOU ARE USING**
-
-If you download the App onto any phone or other device not owned by you, you must have the owner's permission to do so. You will be responsible for complying with these terms, whether or not you own the phone or other device.
+**13\. IF SOMEONE ELSE OWNS THE PHONE OR DEVICE YOU ARE USING**If you download the App onto any phone or other device not owned by you, you must have the owner's permission to do so. You will be responsible for complying with these terms, whether or not you own the phone or other device.
 
 **14\. THIRD PARTY STORES, PREMIUM SERVICES AND IN-APP PURCHASES**
 
@@ -350,29 +346,17 @@ All intellectual property rights in the App, and the Services throughout the wor
 
 22.3.3. Where functionality permits this, we or the relevant AppStore on our behalf may remotely access your devices and remove the App and restrict your right to re-download as well as ceasing to provide you with access to the Services.
 
-**23\. WE MAY TRANSFER THIS AGREEMENT TO SOMEONE ELSE**
+**23\. WE MAY TRANSFER THIS AGREEMENT TO SOMEONE ELSE**We may transfer our rights and obligations under these terms to another organisation. We will always tell you in writing if this happens and we will ensure that the transfer will not affect your rights under the contract.
 
-We may transfer our rights and obligations under these terms to another organisation. We will always tell you in writing if this happens and we will ensure that the transfer will not affect your rights under the contract.
+**24\. YOU NEED OUR CONSENT TO TRANSFER YOUR RIGHTS TO SOMEONE ELSE**You may only transfer your rights or your obligations under these terms to another person if we agree in writing.
 
-**24\. YOU NEED OUR CONSENT TO TRANSFER YOUR RIGHTS TO SOMEONE ELSE**
+**25\. CANCELLATION**Should you wish to cancel your account you can do so by going to the account settings on the App. Generally, refunds are not available for any payments made by you in relation to the App (including, for the avoidance of doubt, payments made in relation to Premium Services).
 
-You may only transfer your rights or your obligations under these terms to another person if we agree in writing.
+**26\. NO RIGHTS FOR THIRD PARTIES**This agreement does not give rise to any rights under the Contracts (Rights of Third Parties) Act 1999 enabling any other party to enforce any term of this agreement.
 
-**25\. CANCELLATION**
+**27\. IF A COURT FINDS PART OF THIS CONTRACT ILLEGAL, THE REST WILL CONTINUE IN FORCE**Each of the paragraphs of these terms operates separately. If any court or relevant authority decides that any of them are unlawful, the remaining paragraphs will remain in full force and effect.
 
-Should you wish to cancel your account you can do so by going to the account settings on the App. Generally, refunds are not available for any payments made by you in relation to the App (including, for the avoidance of doubt, payments made in relation to Premium Services).
-
-**26\. NO RIGHTS FOR THIRD PARTIES**
-
-This agreement does not give rise to any rights under the Contracts (Rights of Third Parties) Act 1999 enabling any other party to enforce any term of this agreement.
-
-**27\. IF A COURT FINDS PART OF THIS CONTRACT ILLEGAL, THE REST WILL CONTINUE IN FORCE**
-
-Each of the paragraphs of these terms operates separately. If any court or relevant authority decides that any of them are unlawful, the remaining paragraphs will remain in full force and effect.
-
-**28\. EVEN IF WE DELAY IN ENFORCING THIS CONTRACT, WE CAN STILL ENFORCE IT LATER**
-
-Even if we delay in enforcing this contract, we can still enforce it later. If we do not insist immediately that you do anything you are required to do under these terms, or if we delay in taking steps against you in respect of your breaking this contract, that will not mean that you do not have to do those things and it will not prevent us taking steps against you at a later date.
+**28\. EVEN IF WE DELAY IN ENFORCING THIS CONTRACT, WE CAN STILL ENFORCE IT LATER**Even if we delay in enforcing this contract, we can still enforce it later. If we do not insist immediately that you do anything you are required to do under these terms, or if we delay in taking steps against you in respect of your breaking this contract, that will not mean that you do not have to do those things and it will not prevent us taking steps against you at a later date.
 
 **29\. WHICH LAWS APPLY TO THIS CONTRACT AND WHERE YOU MAY BRING LEGAL PROCEEDINGS**
 

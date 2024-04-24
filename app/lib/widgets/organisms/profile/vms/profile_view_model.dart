@@ -7,14 +7,12 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/shared/mixin/busy_state_delegate_mixin.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
-import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../services/third_party.dart';
 
 // Flutter imports:
@@ -25,18 +23,20 @@ part 'profile_view_model.g.dart';
 @freezed
 class ProfileViewModelState with _$ProfileViewModelState {
   const factory ProfileViewModelState({
-    String? targetProfileId,
+    required String targetProfileId,
     @Default(false) bool isBusy,
   }) = _ProfileViewModelState;
 
-  factory ProfileViewModelState.initialState() => const ProfileViewModelState();
+  factory ProfileViewModelState.initialState(String targetId) => ProfileViewModelState(
+        targetProfileId: targetId,
+      );
 }
 
 @Riverpod(keepAlive: true)
 class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin, BusyStateDelegateMixin {
   @override
-  ProfileViewModelState build() {
-    return ProfileViewModelState.initialState();
+  ProfileViewModelState build(String targetId) {
+    return ProfileViewModelState.initialState(targetId);
   }
 
   @override
@@ -68,17 +68,6 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin, BusyState
     cacheController.add(key: cacheKey, value: feedState);
   }
 
-  Future<void> preloadUserProfile(String uid) async {
-    final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
-    logger.d('[Profile View Model] - Preloading profile for user: $uid');
-    final Profile profile = await profileController.getProfile(uid);
-
-    logger.i('[Profile View Model] - Preloaded profile for user: $uid');
-    state = state.copyWith(targetProfileId: profile.flMeta?.id);
-  }
-
   Future<void> onAccountSelected() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter router = ref.read(appRouterProvider);
@@ -94,7 +83,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin, BusyState
     final AppRouter router = ref.read(appRouterProvider);
 
     logger.d('[Profile View Model] - Disconnecting from profile');
-    if (state.targetProfileId?.isEmpty ?? true) {
+    if (state.targetProfileId.isEmpty ?? true) {
       logger.e('[Profile View Model] - Profile ID is empty');
       return;
     }

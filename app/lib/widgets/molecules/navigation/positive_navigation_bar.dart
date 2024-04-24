@@ -173,8 +173,8 @@ class PositiveNavigationBarContent extends ConsumerWidget {
         break;
       case NavigationBarIndex.hub:
       default:
-        routeInfo = const HomeRoute();
-        break;
+        await router.replaceAll([const HomeRoute()]);
+        return;
     }
 
     // Check if we are currently on the route we want to navigate to

@@ -98,8 +98,7 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
       await profileController.updateProfileImage(result);
       state = state.copyWith(isBusy: false);
 
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -142,8 +141,7 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
       await profileController.updateProfileImage(picture);
       state = state.copyWith(isBusy: false);
 
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.replaceAll([const HomeRoute()]);
     } finally {
       state = state.copyWith(isBusy: false);
     }
