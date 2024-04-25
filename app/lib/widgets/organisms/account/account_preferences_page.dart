@@ -80,7 +80,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
       case AvailableBiometrics.strong:
       case AvailableBiometrics.weak:
         biometricToggleTitle = localizations.page_account_actions_biometrics_bio;
-        biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_bio);
+        biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_bio_inline);
       case AvailableBiometrics.none:
         biometricToggleTitle = localizations.page_account_actions_biometrics_pin;
         biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_pin);
