@@ -15,6 +15,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart';
 import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/application_constants.dart';
@@ -23,7 +24,6 @@ import 'package:app/helpers/image_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 class UploadResult {
   UploadResult({
