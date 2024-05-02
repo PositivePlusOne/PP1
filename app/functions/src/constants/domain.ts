@@ -36,4 +36,13 @@ export const FIREBASE_FUNCTION_INSTANCE_DATA_ONE_INSTANCE = {
   timeoutSeconds: 540,
 } as functions.RuntimeOptions;
 
+export const FIREBASE_FUNCTION_INSTANCE_DATA_LARGE_INSTANCE = {
+  secrets: Keys.AllKeys,
+  vpcConnector: "redis-vpc-conn",
+  minInstances: 1,
+  maxInstances: 1,
+  memory: "256MB",
+  timeoutSeconds: 540,
+} as functions.RuntimeOptions;
+
 export const GENERIC_API_TIMEOUT = 10000;
