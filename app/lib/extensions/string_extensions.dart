@@ -11,6 +11,7 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/localization/country.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/services/third_party.dart';
 
 extension StringExt on String {
@@ -59,6 +60,16 @@ extension StringExt on String {
   Future<void> attemptToLaunchURL() async {
     final Uri? uri = Uri.tryParse(this);
     final Logger logger = providerContainer.read(loggerProvider);
+
+    // We can bypass deep linking if the URL matches our custom scheme
+    final UniversalLinksController universalLinksController = providerContainer.read(universalLinksControllerProvider.notifier);
+    final bool canHandleInternally = await universalLinksController.canHandleLink(uri);
+
+    if (canHandleInternally) {
+      logger.d("Handling URL internally: $this");
+      await universalLinksController.handleLink(uri);
+      return;
+    }
 
     if (uri == null) {
       logger.e("Invalid URL: $this");
