@@ -61,6 +61,23 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     super.dispose();
   }
 
+  @override
+  void didUpdateHook(PagingControllerHook oldHook) {
+    super.didUpdateHook(oldHook);
+
+    if (hook.controller == oldHook.controller) {
+      return;
+    }
+
+    final bool hasListeners = hook.controller.hasListeners;
+    final bool isRefreshAction = oldHook.controller.value.status == PagingStatus.ongoing && hook.controller.value.status == PagingStatus.loadingFirstPage;
+
+    // Manually trigger the next page request if the controller has no listeners and the action is a refresh
+    if (!hasListeners && isRefreshAction) {
+      onPreviousPageRequested("");
+    }
+  }
+
   Future<void> setupListeners() async {
     hook.controller.addPageRequestListener(onPreviousPageRequested);
 
@@ -91,19 +108,8 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     await hook.onPreviousPageRequest(pageKey);
   }
 
-  Future<void> onNextPageRequested() => runWithMutex(
-        () async {
-          await hook.onNextPagePageRequest?.call();
-        },
-      );
-
-  @override
-  void didUpdateHook(PagingControllerHook oldHook) {
-    super.didUpdateHook(oldHook);
-
-    if (hook.controller == oldHook.controller) {
-      return;
-    }
+  Future<void> onNextPageRequested() async {
+    await hook.onNextPagePageRequest?.call();
   }
 
   @override
