@@ -120,7 +120,7 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
     H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
-      style: typography.styleBold.copyWith(color: colors.black),
+      style: typography.styleBold.copyWith(color: colors.linkBlue),
       onTap: (link) => _onInternalLinkedTapped(onTapLink, link),
     ),
     CodeConfig(style: typography.styleSubtitle.copyWith(color: textColor, fontFamily: 'AlbertSans')),
