@@ -493,16 +493,13 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
         index: "relationships",
         fromJson: (json) => Relationship.fromJson(json),
         facetFilters: filters,
-        pagination: const Pagination(
-          limit: 10,
-        ),
       );
 
       logger.d('CommunitiesController - loadNextSearchCommunityData - Loaded next community data appending to page');
       appendToFeedState(
         currentProfile: currentProfile,
         feedState: feedState,
-        relationships: response.results,
+        relationships: await filterRelationships(response.results, feedState.communityType),
         cursor: response.cursor,
       );
     } catch (ex) {
@@ -512,6 +509,47 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     } finally {
       saveFeedState(feedState);
     }
+  }
+
+  Future<List<Relationship>> filterRelationships(List<Relationship> relationships, CommunityType type) async {
+    final Profile? currentProfile = getCurrentProfile();
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final List<Relationship> newRelationships = <Relationship>[];
+
+    for (final Relationship relationship in relationships) {
+      final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+      switch (type) {
+        case CommunityType.connected:
+          if (relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected)) {
+            newRelationships.add(relationship);
+          }
+          break;
+        case CommunityType.followers:
+          if (relationshipStates.contains(RelationshipState.targetFollowing)) {
+            newRelationships.add(relationship);
+          }
+          break;
+        case CommunityType.following:
+          if (relationshipStates.contains(RelationshipState.sourceFollowed)) {
+            newRelationships.add(relationship);
+          }
+          break;
+        case CommunityType.blocked:
+          if (relationshipStates.contains(RelationshipState.sourceBlocked)) {
+            newRelationships.add(relationship);
+          }
+          break;
+        case CommunityType.managed:
+          if (relationshipStates.contains(RelationshipState.targetManaged)) {
+            newRelationships.add(relationship);
+          }
+          break;
+        case CommunityType.supported:
+          break;
+      }
+    }
+
+    return newRelationships;
   }
 
   Future<void> loadNextInternalCommunityData({
@@ -556,7 +594,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
       appendToFeedState(
         currentProfile: currentProfile,
         feedState: feedState,
-        relationships: relationships,
+        relationships: await filterRelationships(relationships, feedState.communityType),
         cursor: response.cursor ?? '',
       );
     } catch (ex) {
