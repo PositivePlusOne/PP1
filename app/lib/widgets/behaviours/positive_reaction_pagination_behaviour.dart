@@ -237,17 +237,41 @@ class ReactionLikeList extends ConsumerWidget {
   final Profile? currentProfile;
   final PagingController<String?, Reaction> pagingController;
 
+  // Prevent showing us in the list of likes if we somehow liked our own post
+  bool canBuildItem(Reaction reaction, int index) {
+    final bool isValidUserId = reaction.userId.isNotEmpty;
+    final bool isValidProfileId = currentProfile == null || currentProfile?.flMeta?.id?.isNotEmpty == true && reaction.userId != currentProfile?.flMeta?.id;
+
+    // If we have a stale cache, we could see duplicate likes from us (unlike, like, unlike, like, etc.)
+    // In this case, we might have the same user twice in the list
+    // We can prevent this by checking if we've seen the previous user
+    final int firstIndex = pagingController.itemList?.indexWhere((element) => element.userId == reaction.userId) ?? -1;
+    final bool hasSeenPrevious = firstIndex != -1 && firstIndex < index;
+
+    return isValidUserId && isValidProfileId && !hasSeenPrevious;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     return PagedListView.separated(
       shrinkWrap: true,
       pagingController: pagingController,
-      separatorBuilder: (_, __) => PositiveFeedPaginationBehaviour.buildVisualSeparator(
-        context,
-        color: colours.colorGray1,
-        vPadding: 0,
-      ),
+      separatorBuilder: (_, int index) {
+        final Reaction? reaction = pagingController.itemList?[index];
+        if (reaction != null) {
+          final bool canBuild = canBuildItem(reaction, index);
+          if (!canBuild) {
+            return const SizedBox.shrink();
+          }
+        }
+
+        return PositiveFeedPaginationBehaviour.buildVisualSeparator(
+          context,
+          color: colours.colorGray1,
+          vPadding: 0,
+        );
+      },
       builderDelegate: PagedChildBuilderDelegate<Reaction>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
@@ -257,13 +281,20 @@ class ReactionLikeList extends ConsumerWidget {
         noItemsFoundIndicatorBuilder: (_) => const SizedBox.shrink(),
         firstPageProgressIndicatorBuilder: (_) => const PositiveLoadingIndicator(),
         newPageProgressIndicatorBuilder: (_) => const PositiveLoadingIndicator(),
-        itemBuilder: (context, reaction, index) => buildReactionProfileItem(
-          context: context,
-          activity: activity,
-          currentProfile: currentProfile,
-          item: reaction,
-          index: index,
-        ),
+        itemBuilder: (context, reaction, index) {
+          final bool canBuild = canBuildItem(reaction, index);
+          if (!canBuild) {
+            return const SizedBox.shrink();
+          }
+
+          return buildReactionProfileItem(
+            context: context,
+            activity: activity,
+            currentProfile: currentProfile,
+            item: reaction,
+            index: index,
+          );
+        },
       ),
     );
   }
