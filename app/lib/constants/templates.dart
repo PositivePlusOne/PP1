@@ -43,15 +43,15 @@ The terms set out below, are terms that you have already agreed to in becoming a
 
 **You must:**
 
-*   not use the App or any Service in any unlawful manner, for any unlawful purpose, or in any manner inconsistent with these terms, or act fraudulently or maliciously, for example, by hacking into or inserting malicious code, such as viruses, or harmful data, into the App, any Service or any operating system;
+*   Not use the App or any Service in any unlawful manner, for any unlawful purpose, or in any manner inconsistent with these terms, or act fraudulently or maliciously, for example, by hacking into or inserting malicious code, such as viruses, or harmful data, into the App, any Service or any operating system;
     
-*   not infringe our intellectual property rights or those of any third party in relation to your use of the App or any Service, including by the submission of any material (to the extent that such use is not licensed by these terms);
+*   Not infringe our intellectual property rights or those of any third party in relation to your use of the App or any Service, including by the submission of any material (to the extent that such use is not licensed by these terms);
     
-*   not transmit any material that is defamatory, offensive or otherwise objectionable in relation to your use of the App or any Service;
+*   Not transmit any material that is defamatory, offensive or otherwise objectionable in relation to your use of the App or any Service;
     
-*   not use the App or any Service in a way that could damage, disable, overburden, impair or compromise our systems or security or interfere with other users;
+*   Not use the App or any Service in a way that could damage, disable, overburden, impair or compromise our systems or security or interfere with other users;
     
-*   not collect or harvest any information or data from any Service or our systems or attempt to decipher any transmissions to or from the servers running any Service.
+*   Not collect or harvest any information or data from any Service or our systems or attempt to decipher any transmissions to or from the servers running any Service.
     
 *   In addition, your use of the App must at all times be in compliance with and support the operation of our guidelines and principles of acceptable use contained within this policy, all of which are provided to you below.
     
@@ -122,7 +122,7 @@ TERMS AND CONDITIONS - PLEASE READ THESE LICENCE TERMS CAREFULLY
 
 **3\. ADDITIONAL TERMS FOR SPECIFIC SERVICES**
 
-In addition your use of the App and Services that you subscribe to and purchase will be governed by the terms of use and privacy policies of Positive Plus One Limited and such other policies as we may notify you from time to time. Please review our Privacy Policy here [www.positiveplusone.com/privacy-policy](http://www.positiveplusone.com/privacy-policy) to check out other relevant organisations and their policies.
+In addition your use of the App and Services that you subscribe to and purchase will be governed by the terms of use and privacy policies of Positive Plus One Limited and such other policies as we may notify you from time to time. Please review our Privacy Policy here [www.positiveplusone.com/privacy-policy](https://www.positiveplusone.com/privacy-policy) to check out other relevant organisations and their policies.
 
 **4\. ELIGIBILITY**
 
@@ -184,7 +184,7 @@ This App requires operating systems of iOS 10 or Android 5.1 (as applicable) or 
 
 8.4.1. We are under a legal duty to supply products that are in conformity with this contract. We summarise in this section your key legal rights in relation to the App. Nothing in these terms will affect your legal rights.
 
-8.4.2. This is only a summary of your key legal rights. They are also subject to certain exceptions. For detailed information please visit the Citizens Advice website [http://www.adviceguide.org.uk](http://www.adviceguide.org.uk) or call 03454 04 05 06. Please note these details may change from time to time. If outside of the United Kingdom your rights may differ and you should seek advice from the most appropriate local consumer organisation.
+8.4.2. This is only a summary of your key legal rights. They are also subject to certain exceptions. For detailed information please visit the Citizens Advice website [https://www.adviceguide.org.uk](http://www.adviceguide.org.uk) or call 03454 04 05 06. Please note these details may change from time to time. If outside of the United Kingdom your rights may differ and you should seek advice from the most appropriate local consumer organisation.
 
 8.4.3. The Consumer Rights Act 2015 says digital content must be as described, fit for purpose and of satisfactory quality.
 
