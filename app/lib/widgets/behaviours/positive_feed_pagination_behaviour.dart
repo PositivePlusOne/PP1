@@ -348,7 +348,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       child: Container(
         height: 2.0,
         decoration: BoxDecoration(
-          color: color ?? colors.white,
+          // color: color ?? colors.white,
+          color: Colors.black,
         ),
       ),
     );
@@ -369,7 +370,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   Widget buildSeparator(BuildContext context, int index) {
     final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
-    final String activityId = activity?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String targetProfileId = activity?.publisherInformation?.publisherId ?? '';
 
@@ -377,7 +377,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String relationshipId = [targetProfileId, currentProfileId].asGUID;
     final Relationship? relationship = cacheController.get(relationshipId);
 
-    final Widget? promotedPost = getPromotedPostFromIndex(
+    final (Promotion? promotion, Widget? promotionWidget) = getPromotedPostFromIndex(
       index: index,
       promotionType: PromotionType.feed,
       context: context,
@@ -385,19 +385,19 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       relationship: relationship,
     );
 
-    // Prevent showing promoted posts if they are not supplied as a promotion
-    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
-    final bool isPromoted = promotionsController.isActivityPromoted(activityId: activityId, promotionType: PromotionType.feed);
-    if (isPromoted) {
-      return const SizedBox.shrink();
-    }
+    final bool hasContent = doesItemHaveContent(
+      feed: feed,
+      item: activity ?? const Activity(),
+      relationship: relationship,
+      promotion: promotion,
+    );
 
-    final bool hasContent = doesItemHaveContent(feed: feed, item: activity ?? const Activity());
     if (!hasContent) {
       return const SizedBox.shrink();
     }
 
     final bool meetsRelationshipCheck = meetsRelationshipCheckForDisplay(
+      item: activity,
       relationship: relationship,
       feed: feed,
       currentProfileId: currentProfileId,
@@ -415,15 +415,15 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         buildVisualSeparator(context),
-        if (promotedPost != null && canDisplayPromotion) ...<Widget>[
-          promotedPost,
+        if (promotionWidget != null && canDisplayPromotion) ...<Widget>[
+          promotionWidget,
           buildVisualSeparator(context),
         ],
       ],
     );
   }
 
-  static Widget? getPromotedPostFromIndex({
+  static (Promotion? promotion, Widget? child) getPromotedPostFromIndex({
     required int index,
     required PromotionType promotionType,
     required BuildContext context,
@@ -439,12 +439,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     );
 
     if (promotion == null) {
-      return null;
+      return (null, null);
     }
 
     final Activity? promotedActivity = cacheController.get(promotion.activityId);
     if (promotedActivity == null) {
-      return null;
+      return (null, null);
     }
 
     // Check the relationship for the promoted activity
@@ -461,26 +461,30 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     );
 
     if (!canDisplayPromotedActivity) {
-      return null;
+      return (null, null);
     }
 
     final bool meetsRelationshipCheck = meetsRelationshipCheckForDisplay(
+      item: promotedActivity,
       relationship: relationship,
       feed: feed,
       currentProfileId: currentProfileId,
     );
 
     if (!meetsRelationshipCheck) {
-      return null;
+      return (null, null);
     }
 
-    return buildItem(
-      currentProfile: currentProfile,
-      feed: feed,
-      context: context,
-      item: promotedActivity,
-      index: index,
-      promotion: promotion,
+    return (
+      promotion,
+      buildItem(
+        currentProfile: currentProfile,
+        feed: feed,
+        context: context,
+        item: promotedActivity,
+        index: index,
+        promotion: promotion,
+      ),
     );
   }
 
@@ -488,10 +492,20 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     required TargetFeed? feed,
     required Activity item,
     Relationship? relationship,
+    Promotion? promotion,
   }) {
     final String activityId = item.flMeta?.id ?? '';
     final String publisherId = item.publisherInformation?.publisherId ?? '';
     if (activityId.isEmpty || publisherId.isEmpty) {
+      return false;
+    }
+
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+    final bool isPromoted = promotionsController.isActivityPromoted(activityId: activityId, promotionType: PromotionType.feed);
+    final bool isPromotionSupplied = promotion != null;
+
+    // Prevent showing promoted posts if they are not supplied as a promotion
+    if (isPromoted && !isPromotionSupplied) {
       return false;
     }
 
@@ -515,12 +529,35 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   static bool meetsRelationshipCheckForDisplay({
+    required Activity? item,
     required Relationship? relationship,
     required TargetFeed? feed,
     required String currentProfileId,
   }) {
     final Set<RelationshipState> states = relationship?.relationshipStatesForEntity(currentProfileId) ?? <RelationshipState>{};
     final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
+    final bool isConnected = states.contains(RelationshipState.fullyConnected);
+    final bool isMyPost = item?.publisherInformation?.publisherId == currentProfileId;
+
+    if (isMyPost) {
+      return true;
+    }
+
+    if (item != null && item.securityConfiguration?.viewMode != null) {
+      final bool hasViewMode = item.securityConfiguration?.viewMode.when(
+            public: () => true,
+            followersAndConnections: () => isFollowing || isConnected,
+            connections: () => isConnected,
+            private: () => isMyPost,
+            signedIn: () => currentProfileId.isNotEmpty,
+            disabled: () => isMyPost,
+          ) ??
+          true;
+
+      if (!hasViewMode) {
+        return false;
+      }
+    }
 
     if (feed != null) {
       final bool isUserTimelineFeed = feed.targetSlug == 'timeline' && feed.targetUserId == currentProfileId;
@@ -555,16 +592,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String publisherId = item.publisherInformation?.publisherId ?? '';
     final String reposterId = item.repostConfiguration?.targetActivityPublisherId ?? '';
 
-    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
-    final bool isPromoted = promotionsController.isActivityPromoted(activityId: activityId, promotionType: PromotionType.feed);
-    final bool isPromotionSupplied = promotion != null;
-
-    // Prevent showing promoted posts if they are not supplied as a promotion
-    if (isPromoted && !isPromotionSupplied) {
-      return const SizedBox.shrink();
-    }
-
-    if (!doesItemHaveContent(feed: feed, item: item)) {
+    if (!doesItemHaveContent(feed: feed, item: item, relationship: null, promotion: promotion)) {
       return const SizedBox.shrink();
     }
 
