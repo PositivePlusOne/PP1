@@ -348,8 +348,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       child: Container(
         height: 2.0,
         decoration: BoxDecoration(
-          // color: color ?? colors.white,
-          color: Colors.black,
+          color: color ?? colors.white,
         ),
       ),
     );
