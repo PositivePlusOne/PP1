@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -38,6 +39,7 @@ import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../dtos/database/activities/activities.dart';
 import '../dtos/database/common/media.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 
 extension ActivityExt on Activity {
   bool get hasContentToDisplay {
@@ -216,6 +218,19 @@ extension ActivityExt on Activity {
     final bool isLoggedIn = currentProfileId.isNotEmpty;
 
     final bool shouldSkipOnPromotionKey = hideWhenMatchesPromotionKey && isLoggedIn && isPublisher && promotionsController.isActivityPromoted(activityId: flMeta?.id ?? '', promotionType: PromotionType.feed);
+
+    // Saad
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+
+    final String expectedStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: currentProfile?.flMeta?.id ?? '');
+    final ProfileStatistics? profileStatistics = cacheController.get<ProfileStatistics>(expectedStatisticsKey);
+    final AppRouter router = providerContainer.read(appRouterProvider);
+
+    if (router.currentPath == "/home" && currentFeed != null && currentFeed.targetSlug == "user" && currentProfile != null && profileStatistics != null && profileStatistics.following > 1 && isPublisher) {
+      return false;
+    }
+
     if (shouldSkipOnPromotionKey) {
       return false;
     }
