@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +14,7 @@ import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -27,6 +27,7 @@ import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/content/sharing_controller.dart';
 import 'package:app/providers/enrichment/activity_enrichment_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -39,7 +40,6 @@ import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../dtos/database/activities/activities.dart';
 import '../dtos/database/common/media.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 
 extension ActivityExt on Activity {
   bool get hasContentToDisplay {
