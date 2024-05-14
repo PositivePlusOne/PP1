@@ -219,7 +219,6 @@ extension ActivityExt on Activity {
 
     final bool shouldSkipOnPromotionKey = hideWhenMatchesPromotionKey && isLoggedIn && isPublisher && promotionsController.isActivityPromoted(activityId: flMeta?.id ?? '', promotionType: PromotionType.feed);
 
-    // Saad
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
@@ -227,7 +226,7 @@ extension ActivityExt on Activity {
     final ProfileStatistics? profileStatistics = cacheController.get<ProfileStatistics>(expectedStatisticsKey);
     final AppRouter router = providerContainer.read(appRouterProvider);
 
-    if (router.currentPath == "/home" && currentFeed != null && currentFeed.targetSlug == "user" && currentProfile != null && profileStatistics != null && profileStatistics.following > 1 && isPublisher) {
+    if (router.current.name == HomeRoute.name && currentFeed != null && currentFeed.targetSlug == "user" && currentProfile != null && profileStatistics != null && profileStatistics.following > 1 && isPublisher) {
       return false;
     }
 

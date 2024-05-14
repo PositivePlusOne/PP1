@@ -1,7 +1,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +22,7 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 
 //*-------------------*//
 //*VIDEO EDITOR SCREEN*//
