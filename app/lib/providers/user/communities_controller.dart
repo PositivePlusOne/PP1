@@ -1,12 +1,11 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:collection';
 
 // Flutter imports:
-import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -16,7 +15,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/builders/relationship_search_filter_builder.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
-import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
