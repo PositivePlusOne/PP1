@@ -14,6 +14,7 @@ import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -26,6 +27,7 @@ import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/content/sharing_controller.dart';
 import 'package:app/providers/enrichment/activity_enrichment_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -216,6 +218,18 @@ extension ActivityExt on Activity {
     final bool isLoggedIn = currentProfileId.isNotEmpty;
 
     final bool shouldSkipOnPromotionKey = hideWhenMatchesPromotionKey && isLoggedIn && isPublisher && promotionsController.isActivityPromoted(activityId: flMeta?.id ?? '', promotionType: PromotionType.feed);
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+
+    final String expectedStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: currentProfile?.flMeta?.id ?? '');
+    final ProfileStatistics? profileStatistics = cacheController.get<ProfileStatistics>(expectedStatisticsKey);
+    final AppRouter router = providerContainer.read(appRouterProvider);
+
+    if (router.current.name == HomeRoute.name && currentFeed != null && currentFeed.targetSlug == "user" && currentProfile != null && profileStatistics != null && profileStatistics.following > 1 && isPublisher) {
+      return false;
+    }
+
     if (shouldSkipOnPromotionKey) {
       return false;
     }
