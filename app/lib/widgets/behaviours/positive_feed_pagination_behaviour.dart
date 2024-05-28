@@ -194,6 +194,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     if (newActivities.isEmpty) {
       logger.d('appendPotentialNewEntries() - No activities to append');
+      feedState.pagingController.nextPageKey = null;
       return false;
     }
 
@@ -392,6 +393,18 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     );
 
     if (!hasContent) {
+      return const SizedBox.shrink();
+    }
+
+    final bool canDisplay = activity?.canDisplayOnFeed(
+          currentProfile: currentProfile,
+          relationshipWithActivityPublisher: relationship,
+          hideWhenMatchesPromotionKey: true,
+          currentFeed: feed,
+        ) ??
+        false;
+
+    if (!canDisplay) {
       return const SizedBox.shrink();
     }
 

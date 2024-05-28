@@ -132,15 +132,20 @@ class HomePage extends HookConsumerWidget {
 
     void Function()? scrollToTop;
     String fabTitle = '';
+    final showFab = useState(true);
 
     final bool hasNewItems = useFeedNotifier(feedState: currentFeedState);
     if (hasNewItems) {
       fabTitle = 'New Posts';
-      scrollToTop = () => scrollController.animateTo(
+      scrollToTop = () => scrollController
+              .animateTo(
             0,
             duration: kAnimationDurationRegular,
             curve: kAnimationCurveDefault,
-          );
+          )
+              .then((_) {
+            showFab.value = false;
+          });
     }
 
     // Check enabled state of the tabs
@@ -157,7 +162,7 @@ class HomePage extends HookConsumerWidget {
       onRefresh: () => currentFeedState.onRefresh(),
       appBarColor: colors.colorGray1,
       scrollController: scrollController,
-      floatingActionLabel: fabTitle,
+      floatingActionLabel: showFab.value ? fabTitle : "",
       onFloatingActionPressed: scrollToTop,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,

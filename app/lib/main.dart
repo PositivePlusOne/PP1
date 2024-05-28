@@ -23,7 +23,8 @@ final ProviderContainer providerContainer = ProviderContainer();
 
 Future<void> main() async {
   await setupApplication();
-
+  final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
+  systemController.biometricsReverification(false);
   runApp(
     UncontrolledProviderScope(
       container: providerContainer,
