@@ -98,6 +98,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         saveActivitiesState();
       }
     } catch (ex) {
+      feedState.pagingController.nextPageKey = null;
       logger.e('checkForNextPageEntries() - ex: $ex');
     }
   }
@@ -167,6 +168,9 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     logger.d('appendActivityPageToState() - activityList.length: ${activities.length}');
     feedState.currentPaginationKey = next ?? '';
     feedState.pagingController.appendSafePage(activities, next ?? '');
+    if (next == null) {
+      feedState.pagingController.nextPageKey = null;
+    }
   }
 
   bool appendPotentialNewEntries(Map<String, dynamic> data) {
