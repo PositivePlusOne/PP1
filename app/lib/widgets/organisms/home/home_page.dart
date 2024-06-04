@@ -52,6 +52,8 @@ class HomePage extends HookConsumerWidget {
 
     useLifecycleHook(viewModel);
 
+    final ScrollController scrollController = useScrollController();
+
     final bool isLoggedOut = userController.currentUser == null;
     final List<Widget> actions = [
       ...buildCommonProfilePageActions(),
@@ -73,6 +75,7 @@ class HomePage extends HookConsumerWidget {
       feedState: newFeedState,
       feed: newFeed,
       isSliver: true,
+      scrollController: scrollController,
     );
 
     final TargetFeed followingFeed = TargetFeed(
@@ -87,6 +90,7 @@ class HomePage extends HookConsumerWidget {
       feedState: followingFeedState,
       feed: followingFeed,
       isSliver: true,
+      scrollController: scrollController,
     );
 
     final TargetFeed popularFeed = TargetFeed(
@@ -103,6 +107,7 @@ class HomePage extends HookConsumerWidget {
       feed: popularFeed,
       isSliver: true,
       shouldPersonalize: true,
+      scrollController: scrollController,
     );
 
     final List<TargetFeed> allTargetFeeds = <TargetFeed>[
@@ -113,8 +118,6 @@ class HomePage extends HookConsumerWidget {
 
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [...allTargetFeeds]).toList();
     useCacheHook(keys: expectedCacheKeys);
-
-    final ScrollController scrollController = useScrollController();
 
     final Widget currentFeedWidget = switch (state.currentTabIndex) {
       0 => newFeedWidget,
@@ -132,10 +135,10 @@ class HomePage extends HookConsumerWidget {
 
     void Function()? scrollToTop;
     String fabTitle = '';
-    final showFab = useState(true);
+    final showFab = useState(false);
 
     final bool hasNewItems = useFeedNotifier(feedState: currentFeedState);
-    if (hasNewItems) {
+    if (hasNewItems && !showFab.value) {
       fabTitle = 'New Posts';
       showFab.value = true;
       scrollToTop = () => scrollController

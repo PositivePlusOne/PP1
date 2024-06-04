@@ -37,6 +37,7 @@ class PositiveFeedState with PositivePaginationControllerState {
   bool hasNewItems;
 
   final Set<String> knownActivities = <String>{};
+  final Set<Activity> newActivities = <Activity>{};
 
   void appendKnownActivity(String str) {
     knownActivities.add(str);
@@ -44,6 +45,14 @@ class PositiveFeedState with PositivePaginationControllerState {
 
   void appendKnownActivities(List<String> strs) {
     knownActivities.addAll(strs);
+  }
+
+  void appendNewActivity(Activity activity) {
+    newActivities.add(activity);
+  }
+
+  void appendNewActivities(List<Activity> activity) {
+    newActivities.addAll(activity);
   }
 
   @override

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:collection/collection.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -59,6 +60,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     this.onPageLoaded,
     this.emptyDataWidget,
     this.noPostsWidget,
+    this.scrollController,
     super.key,
   });
 
@@ -77,6 +79,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
   static const int kCacheExtentHeightMultiplier = 5;
+
+  final ScrollController? scrollController;
 
   Future<void> checkForNextPageEntries() async {
     final Logger logger = providerContainer.read(loggerProvider);
@@ -177,7 +181,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Logger logger = providerContainer.read(loggerProvider);
 
     final List<dynamic> activityData = data['activities'] as List<dynamic>;
-    final List<Activity> newActivities = [];
 
     for (final dynamic activity in activityData) {
       final Map<String, dynamic> activityMap = activity as Map<String, dynamic>;
@@ -193,25 +196,16 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       }
 
       feedState.knownActivities.add(activityId);
-      newActivities.add(activityObject);
+      feedState.newActivities.add(activityObject);
     }
 
-    if (newActivities.isEmpty) {
+    if (feedState.newActivities.isEmpty) {
       logger.d('appendPotentialNewEntries() - No activities to append');
       feedState.pagingController.nextPageKey = null;
       return false;
     }
 
-    logger.d('appendPotentialNewEntries() - activityList.length: ${newActivities.length}');
-
-    // Create a new copy of the item list, appending the new items to the start
-    final List<Activity> currentItems = feedState.pagingController.itemList ?? [];
-    final List<Activity> newItems = [...newActivities, ...currentItems];
-    feedState.pagingController.value = PagingState<String, Activity>(
-      itemList: newItems,
-      error: null,
-      nextPageKey: feedState.pagingController.nextPageKey,
-    );
+    logger.d('appendPotentialNewEntries() - activityList.length: ${feedState.newActivities.length}');
 
     // Add a flag so that the UI can let the user know that new items have been found!
     feedState.hasNewItems = true;
@@ -282,6 +276,21 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     saveActivitiesState();
   }
 
+  void _onScroll() {
+    if (scrollController!.position.atEdge && scrollController!.position.pixels == 0) {
+      // Reached the top, load more entries
+      final List<Activity> currentItems = feedState.pagingController.itemList ?? [];
+      final List<Activity> newItems = [...feedState.newActivities, ...currentItems];
+      feedState.pagingController.value = PagingState<String, Activity>(
+        itemList: newItems,
+        error: null,
+        nextPageKey: feedState.pagingController.nextPageKey,
+      );
+      feedState.newActivities.clear();
+      saveActivitiesState();
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
@@ -304,6 +313,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         feedState.onRefresh();
       },
     );
+
+    useEffect(() {
+      scrollController?.addListener(_onScroll);
+      return () => scrollController?.removeListener(_onScroll); // Cleanup function
+    }, [scrollController]); // Re-run effect if scrollController changes
 
     final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts(currentProfile: currentProfile);
 
