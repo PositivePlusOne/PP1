@@ -137,6 +137,7 @@ class HomePage extends HookConsumerWidget {
     final bool hasNewItems = useFeedNotifier(feedState: currentFeedState);
     if (hasNewItems) {
       fabTitle = 'New Posts';
+      showFab.value = true;
       scrollToTop = () => scrollController
               .animateTo(
             0,
