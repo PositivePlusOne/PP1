@@ -87,6 +87,14 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
     logger.d('Checking for next page entries for feed: ${feed.targetSlug}');
 
+    //TO DO Investigate a larger issue of API being called with this
+    // Current fix to stop infinite loading
+    if (feed.targetUserId.isEmpty && feed.targetSlug == "user") {
+      logger.d('Incorrect slugs');
+      feedState.pagingController.nextPageKey = null;
+      feedState.pagingController.appendLastPage([]);
+      return;
+    }
     try {
       final EndpointResponse endpointResponse = await postApiService.listActivities(
         targetSlug: feed.targetSlug,
@@ -103,6 +111,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       }
     } catch (ex) {
       feedState.pagingController.nextPageKey = null;
+      feedState.pagingController.appendLastPage([]);
       logger.e('checkForNextPageEntries() - ex: $ex');
     }
   }
@@ -166,6 +175,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     if (activities.isEmpty) {
       logger.d('appendActivityPageToState() - No activities to append');
       feedState.pagingController.nextPageKey = null;
+      feedState.pagingController.appendLastPage([]);
       return;
     }
 
@@ -174,6 +184,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     feedState.pagingController.appendSafePage(activities, next ?? '');
     if (next == null) {
       feedState.pagingController.nextPageKey = null;
+      feedState.pagingController.appendLastPage([]);
     }
   }
 
@@ -202,6 +213,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     if (feedState.newActivities.isEmpty) {
       logger.d('appendPotentialNewEntries() - No activities to append');
       feedState.pagingController.nextPageKey = null;
+      feedState.pagingController.appendLastPage([]);
       return false;
     }
 
@@ -281,7 +293,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   void _onScroll() {
-    if (scrollController != null && scrollController!.position.atEdge && scrollController!.position.pixels == 0 && feedState.newActivities.isNotEmpty) {
+    if (scrollController != null && scrollController!.position.pixels >= 0 && scrollController!.position.pixels <= 20 && feedState.newActivities.isNotEmpty) {
       // Reached the top, load more entries
       final List<Activity> currentItems = feedState.pagingController.itemList ?? [];
       final List<Activity> newItems = [...feedState.newActivities, ...currentItems];

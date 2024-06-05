@@ -60,6 +60,15 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onFirstRender()');
 
+    // Sets the current tab to new in case user logged out
+    // when they were on the following tab
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final Profile? currentProfile = cacheController.get(profileController.currentProfileId);
+    if (currentProfile == null && state.currentTabIndex == 2) {
+      state = state.copyWith(currentTabIndex: 0);
+    }
+
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
     universalLinksController.removeInitialLinkFlagInSharedPreferences();
 
@@ -120,6 +129,15 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onTabSelected() - index: $index');
 
+    //Check if user isn't logged in and selects the following tab
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final Profile? currentProfile = cacheController.get(profileController.currentProfileId);
+    if (currentProfile == null && index == 2) {
+      final AppRouter router = ref.read(appRouterProvider);
+      await router.push(const HomeLoginPromptRoute());
+      return;
+    }
     state = state.copyWith(currentTabIndex: index);
   }
 

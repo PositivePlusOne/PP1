@@ -158,12 +158,14 @@ class TargetFeed with _$TargetFeed {
       return true;
     }
 
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final Profile? profile = profileController.currentProfile;
+    // Snippet to disable following tab when logged out
+    // TO DO remove after confirmation
+    // final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    // final Profile? profile = profileController.currentProfile;
 
-    if (profile == null && feed.targetUserId.isEmpty) {
-      return true;
-    }
+    // if (profile == null && feed.targetUserId.isEmpty) {
+    //   return true;
+    // }
 
     //! The disabled feeds may concain regex patterns, we need to check if the feed is disabled by a regex pattern
     for (final TargetFeed disabledFeed in disabledFeeds) {
