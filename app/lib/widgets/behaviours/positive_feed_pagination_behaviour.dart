@@ -165,7 +165,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     if (activities.isEmpty) {
       logger.d('appendActivityPageToState() - No activities to append');
-      feedState.pagingController.appendLastPage([]);
+      feedState.pagingController.nextPageKey = null;
       return;
     }
 
@@ -206,9 +206,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
 
     logger.d('appendPotentialNewEntries() - activityList.length: ${feedState.newActivities.length}');
+    _onScroll();
+    // check if already at top then don't show new posts fab
+    if (scrollController != null && scrollController!.position.pixels != 0) {
+      // Add a flag so that the UI can let the user know that new items have been found!
+      feedState.hasNewItems = true;
+    }
 
-    // Add a flag so that the UI can let the user know that new items have been found!
-    feedState.hasNewItems = true;
     return true;
   }
 
@@ -277,7 +281,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   void _onScroll() {
-    if (scrollController!.position.atEdge && scrollController!.position.pixels == 0) {
+    if (scrollController != null && scrollController!.position.atEdge && scrollController!.position.pixels == 0 && feedState.newActivities.isNotEmpty) {
       // Reached the top, load more entries
       final List<Activity> currentItems = feedState.pagingController.itemList ?? [];
       final List<Activity> newItems = [...feedState.newActivities, ...currentItems];
