@@ -11,7 +11,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
-import 'package:app/extensions/future_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';

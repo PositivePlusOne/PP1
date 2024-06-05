@@ -57,10 +57,7 @@ class BiometricsPreferencesViewModel extends _$BiometricsPreferencesViewModel wi
       try {
         hasAuthenticated = await localAuthentication.authenticate(
           localizedReason: 'Please authenticate to confirm biometric usage.',
-          options: const AuthenticationOptions(
-            stickyAuth: true,
-            useErrorDialogs: true,
-          ),
+          options: const AuthenticationOptions(stickyAuth: true, useErrorDialogs: true, biometricOnly: false),
         );
       } catch (e) {
         late final PositiveSnackBar snackBar;

@@ -41,6 +41,10 @@ class FeedNotifierHookState extends HookState<bool, FeedNotifierHook> {
 
   @override
   bool build(BuildContext context) {
-    return hook.feedState.hasNewItems;
+    bool hasNewItems = hook.feedState.hasNewItems;
+    if (hasNewItems) {
+      hook.feedState.hasNewItems = false;
+    }
+    return hasNewItems;
   }
 }

@@ -4,6 +4,7 @@ import 'dart:convert';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:app_settings/app_settings.dart';
@@ -113,13 +114,22 @@ class SystemController extends _$SystemController {
     state = state.copyWith(disabledFeeds: disabledFeeds);
   }
 
-  Future<void> biometricsReverification() async {
+  void failedBiometric() async {
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
+    await userController.signOut();
+    profileController.resetState();
+    relationshipController.resetState();
+    await router.replace(LoginRoute(senderRoute: HomeRoute));
+  }
+
+  Future<void> biometricsReverification([bool checkForTimeout = true]) async {
     final LocalAuthentication localAuthentication = LocalAuthentication();
     final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
-    final AppRouter router = providerContainer.read(appRouterProvider);
     final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
     final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
-
     //? If the user has enabled biometric authentication, they will be prompted in this section otherwise skip
     await sharedPreferences.reload();
     final bool biometricPreferencesAgree = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
@@ -127,19 +137,17 @@ class SystemController extends _$SystemController {
       return;
     }
 
-    //? Check epoch times to make sure the user is not asked for authentication too often based on app constants
-    final int? lastCheckedEpoch = sharedPreferences.getInt(kBiometricsAcceptedLastTime);
+    if (checkForTimeout) {
+      final int? lastCheckedEpoch = sharedPreferences.getInt(kBiometricsAcceptedLastTime);
 
-    //? If we have never set epoch/something else has gone wrong, do not ask the user to authenticate
-    if (lastCheckedEpoch == null) {
-      return;
-    }
+      // Exit early if epoch time is not set
+      if (lastCheckedEpoch == null) return;
 
-    //? Check difference between last checked time and current time, do not auth if the user has authenticated recently
-    final int currentEpochTime = DateTime.now().millisecondsSinceEpoch;
-    final int timeSinceLastAuthCheck = currentEpochTime - lastCheckedEpoch;
-    if (timeSinceLastAuthCheck <= await systemController.getBiometricAuthTimeout()) {
-      return;
+      final int currentEpochTime = DateTime.now().millisecondsSinceEpoch;
+      final int timeSinceLastAuthCheck = currentEpochTime - lastCheckedEpoch;
+
+      // Exit early if within the timeout period
+      if (timeSinceLastAuthCheck <= await systemController.getBiometricAuthTimeout()) return;
     }
 
     try {
@@ -147,15 +155,12 @@ class SystemController extends _$SystemController {
       state = state.copyWith(secureScreen: true);
       final bool hasReauthenticated = await localAuthentication.authenticate(localizedReason: "Positive+1 needs to verify it's you");
       await sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
-
       if (!hasReauthenticated) {
-        final UserController userController = providerContainer.read(userControllerProvider.notifier);
-        final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-        final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
-        await userController.signOut();
-        profileController.resetState();
-        relationshipController.resetState();
-        await router.replace(LoginRoute(senderRoute: HomeRoute));
+        failedBiometric();
+      }
+    } on PlatformException catch (e) {
+      if (e.code == 'user_cancel') {
+        failedBiometric();
       }
     } finally {
       state = state.copyWith(secureScreen: false);

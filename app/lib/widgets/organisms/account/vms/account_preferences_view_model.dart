@@ -186,6 +186,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
           options: const AuthenticationOptions(
             stickyAuth: true,
             useErrorDialogs: true,
+            biometricOnly: false, // Set this to false to allow fallback to device credentials
           ),
         );
       } catch (e) {

@@ -248,7 +248,9 @@ If you download the App onto any phone or other device not owned by you, you mus
 
 14.10. Refunds are not available for Premium Services.
 
-15\. WE MAY COLLECT TECHNICAL DATA ABOUT YOUR DEVICEBy using the App or any of the Services, you agree to us collecting and using technical information about the devices you use the App on and related software, hardware and peripherals to improve our products and to provide any Services to you.
+**15\. WE MAY COLLECT TECHNICAL DATA ABOUT YOUR DEVICE**
+
+15.1. By using the App or any of the Services, you agree to us collecting and using technical information about the devices you use the App on and related software, hardware and peripherals to improve our products and to provide any Services to you.
 
 **16\. WE MAY COLLECT LOCATION DATA (BUT YOU CAN TURN LOCATION SERVICES OFF) AND PUSH NOTIFICATIONS**
 

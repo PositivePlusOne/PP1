@@ -20,6 +20,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/brand_helpers.dart';
@@ -265,6 +266,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           senderProfile: currentProfile,
           noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_following_empty_title,
           noDataBody: localizations.page_community_following_empty_body,
+          communityType: CommunityType.following,
         ),
       CommunityType.followers => buildRelationshipList(
           context: context,
@@ -275,6 +277,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           senderProfile: currentProfile,
           noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_followers_empty_title,
           noDataBody: localizations.page_community_followers_empty_body,
+          communityType: CommunityType.followers,
         ),
       CommunityType.connected => buildRelationshipList(
           context: context,
@@ -285,6 +288,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           senderProfile: currentProfile,
           noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_connections_empty_title,
           noDataBody: localizations.page_community_connections_empty_body,
+          communityType: CommunityType.connected,
         ),
       CommunityType.blocked => buildRelationshipList(
           context: context,
@@ -295,6 +299,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           senderProfile: currentProfile,
           noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_blocked_empty_title,
           noDataBody: localizations.page_community_blocked_empty_body,
+          communityType: CommunityType.blocked,
         ),
       CommunityType.managed => buildRelationshipList(
           context: context,
@@ -305,6 +310,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           senderProfile: currentProfile,
           noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_managed_empty_title,
           noDataBody: localizations.page_community_managed_empty_body,
+          communityType: CommunityType.managed,
         ),
       CommunityType.supported => buildRelationshipList(
           context: context,
@@ -315,6 +321,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           senderProfile: currentProfile,
           noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_supported_empty_title,
           noDataBody: localizations.page_community_supported_empty_body,
+          communityType: CommunityType.supported,
         ),
     };
 
@@ -425,6 +432,70 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     );
   }
 
+  bool hasItemsToDisplay(PagingController<String, String> controller, CommunityType communityType) {
+    for (final String profileId in controller.itemList ?? <String>[]) {
+      final bool canDisplay = canDisplayItem(profileId, communityType);
+      if (canDisplay) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  bool canDisplayItem(String profileId, CommunityType communityType) {
+    if (communityType == CommunityType.supported) {
+      return true;
+    }
+
+    if (profileId.isEmpty) {
+      return false;
+    }
+
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.state.currentProfile?.flMeta?.id ?? '';
+    if (currentProfileId.isEmpty) {
+      return false;
+    }
+
+    if (profileId == currentProfileId) {
+      return false;
+    }
+
+    final String relationshipId = [currentProfileId, profileId].asGUID;
+    final Relationship? relationship = ref.read(cacheControllerProvider).get(relationshipId);
+    if (relationship == null) {
+      return false;
+    }
+
+    final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+    if (relationshipStates.isEmpty) {
+      return false;
+    }
+
+    if (communityType == CommunityType.connected) {
+      return relationshipStates.contains(RelationshipState.fullyConnected);
+    }
+
+    if (communityType == CommunityType.following) {
+      return relationshipStates.contains(RelationshipState.sourceFollowed);
+    }
+
+    if (communityType == CommunityType.followers) {
+      return relationshipStates.contains(RelationshipState.targetFollowing);
+    }
+
+    if (communityType == CommunityType.blocked) {
+      return relationshipStates.contains(RelationshipState.sourceBlocked);
+    }
+
+    if (communityType == CommunityType.managed) {
+      return relationshipStates.contains(RelationshipState.sourceManaged) || relationshipStates.contains(RelationshipState.targetManaged);
+    }
+
+    return false;
+  }
+
   Widget buildRelationshipList({
     required BuildContext context,
     required DesignTypographyModel typography,
@@ -434,42 +505,58 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     required PagingController<String, String> controller,
     required String noDataTitle,
     required String noDataBody,
+    required CommunityType communityType,
   }) {
     const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
+
+    final Widget noItemsChild = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const SizedBox(height: kPaddingMedium),
+        Text(
+          noDataTitle,
+          textAlign: TextAlign.left,
+          style: typography.styleHeroMedium,
+        ),
+        const SizedBox(height: kPaddingMedium),
+        Text(
+          noDataBody,
+          textAlign: TextAlign.left,
+          style: typography.styleSubtitle,
+        ),
+      ],
+    );
+
     return PagedListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       pagingController: controller,
-      separatorBuilder: (context, index) => buildSeparator(context: context, index: index, controller: controller),
+      separatorBuilder: (context, index) {
+        final String targetProfileId = controller.itemList?[index] ?? '';
+        final bool canDisplay = canDisplayItem(targetProfileId, communityType);
+        if (!canDisplay) {
+          return const SizedBox.shrink();
+        }
+
+        return buildSeparator(context: context, index: index, controller: controller);
+      },
       padding: EdgeInsets.zero,
       builderDelegate: PagedChildBuilderDelegate<String>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        // create a nice display to show when there is no content in the list
-        noItemsFoundIndicatorBuilder: (context) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: kPaddingMedium),
-            Text(
-              noDataTitle,
-              textAlign: TextAlign.left,
-              style: typography.styleHeroMedium,
-            ),
-            const SizedBox(height: kPaddingMedium),
-            Text(
-              noDataBody,
-              textAlign: TextAlign.left,
-              style: typography.styleSubtitle,
-            ),
-          ],
-        ),
+        noItemsFoundIndicatorBuilder: (context) => noItemsChild,
         itemBuilder: (context, item, index) {
           final Profile? targetProfile = cacheController.get(item);
           final String targetProfileId = targetProfile?.flMeta?.id ?? '';
           final String relationshipId = [senderProfile?.flMeta?.id ?? '', targetProfileId].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
+
+          final bool canDisplay = canDisplayItem(targetProfileId, communityType);
+          if (!canDisplay) {
+            return const SizedBox.shrink();
+          }
 
           final bool hasSelectedProfileLimit = widget.maximumSelectedProfiles > -1;
           final bool hasExceededSelectedProfileLimit = widget.selectedProfiles.length >= widget.maximumSelectedProfiles;

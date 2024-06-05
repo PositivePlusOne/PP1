@@ -87,12 +87,12 @@ extension PositiveRestrictedPlaceExtensions on PositiveRestrictedPlace {
     final Logger logger = providerContainer.read(loggerProvider);
     final bool supportsExpectedValue = await ruleSupportsExpectedValue();
     if (!supportsExpectedValue) {
-      logger.d('Rule does not support expected value');
+      logger.d('Rule does not support expected value for enforcement type $type');
       return false;
     }
 
     if (value == null) {
-      logger.d('No value provided');
+      logger.d('No value provided for enforcement type $type');
       return false;
     }
 
@@ -115,16 +115,16 @@ extension PositiveRestrictedPlaceExtensions on PositiveRestrictedPlace {
     final String enforcementValueString = enforcementValue.toLowerCase().trim();
 
     if (isEqual) {
-      logger.d('Checking equality');
+      logger.d('Checking equality with $actualValue and $enforcementValueString');
       return actualValue == enforcementValueString;
     }
 
     if (isNotEqual) {
-      logger.d('Checking inequality');
+      logger.d('Checking inequality with $actualValue and $enforcementValueString');
       return actualValue != enforcementValueString;
     }
 
-    logger.d('Unknown matcher');
+    logger.d('Unknown matcher type for enforcement type $type');
     return false;
   }
 

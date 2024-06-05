@@ -1,11 +1,11 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:collection';
 
 // Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -15,7 +15,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/builders/relationship_search_filter_builder.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
-import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
@@ -493,16 +492,13 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
         index: "relationships",
         fromJson: (json) => Relationship.fromJson(json),
         facetFilters: filters,
-        pagination: const Pagination(
-          limit: 10,
-        ),
       );
 
       logger.d('CommunitiesController - loadNextSearchCommunityData - Loaded next community data appending to page');
       appendToFeedState(
         currentProfile: currentProfile,
         feedState: feedState,
-        relationships: response.results,
+        relationships: filterRelationshipsByCommunityType(response.results, feedState.communityType),
         cursor: response.cursor,
       );
     } catch (ex) {
@@ -512,6 +508,61 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     } finally {
       saveFeedState(feedState);
     }
+  }
+
+  List<Relationship> filterRelationshipsByCommunityType(List<Relationship> relationships, CommunityType type) {
+    final Profile? currentProfile = getCurrentProfile();
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final List<Relationship> newRelationships = <Relationship>[];
+
+    for (final Relationship relationship in relationships) {
+      final bool isValid = isValidRelationshipForType(relationship, currentProfileId, type);
+      if (isValid) {
+        newRelationships.add(relationship);
+      }
+    }
+
+    return newRelationships;
+  }
+
+  bool isValidRelationshipForType(Relationship relationship, String currentProfileId, CommunityType type) {
+    final String targetProfileId = relationship.members.firstWhereOrNull((RelationshipMember member) => member.memberId != currentProfileId)?.memberId ?? '';
+    if (currentProfileId.isEmpty || targetProfileId.isEmpty) {
+      return false;
+    }
+
+    final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+    switch (type) {
+      case CommunityType.connected:
+        if (relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected)) {
+          return true;
+        }
+        break;
+      case CommunityType.followers:
+        if (relationshipStates.contains(RelationshipState.targetFollowing)) {
+          return true;
+        }
+        break;
+      case CommunityType.following:
+        if (relationshipStates.contains(RelationshipState.sourceFollowed)) {
+          return true;
+        }
+        break;
+      case CommunityType.blocked:
+        if (relationshipStates.contains(RelationshipState.sourceBlocked)) {
+          return true;
+        }
+        break;
+      case CommunityType.managed:
+        if (relationshipStates.contains(RelationshipState.targetManaged)) {
+          return true;
+        }
+        break;
+      default:
+        return true;
+    }
+
+    return false;
   }
 
   Future<void> loadNextInternalCommunityData({
@@ -556,7 +607,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
       appendToFeedState(
         currentProfile: currentProfile,
         feedState: feedState,
-        relationships: relationships,
+        relationships: filterRelationshipsByCommunityType(relationships, feedState.communityType),
         cursor: response.cursor ?? '',
       );
     } catch (ex) {
